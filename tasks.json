@@ -359,7 +359,7 @@
         "Шаг 5: Фильтр по статусу работает корректно"
       ],
       "dependencies": ["TASK-013", "TASK-014"],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-016",

@@ -92,3 +92,10 @@
 **Summary:** Mobile-first player layout: bottom nav (mobile) / sidebar (desktop). CharacterCard: иконка класса, уровень, XP progress bar, золото, вера. 4 раздела навигации. shadcn Card/Progress/Badge. Мок-данные пока (сессия игрока не реализована).
 **Коммит:** 4de16b9
 **Заметки:** Все 5 test_steps пройдены. Реальные данные будут подключены после интеграции player session.
+
+### TASK-015: Доска квестов игрока: отображение, принятие, список активных
+**Статус:** done
+**Дата:** 2026-04-02
+**Summary:** quest.forPlayer: mandatory/optional/instances. quest.accept: принятие опциональных квестов (QuestInstance с status=accepted). Фильтрация active/completed. Защита от дублирования.
+**Коммит:** f1fb164
+**Заметки:** Все 5 test_steps пройдены. UI доски квестов будет подключён к данным при интеграции player session.
