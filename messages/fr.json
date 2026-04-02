@@ -1,0 +1,34 @@
+{
+  "common": {
+    "appName": "F-Guild",
+    "tagline": "Plateforme familiale de gamification",
+    "getStarted": "Commencer",
+    "login": "Se connecter",
+    "register": "S'inscrire",
+    "logout": "Se déconnecter",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "back": "Retour",
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "notFound": "Page non trouvée"
+  },
+  "nav": {
+    "overview": "Aperçu",
+    "quests": "Quêtes",
+    "players": "Joueurs",
+    "shop": "Boutique",
+    "buffs": "Buffs",
+    "prayers": "Prières",
+    "diceLog": "Journal des dés",
+    "settings": "Paramètres",
+    "character": "Personnage"
+  },
+  "home": {
+    "title": "F-Guild",
+    "description": "Transformez les tâches quotidiennes en aventures épiques avec la mécanique DnD",
+    "getStarted": "Commencer l'aventure"
+  }
+}

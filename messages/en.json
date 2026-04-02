@@ -1,0 +1,34 @@
+{
+  "common": {
+    "appName": "F-Guild",
+    "tagline": "Family gamification platform",
+    "getStarted": "Get Started",
+    "login": "Log In",
+    "register": "Sign Up",
+    "logout": "Log Out",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "notFound": "Page not found"
+  },
+  "nav": {
+    "overview": "Overview",
+    "quests": "Quests",
+    "players": "Players",
+    "shop": "Shop",
+    "buffs": "Buffs",
+    "prayers": "Prayers",
+    "diceLog": "Dice Log",
+    "settings": "Settings",
+    "character": "Character"
+  },
+  "home": {
+    "title": "F-Guild",
+    "description": "Turn everyday chores into epic adventures with DnD mechanics",
+    "getStarted": "Start Your Adventure"
+  }
+}
