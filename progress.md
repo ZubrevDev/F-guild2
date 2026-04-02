@@ -36,3 +36,10 @@
 **Summary:** Prisma 6.19.3 с полной схемой БД из PRD. 16 моделей, 13 enum-типов, UUID PK, связи и индексы. PostgreSQL через brew. Seed: гильдия "Дом Солнца", мастер, игрок "Артас" (fighter), квест, предмет, бафф. Все 4 test_steps пройдены.
 **Коммит:** 3d58d0d
 **Заметки:** Prisma 7 не совместима с Node 20.11 — использована Prisma 6. PostgreSQL 17 установлен через brew. .env не коммитится (в .gitignore).
+
+### TASK-004: Настройка i18n (next-intl) с поддержкой en/ru/fr
+**Статус:** done
+**Дата:** 2026-04-02
+**Summary:** next-intl 4.9.0. Prefix-based URL (/en/, /ru/, /fr/). Middleware с auto-detect языка браузера. Переводы: common, nav, home. LocaleSwitcher компонент. App переструктурирован на [locale]. / → 307 redirect на /en.
+**Коммит:** b9d2eb6
+**Заметки:** Все 5 test_steps пройдены через curl. Контент корректно переключается по локалям.

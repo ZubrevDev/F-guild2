@@ -108,7 +108,7 @@
         "Шаг 5: Открыть / без prefix — редирект на язык браузера"
       ],
       "dependencies": ["TASK-002"],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-005",
