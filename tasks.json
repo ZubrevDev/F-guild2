@@ -154,7 +154,7 @@
         "Шаг 5: Неверный пароль — ошибка, не пускает"
       ],
       "dependencies": ["TASK-005"],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-007",

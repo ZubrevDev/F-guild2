@@ -50,3 +50,10 @@
 **Summary:** tRPC v11 с superjson transformer. appRouter с healthcheck (public) и me (protected). fetchRequestHandler в App Router. React Query интеграция через TRPCProvider. Контекст с Prisma + сессией. protectedProcedure выбрасывает UNAUTHORIZED без сессии.
 **Коммит:** ee1587e
 **Заметки:** Все 4 test_steps пройдены. TypeScript типизация end-to-end работает.
+
+### TASK-006: Аутентификация мастера: регистрация по email + пароль
+**Статус:** done
+**Дата:** 2026-04-02
+**Summary:** Auth.js v5 (beta.30) с Credentials provider. JWT сессии. Регистрация через tRPC auth.register с bcrypt (rounds=12). Login/register страницы с i18n. Middleware объединяет next-intl routing + auth protection. Edge-compatible split: auth.config.ts (edge) / auth.ts (node). SessionProvider в providers.tsx. Dashboard защищён — 302 на /login без сессии.
+**Коммит:** bdb6eff
+**Заметки:** Все 5 test_steps пройдены через curl. Email verification оставлен как заглушка (нет Resend настройки).
