@@ -200,7 +200,7 @@
         "Шаг 5: Дополнительный мастер не может удалить owner — ошибка прав"
       ],
       "dependencies": ["TASK-006"],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-009",

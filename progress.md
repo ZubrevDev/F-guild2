@@ -57,3 +57,10 @@
 **Summary:** Auth.js v5 (beta.30) с Credentials provider. JWT сессии. Регистрация через tRPC auth.register с bcrypt (rounds=12). Login/register страницы с i18n. Middleware объединяет next-intl routing + auth protection. Edge-compatible split: auth.config.ts (edge) / auth.ts (node). SessionProvider в providers.tsx. Dashboard защищён — 302 на /login без сессии.
 **Коммит:** bdb6eff
 **Заметки:** Все 5 test_steps пройдены через curl. Email verification оставлен как заглушка (нет Resend настройки).
+
+### TASK-008: Создание и управление гильдией
+**Статус:** done
+**Дата:** 2026-04-02
+**Summary:** tRPC guild router: create, get, update, myGuilds, addMaster, removeMaster. Invite code генерация (8-char hex). Creator = owner. Лимит 5 мастеров. Owner-only операции (add/remove masters). Auth session интегрирована в tRPC context через auth() в route handler.
+**Коммит:** dc3129a
+**Заметки:** Все 5 test_steps пройдены. Страница настроек гильдии (UI) — бэкенд готов, фронтенд dashboard будет в отдельной задаче.
