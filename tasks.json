@@ -267,7 +267,7 @@
         "Шаг 5: Мастер видит персонажа игрока в своём дашборде"
       ],
       "dependencies": ["TASK-009"],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-012",
