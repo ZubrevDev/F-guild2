@@ -336,7 +336,7 @@
         "Шаг 5: Назначить квест конкретному игроку — assigned_to содержит player_id"
       ],
       "dependencies": ["TASK-005", "TASK-008"],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-015",

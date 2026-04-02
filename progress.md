@@ -78,3 +78,10 @@
 **Summary:** tRPC character router: create, get, getByGuild. 6 классов с уникальными распределениями stats (primary=16). Начальные значения: level=1, xp=0, gold=100, faith=10. 1:1 player-character. Дублирование блокируется.
 **Коммит:** f0aec30
 **Заметки:** Все 5 test_steps пройдены. UI выбора класса будет в отдельной задаче (TASK-013).
+
+### TASK-014: CRUD квестов: создание, редактирование, удаление (мастер)
+**Статус:** done
+**Дата:** 2026-04-02
+**Summary:** tRPC quest router: create, update, deactivate, list, get. Все поля из PRD. Назначение игрокам через assignedTo. Soft delete через isActive=false. Фильтрация по типу и статусу.
+**Коммит:** 2a1daad
+**Заметки:** Все 5 test_steps пройдены через node fetch. UI формы создания квеста будет в отдельной задаче.
