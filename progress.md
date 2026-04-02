@@ -99,3 +99,10 @@
 **Summary:** quest.forPlayer: mandatory/optional/instances. quest.accept: принятие опциональных квестов (QuestInstance с status=accepted). Фильтрация active/completed. Защита от дублирования.
 **Коммит:** f1fb164
 **Заметки:** Все 5 test_steps пройдены. UI доски квестов будет подключён к данным при интеграции player session.
+
+### TASK-016: Выполнение квестов: подтверждение (текст и master_confirm)
+**Статус:** done
+**Дата:** 2026-04-02
+**Summary:** quest.submit, quest.review (approve/reject/return), quest.pending. Submit меняет status→pending_review. Approve: $transaction начисляет XP/gold/faith. Reject с причиной. Return→accepted.
+**Коммит:** 93f86f3
+**Заметки:** Все 5 test_steps пройдены. Фото-подтверждение — TASK-017.

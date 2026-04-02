@@ -382,7 +382,7 @@
         "Шаг 5: Мастер возвращает квест — status=returned, игрок видит его снова в активных"
       ],
       "dependencies": ["TASK-015"],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-017",
