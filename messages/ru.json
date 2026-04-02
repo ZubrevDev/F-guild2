@@ -42,6 +42,11 @@
     "emailTaken": "Email уже зарегистрирован",
     "registrationSuccess": "Аккаунт создан! Войдите."
   },
+  "player": {
+    "level": "Ур.",
+    "activeQuests": "Активные квесты",
+    "noQuests": "Нет активных квестов"
+  },
   "dashboard": {
     "title": "Панель управления",
     "welcome": "Добро пожаловать, {name}!"

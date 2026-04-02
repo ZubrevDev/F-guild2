@@ -42,6 +42,11 @@
     "emailTaken": "Email already registered",
     "registrationSuccess": "Account created! Please sign in."
   },
+  "player": {
+    "level": "Lvl",
+    "activeQuests": "Active Quests",
+    "noQuests": "No active quests yet"
+  },
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome, {name}!"

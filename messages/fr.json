@@ -42,6 +42,11 @@
     "emailTaken": "Email déjà enregistré",
     "registrationSuccess": "Compte créé ! Connectez-vous."
   },
+  "player": {
+    "level": "Niv.",
+    "activeQuests": "Quêtes actives",
+    "noQuests": "Pas de quêtes actives"
+  },
   "dashboard": {
     "title": "Tableau de bord",
     "welcome": "Bienvenue, {name} !"
