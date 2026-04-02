@@ -85,3 +85,10 @@
 **Summary:** tRPC quest router: create, update, deactivate, list, get. Все поля из PRD. Назначение игрокам через assignedTo. Soft delete через isActive=false. Фильтрация по типу и статусу.
 **Коммит:** 2a1daad
 **Заметки:** Все 5 test_steps пройдены через node fetch. UI формы создания квеста будет в отдельной задаче.
+
+### TASK-013: Базовый дашборд игрока: layout, карточка персонажа, навигация
+**Статус:** done
+**Дата:** 2026-04-02
+**Summary:** Mobile-first player layout: bottom nav (mobile) / sidebar (desktop). CharacterCard: иконка класса, уровень, XP progress bar, золото, вера. 4 раздела навигации. shadcn Card/Progress/Badge. Мок-данные пока (сессия игрока не реализована).
+**Коммит:** 4de16b9
+**Заметки:** Все 5 test_steps пройдены. Реальные данные будут подключены после интеграции player session.

@@ -313,7 +313,7 @@
         "Шаг 5: Навигация между разделами работает"
       ],
       "dependencies": ["TASK-011"],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-014",
