@@ -1,0 +1,382 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== ENUMS ====================
+
+enum GuildMasterRole {
+  owner
+  master
+}
+
+enum PlayerAuthMethod {
+  pin
+  qr
+  email
+}
+
+enum CharacterClass {
+  fighter
+  wizard
+  ranger
+  cleric
+  rogue
+  bard
+}
+
+enum QuestType {
+  mandatory
+  optional
+}
+
+enum QuestRecurrence {
+  once
+  daily
+  weekly
+  monthly
+  custom
+}
+
+enum ConfirmationType {
+  photo
+  text
+  timer
+  master_confirm
+}
+
+enum QuestInstanceStatus {
+  available
+  accepted
+  pending_review
+  completed
+  rejected
+  returned
+}
+
+enum ItemCategory {
+  real_reward
+  game_item
+}
+
+enum BuffType {
+  buff
+  debuff
+}
+
+enum BuffDurationType {
+  permanent
+  timed
+  manual_cancel
+}
+
+enum PrayerStatus {
+  sent
+  read
+  answered
+}
+
+enum ActorType {
+  master
+  player
+  system
+}
+
+enum LogLevel {
+  info
+  warning
+  important
+}
+
+enum SubscriptionTier {
+  free
+  premium
+}
+
+// ==================== MODELS ====================
+
+model Guild {
+  id              String   @id @default(uuid()) @db.Uuid
+  name            String
+  inviteCode      String   @unique @map("invite_code")
+  createdById     String   @map("created_by") @db.Uuid
+  settings        Json     @default("{}")
+  isActive        Boolean  @default(true) @map("is_active")
+  lastActivityAt  DateTime @default(now()) @map("last_activity_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+  deletedAt       DateTime? @map("deleted_at")
+
+  createdBy       User     @relation("GuildCreator", fields: [createdById], references: [id])
+  masters         GuildMaster[]
+  players         Player[]
+  quests          Quest[]
+  items           Item[]
+  buffs           Buff[]
+  prayers         Prayer[]
+  activityLogs    ActivityLog[]
+
+  @@map("guilds")
+}
+
+model User {
+  id                      String           @id @default(uuid()) @db.Uuid
+  email                   String           @unique
+  passwordHash            String?          @map("password_hash")
+  name                    String
+  oauthProvider           String?          @map("oauth_provider")
+  locale                  String           @default("en")
+  notificationPreferences Json             @default("{}") @map("notification_preferences")
+  subscriptionTier        SubscriptionTier @default(free) @map("subscription_tier")
+  createdAt               DateTime         @default(now()) @map("created_at")
+  updatedAt               DateTime         @updatedAt @map("updated_at")
+
+  createdGuilds           Guild[]          @relation("GuildCreator")
+  guildMasters            GuildMaster[]
+  questsCreated           Quest[]
+  appliedBuffs            ActiveBuff[]     @relation("BuffAppliedBy")
+  prayerReplies           PrayerReply[]
+  activityLogs            ActivityLog[]    @relation("ActivityActor")
+
+  @@map("users")
+}
+
+model GuildMaster {
+  guildId   String          @map("guild_id") @db.Uuid
+  userId    String          @map("user_id") @db.Uuid
+  role      GuildMasterRole
+  joinedAt  DateTime        @default(now()) @map("joined_at")
+
+  guild     Guild           @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([guildId, userId])
+  @@map("guild_masters")
+}
+
+model Player {
+  id           String           @id @default(uuid()) @db.Uuid
+  guildId      String           @map("guild_id") @db.Uuid
+  name         String
+  pin          String?
+  email        String?
+  passwordHash String?          @map("password_hash")
+  qrToken      String           @unique @map("qr_token")
+  authMethod   PlayerAuthMethod @map("auth_method")
+  createdAt    DateTime         @default(now()) @map("created_at")
+
+  guild        Guild            @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  character    Character?
+  questInstances QuestInstance[]
+  prayers      Prayer[]
+
+  @@unique([guildId, name])
+  @@map("players")
+}
+
+model Character {
+  id          String         @id @default(uuid()) @db.Uuid
+  playerId    String         @unique @map("player_id") @db.Uuid
+  class       CharacterClass
+  level       Int            @default(1)
+  xp          Int            @default(0)
+  gold        Int            @default(100)
+  faithPoints Int            @default(10) @map("faith_points")
+  stats       Json           @default("{\"strength\":10,\"dexterity\":10,\"intelligence\":10,\"wisdom\":10,\"charisma\":10}")
+  abilities   Json           @default("[]")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+
+  player      Player         @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  inventory   Inventory[]
+  activeBuffs ActiveBuff[]
+  diceLogs    DiceLog[]
+
+  @@map("characters")
+}
+
+model Quest {
+  id               String           @id @default(uuid()) @db.Uuid
+  guildId          String           @map("guild_id") @db.Uuid
+  createdById      String           @map("created_by") @db.Uuid
+  title            String
+  description      String
+  type             QuestType
+  recurrence       QuestRecurrence  @default(once)
+  deadline         DateTime?
+  xpReward         Int              @map("xp_reward")
+  goldReward       Int              @map("gold_reward")
+  faithReward      Int              @default(0) @map("faith_reward")
+  difficultyClass  Int              @map("difficulty_class")
+  confirmationType ConfirmationType @map("confirmation_type")
+  assignedTo       String[]         @map("assigned_to") @db.Uuid
+  imageUrl         String?          @map("image_url")
+  isActive         Boolean          @default(true) @map("is_active")
+  createdAt        DateTime         @default(now()) @map("created_at")
+
+  guild            Guild            @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  createdBy        User             @relation(fields: [createdById], references: [id])
+  instances        QuestInstance[]
+
+  @@index([guildId])
+  @@map("quests")
+}
+
+model QuestInstance {
+  id               String              @id @default(uuid()) @db.Uuid
+  questId          String              @map("quest_id") @db.Uuid
+  playerId         String              @map("player_id") @db.Uuid
+  status           QuestInstanceStatus @default(available)
+  confirmationData Json?               @map("confirmation_data")
+  rejectionReason  String?             @map("rejection_reason")
+  completedAt      DateTime?           @map("completed_at")
+  createdAt        DateTime            @default(now()) @map("created_at")
+
+  quest            Quest               @relation(fields: [questId], references: [id], onDelete: Cascade)
+  player           Player              @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@index([questId])
+  @@index([playerId])
+  @@map("quest_instances")
+}
+
+model Item {
+  id            String        @id @default(uuid()) @db.Uuid
+  guildId       String        @map("guild_id") @db.Uuid
+  name          String
+  description   String
+  category      ItemCategory
+  price         Int
+  stock         Int?
+  levelRequired Int           @default(1) @map("level_required")
+  classRequired CharacterClass? @map("class_required")
+  effect        Json?
+  imageUrl      String?       @map("image_url")
+  isActive      Boolean       @default(true) @map("is_active")
+  createdAt     DateTime      @default(now()) @map("created_at")
+
+  guild         Guild         @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  inventory     Inventory[]
+
+  @@index([guildId])
+  @@map("items")
+}
+
+model Inventory {
+  id          String    @id @default(uuid()) @db.Uuid
+  characterId String    @map("character_id") @db.Uuid
+  itemId      String    @map("item_id") @db.Uuid
+  quantity    Int       @default(1)
+  isEquipped  Boolean   @default(false) @map("is_equipped")
+  acquiredAt  DateTime  @default(now()) @map("acquired_at")
+
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  item        Item      @relation(fields: [itemId], references: [id])
+
+  @@index([characterId])
+  @@map("inventory")
+}
+
+model Buff {
+  id                     String          @id @default(uuid()) @db.Uuid
+  guildId                String          @map("guild_id") @db.Uuid
+  name                   String
+  type                   BuffType
+  effect                 Json
+  durationType           BuffDurationType @map("duration_type")
+  defaultDurationMinutes Int?            @map("default_duration_minutes")
+  description            String
+  icon                   String          @default("shield")
+  createdAt              DateTime        @default(now()) @map("created_at")
+
+  guild                  Guild           @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  activeBuffs            ActiveBuff[]
+
+  @@index([guildId])
+  @@map("buffs")
+}
+
+model ActiveBuff {
+  id          String    @id @default(uuid()) @db.Uuid
+  buffId      String    @map("buff_id") @db.Uuid
+  characterId String    @map("character_id") @db.Uuid
+  appliedById String    @map("applied_by") @db.Uuid
+  expiresAt   DateTime? @map("expires_at")
+  isActive    Boolean   @default(true) @map("is_active")
+  appliedAt   DateTime  @default(now()) @map("applied_at")
+
+  buff        Buff      @relation(fields: [buffId], references: [id], onDelete: Cascade)
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  appliedBy   User      @relation("BuffAppliedBy", fields: [appliedById], references: [id])
+
+  @@index([characterId])
+  @@map("active_buffs")
+}
+
+model Prayer {
+  id        String       @id @default(uuid()) @db.Uuid
+  playerId  String       @map("player_id") @db.Uuid
+  guildId   String       @map("guild_id") @db.Uuid
+  message   String
+  faithCost Int          @map("faith_cost")
+  status    PrayerStatus @default(sent)
+  createdAt DateTime     @default(now()) @map("created_at")
+
+  player    Player       @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  guild     Guild        @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  replies   PrayerReply[]
+
+  @@index([guildId])
+  @@index([playerId])
+  @@map("prayers")
+}
+
+model PrayerReply {
+  id        String   @id @default(uuid()) @db.Uuid
+  prayerId  String   @map("prayer_id") @db.Uuid
+  authorId  String   @map("author_id") @db.Uuid
+  message   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  prayer    Prayer   @relation(fields: [prayerId], references: [id], onDelete: Cascade)
+  author    User     @relation(fields: [authorId], references: [id])
+
+  @@map("prayer_replies")
+}
+
+model DiceLog {
+  id              String    @id @default(uuid()) @db.Uuid
+  characterId     String    @map("character_id") @db.Uuid
+  rollValue       Int       @map("roll_value")
+  modifiers       Json      @default("[]")
+  total           Int
+  difficultyClass Int       @map("difficulty_class")
+  success         Boolean
+  context         String
+  rolledAt        DateTime  @default(now()) @map("rolled_at")
+
+  character       Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@index([characterId])
+  @@map("dice_logs")
+}
+
+model ActivityLog {
+  id        String    @id @default(uuid()) @db.Uuid
+  guildId   String    @map("guild_id") @db.Uuid
+  actorType ActorType @map("actor_type")
+  actorId   String    @map("actor_id") @db.Uuid
+  action    String
+  details   Json      @default("{}")
+  logLevel  LogLevel  @default(info) @map("log_level")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  guild     Guild     @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  actor     User?     @relation("ActivityActor", fields: [actorId], references: [id])
+
+  @@index([guildId])
+  @@index([createdAt])
+  @@map("activity_logs")
+}
