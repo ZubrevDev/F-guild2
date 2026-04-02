@@ -223,7 +223,7 @@
         "Шаг 5: Создать 11-го игрока — ошибка лимита"
       ],
       "dependencies": ["TASK-008"],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-010",

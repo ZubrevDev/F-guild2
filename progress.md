@@ -64,3 +64,10 @@
 **Summary:** tRPC guild router: create, get, update, myGuilds, addMaster, removeMaster. Invite code генерация (8-char hex). Creator = owner. Лимит 5 мастеров. Owner-only операции (add/remove masters). Auth session интегрирована в tRPC context через auth() в route handler.
 **Коммит:** dc3129a
 **Заметки:** Все 5 test_steps пройдены. Страница настроек гильдии (UI) — бэкенд готов, фронтенд dashboard будет в отдельной задаче.
+
+### TASK-009: Добавление игроков и аутентификация по PIN-коду
+**Статус:** done
+**Дата:** 2026-04-02
+**Summary:** tRPC player router: create, list, resetPin, loginByPin. PIN хешируется bcrypt (rounds=10). Уникальное имя в гильдии. Лимит 10 игроков. Login по invite_code + имя + PIN. Сброс PIN мастером. QR token генерируется при создании.
+**Коммит:** 4072036
+**Заметки:** Все 5 test_steps пройдены через curl. JWT-сессия для игрока пока возвращает данные (playerId, guildId), полноценная сессия будет при интеграции с UI.
