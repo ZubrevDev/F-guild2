@@ -3,12 +3,14 @@ import { authRouter } from "./auth";
 import { guildRouter } from "./guild";
 import { playerRouter } from "./player";
 import { characterRouter } from "./character";
+import { questRouter } from "./quest";
 
 export const appRouter = router({
   auth: authRouter,
   guild: guildRouter,
   player: playerRouter,
   character: characterRouter,
+  quest: questRouter,
 
   healthcheck: publicProcedure.query(() => {
     return { status: "ok", timestamp: new Date().toISOString() };
