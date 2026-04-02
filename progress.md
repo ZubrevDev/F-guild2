@@ -29,3 +29,10 @@
 **Summary:** Tailwind CSS 4.2.2 + PostCSS. shadcn/ui с фиолетовой темой (oklch). Dark mode по умолчанию (class=dark). Inter font через next/font/google. Button компонент в src/components/ui/. cn() утилита. tw-animate-css.
 **Коммит:** 8b96704
 **Заметки:** Переключатель тем пока не реализован (нет client component для toggle). Тема зафиксирована как dark в layout.tsx.
+
+### TASK-003: Настройка PostgreSQL + Prisma ORM со схемой базы данных
+**Статус:** done
+**Дата:** 2026-04-02
+**Summary:** Prisma 6.19.3 с полной схемой БД из PRD. 16 моделей, 13 enum-типов, UUID PK, связи и индексы. PostgreSQL через brew. Seed: гильдия "Дом Солнца", мастер, игрок "Артас" (fighter), квест, предмет, бафф. Все 4 test_steps пройдены.
+**Коммит:** 3d58d0d
+**Заметки:** Prisma 7 не совместима с Node 20.11 — использована Prisma 6. PostgreSQL 17 установлен через brew. .env не коммитится (в .gitignore).
