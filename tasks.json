@@ -63,7 +63,7 @@
         "Шаг 3: shadcn Button компонент установлен и экспортируется"
       ],
       "dependencies": ["TASK-001"],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-003",
