@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 import { TRPCError } from "@trpc/server";
-import { router, protectedProcedure } from "../trpc";
+import { router, protectedProcedure, publicProcedure } from "../trpc";
 
 export const questRouter = router({
   create: protectedProcedure
@@ -149,6 +149,85 @@ export const questRouter = router({
         throw new TRPCError({ code: "NOT_FOUND", message: "Quest not found" });
       }
       return quest;
+    }),
+
+  // Player-facing endpoints
+  forPlayer: publicProcedure
+    .input(
+      z.object({
+        playerId: z.uuid(),
+        guildId: z.uuid(),
+        status: z.enum(["active", "completed"]).default("active"),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      // Mandatory quests assigned to this player (or to all)
+      const mandatoryQuests = await ctx.db.quest.findMany({
+        where: {
+          guildId: input.guildId,
+          isActive: true,
+          type: "mandatory",
+          OR: [
+            { assignedTo: { has: input.playerId } },
+            { assignedTo: { isEmpty: true } },
+          ],
+        },
+        orderBy: { createdAt: "desc" },
+      });
+
+      // Optional quests (guild board)
+      const optionalQuests = await ctx.db.quest.findMany({
+        where: {
+          guildId: input.guildId,
+          isActive: true,
+          type: "optional",
+        },
+        orderBy: { createdAt: "desc" },
+      });
+
+      // Player's quest instances
+      const instances = await ctx.db.questInstance.findMany({
+        where: {
+          playerId: input.playerId,
+          ...(input.status === "completed"
+            ? { status: "completed" }
+            : { status: { in: ["available", "accepted", "pending_review"] } }),
+        },
+        include: { quest: true },
+        orderBy: { createdAt: "desc" },
+      });
+
+      return { mandatoryQuests, optionalQuests, instances };
+    }),
+
+  accept: publicProcedure
+    .input(z.object({ questId: z.uuid(), playerId: z.uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const quest = await ctx.db.quest.findUnique({
+        where: { id: input.questId },
+      });
+      if (!quest || !quest.isActive) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Quest not found or inactive" });
+      }
+
+      const existing = await ctx.db.questInstance.findFirst({
+        where: {
+          questId: input.questId,
+          playerId: input.playerId,
+          status: { in: ["accepted", "pending_review"] },
+        },
+      });
+      if (existing) {
+        throw new TRPCError({ code: "CONFLICT", message: "Quest already accepted" });
+      }
+
+      return ctx.db.questInstance.create({
+        data: {
+          questId: input.questId,
+          playerId: input.playerId,
+          status: "accepted",
+        },
+      });
     }),
 });
 
