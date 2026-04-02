@@ -49,7 +49,12 @@
   },
   "dashboard": {
     "title": "Панель управления",
-    "welcome": "Добро пожаловать, {name}!"
+    "welcome": "Добро пожаловать, {name}!",
+    "pendingQuests": "Ожидают проверки",
+    "unreadPrayers": "Непрочитанные молитвы",
+    "players": "Игроки",
+    "activity": "Последние действия",
+    "noActivity": "Нет недавних действий"
   },
   "home": {
     "title": "F-Guild",

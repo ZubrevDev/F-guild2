@@ -49,7 +49,12 @@
   },
   "dashboard": {
     "title": "Tableau de bord",
-    "welcome": "Bienvenue, {name} !"
+    "welcome": "Bienvenue, {name} !",
+    "pendingQuests": "Quêtes en attente",
+    "unreadPrayers": "Prières non lues",
+    "players": "Joueurs",
+    "activity": "Activité récente",
+    "noActivity": "Aucune activité récente"
   },
   "home": {
     "title": "F-Guild",

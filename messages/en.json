@@ -49,7 +49,12 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "welcome": "Welcome, {name}!"
+    "welcome": "Welcome, {name}!",
+    "pendingQuests": "Pending Quests",
+    "unreadPrayers": "Unread Prayers",
+    "players": "Players",
+    "activity": "Recent Activity",
+    "noActivity": "No recent activity"
   },
   "home": {
     "title": "F-Guild",
