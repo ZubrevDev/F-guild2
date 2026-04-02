@@ -1,77 +1,45 @@
-# Interview Trainer Bot
+# F-Guild
 
-Telegram-бот для подготовки к техническим интервью.
+Family gamification platform with DnD mechanics. Track quests, earn XP, level up your family.
 
-## Требования
+## Stack
 
-- Python 3.13+
-- установленный `uv`
-- Git
-- минимум один CLI-агент в PATH:
-  - `codex` или
-  - `claude`
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript 5 (strict)
+- **Runtime**: React 19
+- **Package manager**: pnpm
+- **Linter**: ESLint 9+ (flat config)
 
-## Настройка бота (ручной запуск)
-
-1. Скопируйте `.env.example` в `.env` и заполните переменные.
-2. Установите зависимости:
-   ```bash
-   uv sync --dev
-   ```
-3. Запустите бота:
-   ```bash
-   uv run python -m bot
-   ```
-
-## Как повторить workflow из видео (`ralph.sh`)
-
-`ralph.sh` — это итерационный цикл автоматизации, который использовался в видео. На каждой итерации он:
-
-1. Находит pending-задачи в `tasks.json`
-2. Вызывает агента (`claude` или `codex`)
-3. Просит реализовать ровно одну наиболее приоритетную фичу
-4. Запрашивает lint/тесты, обновление task/progress и commit
-5. Повторяет цикл, пока не закончатся pending-задачи
-
-### Запуск
+## Getting Started
 
 ```bash
-chmod +x ralph.sh
-./ralph.sh
+pnpm install
+pnpm dev
 ```
 
-### Опционально: принудительный выбор агента
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-```bash
-RALPH_AGENT=codex ./ralph.sh
-# или
-RALPH_AGENT=claude ./ralph.sh
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start development server |
+| `pnpm build` | Build for production |
+| `pnpm start` | Start production server |
+| `pnpm lint` | Run ESLint |
+
+## Project Structure
+
+```
+src/
+  app/          # Next.js App Router pages and layouts
+  components/   # Reusable React components
+  lib/          # Utility functions and shared logic
+  server/       # Server-side code (tRPC routers, etc.)
+prisma/         # Database schema and migrations
 ```
 
-Если `RALPH_AGENT` не задан, скрипт автоматически определяет агент и выбирает `claude`, если он доступен, иначе `codex`.
-Данный `ralph.sh` скрипт лучше работает с CLAUDE CODE, можете адаптировать его к Codex или другому CLI агенту.
+## Development
 
-### Файлы, которые использует скрипт
-
-- `tasks.json`: источник pending/done задач
-- `progress.txt`: журнал заметок по реализации на каждой итерации
-
-### Снимки задач в этом репозитории
-
-- `tasks.json`: начальная версия задач (до основной реализации)
-- `final_tasks.json`: финальная версия задач после работы агента
-
-### Примечания
-
-- Встроенный prompt для агента написан на русском.
-- На ОС без команды `say` голосовые уведомления о завершении могут не сработать. На основную логику это не влияет.
-
-## Разработка
-
-- Запустить тесты: `uv run pytest`
-- Проверить линтинг: `uv run ruff check .`
-
-## Контакты
-
-- Автор: Vladislav Sokolovskii
-- Telegram: https://t.me/makebugger
+This project uses the Ralph loop for iterative task-driven development.
+Tasks are tracked in `tasks.json`, progress in `progress.md`.
