@@ -1,10 +1,12 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { authRouter } from "./auth";
 import { guildRouter } from "./guild";
+import { playerRouter } from "./player";
 
 export const appRouter = router({
   auth: authRouter,
   guild: guildRouter,
+  player: playerRouter,
 
   healthcheck: publicProcedure.query(() => {
     return { status: "ok", timestamp: new Date().toISOString() };
