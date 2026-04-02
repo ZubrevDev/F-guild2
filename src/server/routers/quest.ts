@@ -229,6 +229,123 @@ export const questRouter = router({
         },
       });
     }),
+  submit: publicProcedure
+    .input(
+      z.object({
+        instanceId: z.uuid(),
+        confirmationData: z.object({
+          type: z.enum(["text", "master_confirm"]),
+          text: z.string().optional(),
+        }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const instance = await ctx.db.questInstance.findUnique({
+        where: { id: input.instanceId },
+      });
+      if (!instance) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Quest instance not found" });
+      }
+      if (instance.status !== "accepted") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Quest must be in accepted status to submit",
+        });
+      }
+
+      return ctx.db.questInstance.update({
+        where: { id: input.instanceId },
+        data: {
+          status: "pending_review",
+          confirmationData: input.confirmationData,
+        },
+      });
+    }),
+
+  review: protectedProcedure
+    .input(
+      z.object({
+        instanceId: z.uuid(),
+        action: z.enum(["approve", "reject", "return"]),
+        rejectionReason: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const instance = await ctx.db.questInstance.findUnique({
+        where: { id: input.instanceId },
+        include: { quest: true, player: { include: { character: true } } },
+      });
+      if (!instance) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Quest instance not found" });
+      }
+      if (instance.status !== "pending_review") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Quest must be pending_review to review",
+        });
+      }
+
+      await assertGuildMaster(ctx, instance.quest.guildId);
+
+      if (input.action === "approve") {
+        // Atomically update instance and character rewards
+        const character = instance.player.character;
+        if (!character) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "Player has no character" });
+        }
+
+        await ctx.db.$transaction([
+          ctx.db.questInstance.update({
+            where: { id: input.instanceId },
+            data: { status: "completed", completedAt: new Date() },
+          }),
+          ctx.db.character.update({
+            where: { id: character.id },
+            data: {
+              xp: { increment: instance.quest.xpReward },
+              gold: { increment: instance.quest.goldReward },
+              faithPoints: { increment: instance.quest.faithReward },
+            },
+          }),
+        ]);
+
+        return { status: "completed", xpAwarded: instance.quest.xpReward, goldAwarded: instance.quest.goldReward };
+      }
+
+      if (input.action === "reject") {
+        return ctx.db.questInstance.update({
+          where: { id: input.instanceId },
+          data: {
+            status: "rejected",
+            rejectionReason: input.rejectionReason || null,
+          },
+        });
+      }
+
+      // return
+      return ctx.db.questInstance.update({
+        where: { id: input.instanceId },
+        data: { status: "accepted" },
+      });
+    }),
+
+  pending: protectedProcedure
+    .input(z.object({ guildId: z.uuid() }))
+    .query(async ({ ctx, input }) => {
+      await assertGuildMaster(ctx, input.guildId);
+
+      return ctx.db.questInstance.findMany({
+        where: {
+          status: "pending_review",
+          quest: { guildId: input.guildId },
+        },
+        include: {
+          quest: { select: { title: true, xpReward: true, goldReward: true } },
+          player: { select: { name: true } },
+        },
+        orderBy: { createdAt: "asc" },
+      });
+    }),
 });
 
 async function assertGuildMaster(
