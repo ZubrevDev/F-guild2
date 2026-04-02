@@ -26,6 +26,26 @@
     "settings": "Settings",
     "character": "Character"
   },
+  "auth": {
+    "loginTitle": "Welcome Back",
+    "loginDescription": "Sign in to your guild",
+    "registerTitle": "Create Account",
+    "registerDescription": "Start your adventure",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "loginButton": "Sign In",
+    "registerButton": "Create Account",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "invalidCredentials": "Invalid email or password",
+    "emailTaken": "Email already registered",
+    "registrationSuccess": "Account created! Please sign in."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome, {name}!"
+  },
   "home": {
     "title": "F-Guild",
     "description": "Turn everyday chores into epic adventures with DnD mechanics",

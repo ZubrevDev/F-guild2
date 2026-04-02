@@ -1,6 +1,9 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { authRouter } from "./auth";
 
 export const appRouter = router({
+  auth: authRouter,
+
   healthcheck: publicProcedure.query(() => {
     return { status: "ok", timestamp: new Date().toISOString() };
   }),

@@ -26,6 +26,26 @@
     "settings": "Настройки",
     "character": "Персонаж"
   },
+  "auth": {
+    "loginTitle": "С возвращением",
+    "loginDescription": "Войдите в свою гильдию",
+    "registerTitle": "Создать аккаунт",
+    "registerDescription": "Начните своё приключение",
+    "email": "Email",
+    "password": "Пароль",
+    "name": "Имя",
+    "loginButton": "Войти",
+    "registerButton": "Создать аккаунт",
+    "noAccount": "Нет аккаунта?",
+    "hasAccount": "Уже есть аккаунт?",
+    "invalidCredentials": "Неверный email или пароль",
+    "emailTaken": "Email уже зарегистрирован",
+    "registrationSuccess": "Аккаунт создан! Войдите."
+  },
+  "dashboard": {
+    "title": "Панель управления",
+    "welcome": "Добро пожаловать, {name}!"
+  },
   "home": {
     "title": "F-Guild",
     "description": "Превратите повседневные дела в эпические приключения с механикой DnD",
