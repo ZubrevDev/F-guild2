@@ -5,6 +5,7 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { TRPCProvider } from "@/components/providers";
 import "../globals.css";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
@@ -33,7 +34,7 @@ export default async function LocaleLayout({
     <html lang={locale} className="dark">
       <body className={inter.className}>
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <TRPCProvider>{children}</TRPCProvider>
         </NextIntlClientProvider>
       </body>
     </html>
