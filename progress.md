@@ -106,3 +106,10 @@
 **Summary:** quest.submit, quest.review (approve/reject/return), quest.pending. Submit меняет status→pending_review. Approve: $transaction начисляет XP/gold/faith. Reject с причиной. Return→accepted.
 **Коммит:** 93f86f3
 **Заметки:** Все 5 test_steps пройдены. Фото-подтверждение — TASK-017.
+
+### TASK-012: Базовый дашборд мастера: layout, навигация, обзор игроков
+**Статус:** done
+**Дата:** 2026-04-02
+**Summary:** Dashboard layout: sidebar (desktop, md:block) / bottom-nav (mobile, md:hidden). 8 разделов навигации. Player cards с классами, уровнями, XP. Counters pending quests / unread prayers. Activity feed placeholder. 7 placeholder страниц для разделов.
+**Коммит:** e3e324a
+**Заметки:** Все 5 test_steps пройдены. Мок-данные для игроков; реальные данные при подключении guild context.

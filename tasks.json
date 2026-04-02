@@ -290,7 +290,7 @@
         "Шаг 5: Activity feed отображает последние события"
       ],
       "dependencies": ["TASK-008", "TASK-011"],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-013",
