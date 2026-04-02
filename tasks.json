@@ -130,7 +130,7 @@
         "Шаг 4: Проверить что Prisma клиент доступен в контексте процедур"
       ],
       "dependencies": ["TASK-002", "TASK-003"],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-006",

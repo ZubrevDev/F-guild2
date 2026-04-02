@@ -43,3 +43,10 @@
 **Summary:** next-intl 4.9.0. Prefix-based URL (/en/, /ru/, /fr/). Middleware с auto-detect языка браузера. Переводы: common, nav, home. LocaleSwitcher компонент. App переструктурирован на [locale]. / → 307 redirect на /en.
 **Коммит:** b9d2eb6
 **Заметки:** Все 5 test_steps пройдены через curl. Контент корректно переключается по локалям.
+
+### TASK-005: Настройка tRPC с базовым API-роутером
+**Статус:** done
+**Дата:** 2026-04-02
+**Summary:** tRPC v11 с superjson transformer. appRouter с healthcheck (public) и me (protected). fetchRequestHandler в App Router. React Query интеграция через TRPCProvider. Контекст с Prisma + сессией. protectedProcedure выбрасывает UNAUTHORIZED без сессии.
+**Коммит:** ee1587e
+**Заметки:** Все 4 test_steps пройдены. TypeScript типизация end-to-end работает.
