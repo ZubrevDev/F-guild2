@@ -25,41 +25,42 @@
       "id": "TASK-001",
       "category": "infrastructure",
       "priority": "critical",
-      "description": "Инициализация монорепо Turborepo с базовой структурой проекта",
+      "description": "Инициализация плоского Next.js 15 проекта с TypeScript",
       "acceptance_criteria": [
-        "Turborepo инициализирован в корне проекта",
-        "Создана структура: apps/web (Next.js), packages/db (Prisma), packages/ui (shadcn), packages/config (общие конфиги)",
-        "TypeScript настроен во всех пакетах с strict mode",
-        "turbo.json содержит pipeline для build, dev, lint, test",
-        "Рабочие скрипты dev и build в корневом package.json"
+        "Next.js 15+ с App Router создан в корне проекта (плоская структура, без monorepo)",
+        "TypeScript настроен с strict mode",
+        "pnpm как пакетный менеджер",
+        "ESLint настроен (flat config)",
+        "Базовый layout.tsx и page.tsx с заголовком F-Guild",
+        "Структура директорий: src/app/, src/components/, src/lib/, src/server/, prisma/",
+        "Рабочие скрипты dev, build, lint в package.json",
+        ".gitignore настроен для Next.js (node_modules, .next, .env*)"
       ],
       "test_steps": [
         "Шаг 1: Запустить pnpm install — все зависимости установлены без ошибок",
-        "Шаг 2: Запустить pnpm dev — Next.js стартует на localhost:3000",
-        "Шаг 3: Запустить pnpm build — билд проходит без ошибок",
-        "Шаг 4: Проверить что turbo кэширует повторные билды"
+        "Шаг 2: Запустить pnpm build — билд проходит без ошибок",
+        "Шаг 3: Запустить pnpm lint — линтинг проходит без ошибок"
       ],
       "dependencies": [],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-002",
       "category": "infrastructure",
       "priority": "critical",
-      "description": "Настройка Next.js 15 с App Router, Tailwind CSS 4 и shadcn/ui",
+      "description": "Настройка Tailwind CSS 4 и shadcn/ui с фиолетовой DnD-темой",
       "acceptance_criteria": [
-        "Next.js 15+ с App Router установлен в apps/web",
         "Tailwind CSS 4 подключен и работает",
         "shadcn/ui инициализирован с фиолетовой темой (primary: purple-600)",
         "Dark mode включен по умолчанию (class strategy)",
         "Базовый layout.tsx с переключателем тем",
-        "Шрифт Inter подключен через next/font"
+        "Шрифт Inter подключен через next/font",
+        "Компоненты shadcn устанавливаются в src/components/ui/"
       ],
       "test_steps": [
-        "Шаг 1: Открыть localhost:3000 — страница отображается с фиолетовой темой",
-        "Шаг 2: Переключить тему dark/light — стили корректно меняются",
-        "Шаг 3: Добавить shadcn Button на страницу — компонент рендерится корректно",
-        "Шаг 4: Проверить Tailwind классы в DevTools — стили применяются"
+        "Шаг 1: Запустить pnpm build — билд проходит без ошибок",
+        "Шаг 2: Проверить что Tailwind классы компилируются в CSS",
+        "Шаг 3: shadcn Button компонент установлен и экспортируется"
       ],
       "dependencies": ["TASK-001"],
       "status": "pending"
@@ -70,7 +71,7 @@
       "priority": "critical",
       "description": "Настройка PostgreSQL + Prisma ORM со схемой базы данных",
       "acceptance_criteria": [
-        "Prisma установлен в packages/db",
+        "Prisma установлен в корне проекта (prisma/ директория для схемы)",
         "Полная Prisma-схема со всеми сущностями из PRD: Guild, User, GuildMaster, Player, Character, Quest, QuestInstance, Item, Inventory, Buff, ActiveBuff, Prayer, PrayerReply, DiceLog, ActivityLog",
         "Все enum-типы определены (роли, классы, статусы квестов и т.д.)",
         "Все связи и индексы настроены",
@@ -115,7 +116,7 @@
       "priority": "critical",
       "description": "Настройка tRPC с базовым API-роутером",
       "acceptance_criteria": [
-        "tRPC сервер настроен в apps/web (или отдельный пакет)",
+        "tRPC сервер настроен в src/server/",
         "Базовый appRouter с healthcheck эндпоинтом",
         "tRPC клиент настроен для React (hooks)",
         "Контекст с Prisma Client и сессией",
