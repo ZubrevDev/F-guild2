@@ -238,6 +238,37 @@
     "filterByPlayer": "Filter by player",
     "allPlayers": "All Players"
   },
+  "shop": {
+    "title": "Shop",
+    "createItem": "Create Item",
+    "noItems": "No items in shop yet",
+    "noItemsDesc": "Create your first item to stock the shop",
+    "itemName": "Item Name",
+    "itemDescription": "Description",
+    "category": "Category",
+    "gameItem": "Game Item",
+    "realReward": "Real Reward",
+    "price": "Price (Gold)",
+    "stock": "Stock",
+    "unlimited": "Unlimited",
+    "levelRequired": "Level Required",
+    "classRequired": "Class Required",
+    "anyClass": "Any Class",
+    "effect": "Effect",
+    "buy": "Buy",
+    "equip": "Equip",
+    "unequip": "Unequip",
+    "use": "Use",
+    "inventory": "Inventory",
+    "noInventory": "No items in inventory",
+    "notEnoughGold": "Not enough gold",
+    "purchased": "Item purchased!",
+    "equipped": "Item equipped",
+    "used": "Item used",
+    "edit": "Edit",
+    "deactivate": "Deactivate",
+    "yourGold": "Your Gold"
+  },
   "admin": {
     "common": {
       "loading": "Loading..."

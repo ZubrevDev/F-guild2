@@ -238,6 +238,37 @@
     "filterByPlayer": "Filtrer par joueur",
     "allPlayers": "Tous les joueurs"
   },
+  "shop": {
+    "title": "Boutique",
+    "createItem": "Créer un article",
+    "noItems": "Pas encore d'articles",
+    "noItemsDesc": "Créez votre premier article pour remplir la boutique",
+    "itemName": "Nom de l'article",
+    "itemDescription": "Description",
+    "category": "Catégorie",
+    "gameItem": "Objet de jeu",
+    "realReward": "Récompense réelle",
+    "price": "Prix (Or)",
+    "stock": "Stock",
+    "unlimited": "Illimité",
+    "levelRequired": "Niveau requis",
+    "classRequired": "Classe requise",
+    "anyClass": "Toutes les classes",
+    "effect": "Effet",
+    "buy": "Acheter",
+    "equip": "Équiper",
+    "unequip": "Déséquiper",
+    "use": "Utiliser",
+    "inventory": "Inventaire",
+    "noInventory": "Pas d'objets dans l'inventaire",
+    "notEnoughGold": "Pas assez d'or",
+    "purchased": "Article acheté !",
+    "equipped": "Objet équipé",
+    "used": "Objet utilisé",
+    "edit": "Modifier",
+    "deactivate": "Désactiver",
+    "yourGold": "Votre or"
+  },
   "admin": {
     "common": {
       "loading": "Chargement..."

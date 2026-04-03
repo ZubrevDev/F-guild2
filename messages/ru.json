@@ -238,6 +238,37 @@
     "filterByPlayer": "Фильтр по игроку",
     "allPlayers": "Все игроки"
   },
+  "shop": {
+    "title": "Магазин",
+    "createItem": "Создать товар",
+    "noItems": "В магазине пока пусто",
+    "noItemsDesc": "Создайте первый товар для магазина",
+    "itemName": "Название товара",
+    "itemDescription": "Описание",
+    "category": "Категория",
+    "gameItem": "Игровой предмет",
+    "realReward": "Реальная награда",
+    "price": "Цена (золото)",
+    "stock": "Запас",
+    "unlimited": "Безлимитный",
+    "levelRequired": "Требуемый уровень",
+    "classRequired": "Требуемый класс",
+    "anyClass": "Любой класс",
+    "effect": "Эффект",
+    "buy": "Купить",
+    "equip": "Надеть",
+    "unequip": "Снять",
+    "use": "Использовать",
+    "inventory": "Инвентарь",
+    "noInventory": "В инвентаре пусто",
+    "notEnoughGold": "Недостаточно золота",
+    "purchased": "Товар куплен!",
+    "equipped": "Предмет надет",
+    "used": "Предмет использован",
+    "edit": "Редактировать",
+    "deactivate": "Деактивировать",
+    "yourGold": "Ваше золото"
+  },
   "admin": {
     "common": {
       "loading": "Загрузка..."
