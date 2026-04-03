@@ -155,3 +155,10 @@
 **Summary:** timerSeconds поле в Quest модели. startTimer/completeTimer tRPC процедуры. Серверная валидация elapsed time (±2s tolerance). confirmationData хранит timerStartedAt/timerSeconds/timerCompletedAt. Submit schema расширена type "timer".
 **Коммит:** d50d9ac
 **Заметки:** Нужен prisma db push для синхронизации timer_seconds колонки. UI таймера будет в отдельной задаче.
+
+### TASK-022: Дайс-механика: серверный бросок d20 с модификаторами
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** src/lib/dice.ts: rollD20() через crypto.getRandomValues. Dice router: roll procedure с characterId, context, dc. Формула: d20 + ability + item + buff модификаторы. Каждый бросок → DiceLog запись. Возвращает {roll, modifiers, total, success, dc}.
+**Коммит:** b4dfe49
+**Заметки:** Модификаторы собираются из character stats, inventory items, active buffs. DiceLog хранит полную историю бросков.
