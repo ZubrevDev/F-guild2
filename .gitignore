@@ -46,5 +46,14 @@ prisma/*.db-journal
 public/uploads/*
 !public/uploads/.gitkeep
 
+# Android build artifacts
+android/app/build/
+android/.gradle/
+android/build/
+android/local.properties
+android/app/src/main/assets/capacitorhash
+*.apk
+*.aab
+
 # OS
 Thumbs.db
