@@ -190,3 +190,39 @@
 **Summary:** Prayer router: send, reply, listForMaster, listForPlayer, getThread, unreadCount. Стоимость молитвы: 1 faith point. Серверная валидация баланса. Threaded replies. Приватность: игрок видит только свои молитвы.
 **Коммит:** 0669e00
 **Заметки:** assertGuildMaster на master endpoints. Другие игроки не видят чужих молитв.
+
+### TASK-021: Дерево способностей: отображение и выбор при левел-апе
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** ability-trees.ts: 6 классов × 3 ветки × 3 тира. character.availableAbilities, learnAbility, abilities процедуры. 1 ability point per level (start lv2). Prerequisites validation. Effects: dice_modifier, xp_bonus, gold_bonus, special_action.
+**Коммит:** ea8e526
+
+### TASK-025: Интеграция баффов в систему наград: модификаторы XP и золота
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** buff-modifiers.ts: calculateBuffModifiers, applyModifier. Quest review approve учитывает xp_bonus/penalty, gold_bonus/penalty баффы. Модификаторы стекаются аддитивно.
+**Коммит:** a16e179
+
+### TASK-010: Аутентификация игрока по QR-коду
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** qrcode пакет. player.getQrCode, regenerateQrToken процедуры. API route /api/qr/[token] для PNG. QR содержит URL с invite code, player name, guild ID.
+**Коммит:** 635e64a
+
+### TASK-030: Дайс-лог: история всех бросков d20 для мастера
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** dice.log (фильтрация по player/date/context, пагинация), dice.stats (avgRoll, criticalHits/Fails, successRate). CSV export через /api/dice-log/export.
+**Коммит:** f6a0c2a
+
+### TASK-027: Торговая гильдия: каталог и покупка (игрок)
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** shop.purchase (транзакция: gold deduction, stock decrement, InventoryItem creation). shop.inventory, shop.purchaseHistory. Валидация: level, class, gold, stock.
+**Коммит:** a73b0e1
+
+### TASK-043: GDPR/COPPA: согласие, минимизация данных, политика хранения
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** consentedAt, ageVerified в User модели. auth.register требует consent + ageVerified. auth.exportData, auth.deleteAccount эндпоинты. Чекбоксы на register page. i18n en/ru/fr.
+**Коммит:** f9d5d04
