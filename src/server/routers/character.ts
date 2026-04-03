@@ -2,6 +2,12 @@ import { z } from "zod/v4";
 import { TRPCError } from "@trpc/server";
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { xpProgress, MAX_LEVEL } from "@/lib/leveling";
+import {
+  getAbilityTree,
+  getAvailableAbilities,
+  getAbilityPoints,
+  findAbility,
+} from "@/lib/ability-trees";
 
 const CLASS_STATS: Record<
   string,
@@ -107,6 +113,128 @@ export const characterRouter = router({
         currentXp: character.xp,
         ...progress,
         maxLevel: MAX_LEVEL,
+      };
+    }),
+
+  /** Returns the full ability tree for a character's class with learned status. */
+  abilities: publicProcedure
+    .input(z.object({ playerId: z.uuid() }))
+    .query(async ({ ctx, input }) => {
+      const character = await ctx.db.character.findUnique({
+        where: { playerId: input.playerId },
+      });
+      if (!character) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Character not found" });
+      }
+
+      const learnedIds = character.abilities as string[];
+      const tree = getAbilityTree(character.class);
+      const totalPoints = getAbilityPoints(character.level);
+      const usedPoints = learnedIds.length;
+
+      return {
+        characterClass: character.class,
+        level: character.level,
+        totalPoints,
+        usedPoints,
+        remainingPoints: totalPoints - usedPoints,
+        abilities: tree.map((ability) => ({
+          ...ability,
+          learned: learnedIds.includes(ability.id),
+        })),
+      };
+    }),
+
+  /** Returns abilities that the character can currently learn. */
+  availableAbilities: publicProcedure
+    .input(z.object({ playerId: z.uuid() }))
+    .query(async ({ ctx, input }) => {
+      const character = await ctx.db.character.findUnique({
+        where: { playerId: input.playerId },
+      });
+      if (!character) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Character not found" });
+      }
+
+      const learnedIds = character.abilities as string[];
+      const available = getAvailableAbilities(character.class, character.level, learnedIds);
+      const totalPoints = getAbilityPoints(character.level);
+      const remainingPoints = totalPoints - learnedIds.length;
+
+      return {
+        remainingPoints,
+        abilities: available,
+      };
+    }),
+
+  /** Player picks an ability on level-up. */
+  learnAbility: publicProcedure
+    .input(
+      z.object({
+        playerId: z.uuid(),
+        abilityId: z.string().min(1),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const character = await ctx.db.character.findUnique({
+        where: { playerId: input.playerId },
+      });
+      if (!character) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Character not found" });
+      }
+
+      const learnedIds = character.abilities as string[];
+
+      // Check ability points
+      const totalPoints = getAbilityPoints(character.level);
+      if (learnedIds.length >= totalPoints) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "No ability points available",
+        });
+      }
+
+      // Check ability exists and belongs to class
+      const ability = findAbility(input.abilityId);
+      if (!ability) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Ability not found" });
+      }
+      if (ability.class !== character.class) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Ability does not belong to your class",
+        });
+      }
+
+      // Check not already learned
+      if (learnedIds.includes(input.abilityId)) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Ability already learned",
+        });
+      }
+
+      // Check prerequisites
+      const missingPrereqs = ability.prerequisiteIds.filter(
+        (preId) => !learnedIds.includes(preId)
+      );
+      if (missingPrereqs.length > 0) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Prerequisites not met",
+        });
+      }
+
+      // Learn the ability
+      const updatedAbilities = [...learnedIds, input.abilityId];
+      await ctx.db.character.update({
+        where: { playerId: input.playerId },
+        data: { abilities: updatedAbilities },
+      });
+
+      return {
+        learned: ability,
+        remainingPoints: totalPoints - updatedAbilities.length,
       };
     }),
 });
