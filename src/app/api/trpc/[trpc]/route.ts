@@ -1,6 +1,7 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter } from "@/server/routers/_app";
 import { createContext } from "@/server/trpc";
+import type { Context } from "@/server/trpc";
 import { auth } from "@/auth";
 import {
   checkRateLimit,
@@ -59,19 +60,13 @@ async function handler(req: Request) {
 
   const session = await auth();
 
-  let sessionCtx: { userId: string; role: "master" | "player" | "platform_admin" } | undefined;
+  let sessionCtx: NonNullable<Context["session"]> | undefined;
 
   if (session?.user?.id) {
-    // Check isPlatformAdmin flag from DB for the authenticated user
-    const { db } = await import("@/server/db");
-    const dbUser = await db.user.findUnique({
-      where: { id: session.user.id },
-      select: { isPlatformAdmin: true },
-    });
-
     sessionCtx = {
       userId: session.user.id,
-      role: dbUser?.isPlatformAdmin ? "platform_admin" : "master",
+      role: session.user.role ?? "master",
+      guildId: session.user.guildId ?? null,
     };
   }
 

@@ -4,7 +4,7 @@ import { db } from "./db";
 
 export type Context = {
   db: typeof db;
-  session: { userId: string; role: "master" | "player" | "platform_admin" } | null;
+  session: { userId: string; role: "master" | "player" | "platform_admin"; guildId: string | null } | null;
 };
 
 export function createContext(opts?: {
