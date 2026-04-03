@@ -12,6 +12,7 @@ import { activityRouter } from "./activity";
 import { settingsRouter } from "./settings";
 import { notificationRouter } from "./notification";
 import { subscriptionRouter } from "./subscription";
+import { pushRouter } from "./push";
 
 export const appRouter = router({
   auth: authRouter,
@@ -27,6 +28,7 @@ export const appRouter = router({
   settings: settingsRouter,
   notification: notificationRouter,
   subscription: subscriptionRouter,
+  push: pushRouter,
 
   healthcheck: publicProcedure.query(() => {
     return { status: "ok", timestamp: new Date().toISOString() };

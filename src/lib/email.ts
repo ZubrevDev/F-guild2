@@ -16,7 +16,15 @@ import { checkRateLimit, type RateLimitConfig } from "./rate-limit";
 // Configuration
 // ---------------------------------------------------------------------------
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy singleton — avoids throwing at module-load time when RESEND_API_KEY is
+// not set in build environments (e.g. Next.js static page data collection).
+let _resend: Resend | null = null;
+function getResend(): Resend {
+  if (!_resend) {
+    _resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return _resend;
+}
 
 const EMAIL_FROM =
   process.env.EMAIL_FROM ?? "Guild <noreply@guild.example.com>";
@@ -79,7 +87,7 @@ export async function sendEmail<T extends EmailTemplateType>(
 
   // 4. Send via Resend
   try {
-    const response = await resend.emails.send({
+    const response = await getResend().emails.send({
       from: EMAIL_FROM,
       to,
       subject,
