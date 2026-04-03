@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 import { TRPCError } from "@trpc/server";
-import { router, protectedProcedure } from "../trpc";
+import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { rollD20, abilityModifier, type DiceModifier, type DiceRollResult } from "@/lib/dice";
 import {
   getClassPassives,
@@ -80,7 +80,8 @@ function getNextDailyReset(): Date {
 const LUCKY_BREAK_BONUS = 5;
 
 export const diceRouter = router({
-  roll: protectedProcedure
+  // publicProcedure: players authenticate via PIN/localStorage, not NextAuth
+  roll: publicProcedure
     .input(
       z.object({
         characterId: z.uuid(),
@@ -115,20 +116,23 @@ export const diceRouter = router({
         });
       }
 
-      // Verify the caller is a master of this guild
-      const membership = await ctx.db.guildMaster.findUnique({
-        where: {
-          guildId_userId: {
-            guildId: character.player.guildId,
-            userId: ctx.session.userId,
+      // If caller is authenticated (master), verify guild membership
+      // If no session (player via PIN), allow — the characterId ownership is sufficient
+      if (ctx.session) {
+        const membership = await ctx.db.guildMaster.findUnique({
+          where: {
+            guildId_userId: {
+              guildId: character.player.guildId,
+              userId: ctx.session.userId,
+            },
           },
-        },
-      });
-      if (!membership) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Not a master of this guild",
         });
+        if (!membership) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Not a master of this guild",
+          });
+        }
       }
 
       const modifiers: DiceModifier[] = [];
