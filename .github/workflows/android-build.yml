@@ -76,25 +76,24 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
 
-  distribute:
-    needs: build-apk
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-
-    steps:
-      - name: Download APK artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: f-guild-debug-${{ github.sha }}
-
-      - name: Upload to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{ secrets.FIREBASE_APP_ID }}
-          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          groups: internal-testers
-          file: app-debug.apk
-          releaseNotes: |
-            Build from commit ${{ github.sha }}
-            Branch: ${{ github.ref_name }}
-            Message: ${{ github.event.head_commit.message }}
+  # Firebase App Distribution — uncomment when internal-testers group is created
+  # distribute:
+  #   needs: build-apk
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #   steps:
+  #     - name: Download APK artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: f-guild-debug-${{ github.sha }}
+  #     - name: Upload to Firebase App Distribution
+  #       uses: wzieba/Firebase-Distribution-Github-Action@v1
+  #       with:
+  #         appId: ${{ secrets.FIREBASE_APP_ID }}
+  #         serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+  #         groups: internal-testers
+  #         file: app-debug.apk
+  #         releaseNotes: |
+  #           Build from commit ${{ github.sha }}
+  #           Branch: ${{ github.ref_name }}
+  #           Message: ${{ github.event.head_commit.message }}
