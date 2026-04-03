@@ -7,6 +7,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
 const INPUT_CLASS =
   "mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary";
 
@@ -31,6 +32,7 @@ function getAvatarColor(name: string): string {
 }
 
 type AuthMethod = "pin" | "qr" | "email";
+type CharacterClass = "fighter" | "wizard" | "ranger" | "cleric" | "rogue" | "bard";
 
 interface ResetPinState {
   playerId: string;
@@ -42,8 +44,23 @@ interface QrDialogState {
   playerName: string;
 }
 
+interface CreateCharDialogState {
+  playerId: string;
+  playerName: string;
+}
+
+const CLASS_DATA: { key: CharacterClass; emoji: string }[] = [
+  { key: "fighter", emoji: "⚔️" },
+  { key: "wizard", emoji: "🪄" },
+  { key: "ranger", emoji: "🌲" },
+  { key: "cleric", emoji: "✝️" },
+  { key: "rogue", emoji: "👁️" },
+  { key: "bard", emoji: "🎵" },
+];
+
 export default function PlayersPage() {
   const t = useTranslations("players");
+  const tc = useTranslations("character");
   const { data: session } = useSession();
   const guildId = (session?.user as { guildId?: string } | undefined)?.guildId;
 
@@ -62,6 +79,11 @@ export default function PlayersPage() {
   const [resetPin, setResetPin] = useState<ResetPinState | null>(null);
   const [resetError, setResetError] = useState("");
   const [resetSuccess, setResetSuccess] = useState("");
+
+  // Create Character dialog state
+  const [createCharDialog, setCreateCharDialog] = useState<CreateCharDialogState | null>(null);
+  const [selectedClass, setSelectedClass] = useState<CharacterClass | null>(null);
+  const [createCharError, setCreateCharError] = useState("");
 
   const utils = trpc.useUtils();
 
@@ -93,6 +115,18 @@ export default function PlayersPage() {
     },
     onError: (err) => {
       setResetError(err.message);
+    },
+  });
+
+  const createCharMutation = trpc.character.create.useMutation({
+    onSuccess: () => {
+      utils.player.list.invalidate({ guildId: guildId! });
+      setCreateCharDialog(null);
+      setSelectedClass(null);
+      setCreateCharError("");
+    },
+    onError: (err) => {
+      setCreateCharError(err.message);
     },
   });
 
@@ -136,10 +170,27 @@ export default function PlayersPage() {
     });
   }
 
+  function handleCreateCharSubmit() {
+    if (!createCharDialog || !selectedClass) return;
+    createCharMutation.mutate({ playerId: createCharDialog.playerId, class: selectedClass });
+  }
+
   function authMethodLabel(method: AuthMethod): string {
     if (method === "pin") return t("pinMethod");
     if (method === "qr") return t("qrMethod");
     return t("emailMethod");
+  }
+
+  function openCreateCharDialog(playerId: string, playerName: string) {
+    setCreateCharDialog({ playerId, playerName });
+    setSelectedClass(null);
+    setCreateCharError("");
+  }
+
+  function closeCreateCharDialog() {
+    setCreateCharDialog(null);
+    setSelectedClass(null);
+    setCreateCharError("");
   }
 
   if (!guildId) {
@@ -229,6 +280,7 @@ export default function PlayersPage() {
                       <button
                         type="button"
                         className="text-xs text-primary underline underline-offset-2 hover:no-underline"
+                        onClick={() => openCreateCharDialog(player.id, player.name)}
                       >
                         {t("createCharacter")}
                       </button>
@@ -442,6 +494,73 @@ export default function PlayersPage() {
             >
               Close
             </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Create Character dialog */}
+      {createCharDialog && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeCreateCharDialog();
+          }}
+        >
+          <div className="w-full max-w-lg rounded-lg bg-background p-6 shadow-xl">
+            <h2 className="mb-1 text-lg font-semibold">{tc("selectClass")}</h2>
+            <p className="mb-4 text-sm text-muted-foreground">{createCharDialog.playerName}</p>
+
+            {/* 6 class cards: 1 col mobile, 2 col sm, 3 col md */}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+              {CLASS_DATA.map(({ key, emoji }) => {
+                const isSelected = selectedClass === key;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setSelectedClass(key)}
+                    className={[
+                      "rounded-lg border p-3 text-left transition-colors",
+                      "hover:border-primary hover:bg-primary/5",
+                      isSelected
+                        ? "border-primary bg-primary/10 ring-2 ring-primary"
+                        : "border-input bg-card",
+                    ].join(" ")}
+                  >
+                    <div className="mb-1 text-2xl" aria-hidden="true">
+                      {emoji}
+                    </div>
+                    <div className="text-sm font-semibold">{tc(key)}</div>
+                    <div className="mt-0.5 text-xs text-muted-foreground">
+                      {tc(`${key}Desc` as Parameters<typeof tc>[0])}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {createCharError && (
+              <p className="mt-3 text-sm text-destructive">{createCharError}</p>
+            )}
+
+            <div className="mt-4 flex gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                onClick={closeCreateCharDialog}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                className="flex-1"
+                disabled={!selectedClass || createCharMutation.isPending}
+                onClick={handleCreateCharSubmit}
+              >
+                {createCharMutation.isPending ? "…" : tc("create")}
+              </Button>
+            </div>
           </div>
         </div>
       )}

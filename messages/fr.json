@@ -119,6 +119,32 @@
     "playerCreated": "Joueur créé avec succès",
     "pinReset": "PIN réinitialisé avec succès"
   },
+  "character": {
+    "createCharacter": "Créer un personnage",
+    "selectClass": "Choisissez une classe",
+    "create": "Créer",
+    "fighter": "Guerrier",
+    "fighterDesc": "Guerrier puissant — relance 1 fois par jour",
+    "wizard": "Mage",
+    "wizardDesc": "Maître des arcanes — auto-20 une fois par jour",
+    "ranger": "Rôdeur",
+    "rangerDesc": "Guide naturel — +2 aux jets en extérieur",
+    "cleric": "Clerc",
+    "clericDesc": "Protecteur divin — prière gratuite une fois par jour",
+    "rogue": "Voleur",
+    "rogueDesc": "Chanceux — +5 rétroactif une fois par jour",
+    "bard": "Barde",
+    "bardDesc": "Allié inspirant — +3 au prochain jet d'un ami",
+    "level": "Niveau",
+    "xp": "XP",
+    "gold": "Or",
+    "faith": "Points de foi",
+    "strength": "FOR",
+    "dexterity": "DEX",
+    "intelligence": "INT",
+    "wisdom": "SAG",
+    "charisma": "CHA"
+  },
   "admin": {
     "common": {
       "loading": "Chargement..."

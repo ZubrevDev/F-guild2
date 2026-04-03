@@ -119,6 +119,32 @@
     "playerCreated": "Player created successfully",
     "pinReset": "PIN reset successfully"
   },
+  "character": {
+    "createCharacter": "Create Character",
+    "selectClass": "Choose a Class",
+    "create": "Create",
+    "fighter": "Fighter",
+    "fighterDesc": "Strong warrior — re-roll once per day",
+    "wizard": "Wizard",
+    "wizardDesc": "Arcane master — auto-20 once per day",
+    "ranger": "Ranger",
+    "rangerDesc": "Nature guide — +2 to outdoor rolls",
+    "cleric": "Cleric",
+    "clericDesc": "Divine protector — free prayer once per day",
+    "rogue": "Rogue",
+    "rogueDesc": "Lucky trickster — +5 retroactive bonus",
+    "bard": "Bard",
+    "bardDesc": "Inspiring ally — +3 to friend's next roll",
+    "level": "Level",
+    "xp": "XP",
+    "gold": "Gold",
+    "faith": "Faith Points",
+    "strength": "STR",
+    "dexterity": "DEX",
+    "intelligence": "INT",
+    "wisdom": "WIS",
+    "charisma": "CHA"
+  },
   "admin": {
     "common": {
       "loading": "Loading..."

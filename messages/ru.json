@@ -119,6 +119,32 @@
     "playerCreated": "Игрок создан",
     "pinReset": "PIN сброшен"
   },
+  "character": {
+    "createCharacter": "Создать персонажа",
+    "selectClass": "Выберите класс",
+    "create": "Создать",
+    "fighter": "Воин",
+    "fighterDesc": "Сильный воин — перебросок 1 раз в день",
+    "wizard": "Маг",
+    "wizardDesc": "Мастер магии — авто-20 раз в день",
+    "ranger": "Следопыт",
+    "rangerDesc": "Проводник — +2 к броскам на природе",
+    "cleric": "Жрец",
+    "clericDesc": "Защитник — бесплатная молитва раз в день",
+    "rogue": "Плут",
+    "rogueDesc": "Счастливчик — +5 ретроактивно раз в день",
+    "bard": "Бард",
+    "bardDesc": "Вдохновитель — +3 к броску друга",
+    "level": "Уровень",
+    "xp": "Опыт",
+    "gold": "Золото",
+    "faith": "Очки веры",
+    "strength": "СИЛ",
+    "dexterity": "ЛОВ",
+    "intelligence": "ИНТ",
+    "wisdom": "МДР",
+    "charisma": "ХАР"
+  },
   "admin": {
     "common": {
       "loading": "Загрузка..."
