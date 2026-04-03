@@ -2,11 +2,14 @@
 
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
-import { Sword, User, ShoppingBag, MessageCircle } from "lucide-react";
+import { LayoutDashboard, Sword, User, ShoppingBag, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { usePlayerSession } from "@/lib/player-session";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 
 const navItems = [
-  { key: "quests", href: "/player", icon: Sword },
+  { key: "home", href: "/player", icon: LayoutDashboard },
+  { key: "quests", href: "/player/quests", icon: Sword },
   { key: "character", href: "/player/character", icon: User },
   { key: "shop", href: "/player/shop", icon: ShoppingBag },
   { key: "prayers", href: "/player/prayers", icon: MessageCircle },
@@ -19,24 +22,69 @@ export default function PlayerLayout({
 }) {
   const t = useTranslations("nav");
   const pathname = usePathname();
+  const { session } = usePlayerSession();
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <main className="flex-1 p-4 pb-20 lg:pb-4">{children}</main>
-
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card lg:static lg:border-t-0 lg:border-r lg:order-first lg:w-56">
-        <div className="flex justify-around lg:flex-col lg:gap-1 lg:p-4">
+    <div className="flex min-h-screen">
+      {/* Desktop sidebar */}
+      <aside className="hidden w-56 shrink-0 border-r border-purple-500/15 bg-[#130e28] md:flex md:flex-col">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-purple-500/15">
+          <span className="text-sm font-semibold text-foreground">{session?.playerName}</span>
+          {session?.playerId && (
+            <NotificationBell recipientType="player" recipientId={session.playerId} />
+          )}
+        </div>
+        <nav className="flex flex-col gap-0.5 px-3 pt-4">
           {navItems.map(({ key, href, icon: Icon }) => {
-            const isActive = pathname === href || (href !== "/player" && pathname.startsWith(href));
+            const isActive =
+              href === "/player"
+                ? pathname === "/player"
+                : pathname === href || pathname.startsWith(href + "/");
             return (
               <Link
                 key={key}
                 href={href}
                 className={cn(
-                  "flex flex-col items-center gap-1 px-3 py-2 text-xs lg:flex-row lg:gap-3 lg:rounded-md lg:px-4 lg:py-2.5 lg:text-sm",
+                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200",
                   isActive
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "sidebar-active-item text-white font-medium shadow-md shadow-purple-500/10"
+                    : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                )}
+              >
+                <Icon className="h-[18px] w-[18px]" />
+                {t(key)}
+              </Link>
+            );
+          })}
+        </nav>
+      </aside>
+
+      {/* Main content */}
+      <main className="flex-1 p-4 pt-14 pb-20 md:p-6 md:pt-6 md:pb-6">{children}</main>
+
+      {/* Mobile top bar with notifications */}
+      {session?.playerId && (
+        <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-2 border-b border-purple-500/15 bg-[#130e28] md:hidden">
+          <span className="text-sm font-medium text-foreground">{session.playerName}</span>
+          <NotificationBell recipientType="player" recipientId={session.playerId} />
+        </div>
+      )}
+
+      {/* Mobile bottom nav */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-purple-500/15 bg-[#130e28] md:hidden">
+        <div className="flex justify-around">
+          {navItems.map(({ key, href, icon: Icon }) => {
+            const isActive =
+              href === "/player"
+                ? pathname === "/player"
+                : pathname === href || pathname.startsWith(href + "/");
+            return (
+              <Link
+                key={key}
+                href={href}
+                className={cn(
+                  "flex flex-col items-center gap-0.5 px-2 py-2 text-[10px] transition-colors",
+                  isActive ? "text-purple-400" : "text-muted-foreground"
                 )}
               >
                 <Icon className="h-5 w-5" />
