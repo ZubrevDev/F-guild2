@@ -44,7 +44,7 @@
     "orContinueWith": "Или продолжить с",
     "signInWithGoogle": "Войти через Google",
     "signInWithApple": "Войти через Apple",
-    "consentLabel": "Я принимаю {terms} и {privacy}",
+    "consentLabel": "Я принимаю <terms>Условия использования</terms> и <privacy>Политику конфиденциальности</privacy>",
     "termsOfService": "Условия использования",
     "privacyPolicy": "Политику конфиденциальности",
     "ageVerification": "Я подтверждаю, что мне не менее 13 лет",
@@ -83,6 +83,22 @@
     "title": "F-Guild",
     "description": "Превратите повседневные дела в эпические приключения с механикой DnD",
     "getStarted": "Начать приключение"
+  },
+  "guilds": {
+    "title": "Ваши гильдии",
+    "createGuild": "Создать гильдию",
+    "guildName": "Название гильдии",
+    "guildDescription": "Описание (необязательно)",
+    "create": "Создать",
+    "joinGuild": "Присоединиться к гильдии",
+    "inviteCode": "Код приглашения",
+    "join": "Присоединиться",
+    "noGuilds": "Гильдий пока нет",
+    "noGuildsDesc": "Создайте свою первую гильдию или присоединитесь к существующей",
+    "selectGuild": "Выберите гильдию",
+    "orJoinExisting": "Или присоединитесь по коду приглашения",
+    "players": "{count} игроков",
+    "created": "Создана {date}"
   },
   "admin": {
     "common": {

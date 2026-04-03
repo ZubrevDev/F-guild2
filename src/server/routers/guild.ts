@@ -125,6 +125,27 @@ export const guildRouter = router({
     return memberships.map((m) => ({ ...m.guild, role: m.role }));
   }),
 
+  joinByInviteCode: protectedProcedure
+    .input(z.object({ inviteCode: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      const guild = await ctx.db.guild.findFirst({
+        where: { inviteCode: input.inviteCode, isActive: true },
+      });
+      if (!guild) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Guild not found" });
+      }
+      const existing = await ctx.db.guildMaster.findUnique({
+        where: { guildId_userId: { guildId: guild.id, userId: ctx.session.userId } },
+      });
+      if (existing) {
+        throw new TRPCError({ code: "CONFLICT", message: "Already a member" });
+      }
+      await ctx.db.guildMaster.create({
+        data: { guildId: guild.id, userId: ctx.session.userId, role: "master" },
+      });
+      return guild;
+    }),
+
   addMaster: protectedProcedure
     .input(z.object({ guildId: z.uuid(), email: z.email() }))
     .mutation(async ({ ctx, input }) => {

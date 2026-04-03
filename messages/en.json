@@ -44,7 +44,7 @@
     "orContinueWith": "Or continue with",
     "signInWithGoogle": "Sign in with Google",
     "signInWithApple": "Sign in with Apple",
-    "consentLabel": "I accept the {terms} and {privacy}",
+    "consentLabel": "I accept the <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>",
     "termsOfService": "Terms of Service",
     "privacyPolicy": "Privacy Policy",
     "ageVerification": "I confirm that I am at least 13 years old",
@@ -83,6 +83,22 @@
     "title": "F-Guild",
     "description": "Turn everyday chores into epic adventures with DnD mechanics",
     "getStarted": "Start Your Adventure"
+  },
+  "guilds": {
+    "title": "Your Guilds",
+    "createGuild": "Create New Guild",
+    "guildName": "Guild Name",
+    "guildDescription": "Description (optional)",
+    "create": "Create",
+    "joinGuild": "Join Existing Guild",
+    "inviteCode": "Invite Code",
+    "join": "Join",
+    "noGuilds": "No guilds yet",
+    "noGuildsDesc": "Create your first guild or join an existing one",
+    "selectGuild": "Select a Guild",
+    "orJoinExisting": "Or join with an invite code",
+    "players": "{count} players",
+    "created": "Created {date}"
   },
   "admin": {
     "common": {
