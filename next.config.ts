@@ -10,9 +10,9 @@ const securityHeaders = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // unsafe-eval needed for Next.js dev; stripped in production via middleware if needed
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https:",
-      "font-src 'self'",
-      "connect-src 'self'",
+      "img-src 'self' data: blob: https: capacitor:",
+      "font-src 'self' https:",
+      "connect-src 'self' https: capacitor: ws: wss:",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",
