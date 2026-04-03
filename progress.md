@@ -148,3 +148,10 @@
 **Summary:** Upload API route (POST /api/upload) с валидацией MIME (jpeg/png/gif/webp/avif) и размера (5MB). Локальное хранилище public/uploads/. Quest submit schema расширена: type "photo" + photoUrl. Refine валидация photoUrl.
 **Коммит:** 9485d1d
 **Заметки:** Клиентская компрессия (browser-image-compression) будет при создании UI. Для прода нужна миграция на S3/R2.
+
+### TASK-018: Выполнение квестов: подтверждение таймером
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** timerSeconds поле в Quest модели. startTimer/completeTimer tRPC процедуры. Серверная валидация elapsed time (±2s tolerance). confirmationData хранит timerStartedAt/timerSeconds/timerCompletedAt. Submit schema расширена type "timer".
+**Коммит:** d50d9ac
+**Заметки:** Нужен prisma db push для синхронизации timer_seconds колонки. UI таймера будет в отдельной задаче.
