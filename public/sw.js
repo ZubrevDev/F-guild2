@@ -26,6 +26,71 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+self.addEventListener("push", (event) => {
+  const data = event.data?.json() ?? {};
+  event.waitUntil(
+    self.registration.showNotification(data.title ?? "Guild", {
+      body: data.body,
+      icon: "/icons/icon-192.svg",
+      badge: "/icons/icon-192.svg",
+      data: data.url ? { url: data.url } : {},
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = event.notification.data?.url ?? "/";
+  event.waitUntil(clients.openWindow(url));
+});
+
+// -------------------------------------------------------------------------
+// Background sync — replays queued offline actions when connectivity returns
+// -------------------------------------------------------------------------
+
+/**
+ * Reads pending items from the "fguild-offline" IndexedDB and posts a
+ * message to all open tabs so the React layer can call processSyncQueue().
+ * @returns {Promise<void>}
+ */
+async function syncOfflineActions() {
+  let db;
+  try {
+    db = await new Promise((resolve, reject) => {
+      const req = indexedDB.open("fguild-offline", 1);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  } catch {
+    // DB not yet initialised — nothing to sync
+    return;
+  }
+
+  const items = await new Promise((resolve, reject) => {
+    const tx = db.transaction("syncQueue", "readonly");
+    const store = tx.objectStore("syncQueue");
+    const req = store.getAll();
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+
+  if (!Array.isArray(items) || items.length === 0) return;
+
+  // Tell open tabs to run the queue through their tRPC executor
+  const windowClients = await self.clients.matchAll({ type: "window" });
+  for (const client of windowClients) {
+    client.postMessage({ type: "SYNC_OFFLINE_ACTIONS", count: items.length });
+  }
+}
+
+self.addEventListener("sync", (event) => {
+  if (event.tag === "fguild-sync") {
+    event.waitUntil(syncOfflineActions());
+  }
+});
+
+// -------------------------------------------------------------------------
+
 self.addEventListener("fetch", (event) => {
   const { request } = event;
 

@@ -9,6 +9,7 @@ import { routing } from "@/i18n/routing";
 import { TRPCProvider } from "@/components/providers";
 import { PostHogProvider } from "@/components/analytics/posthog-provider";
 import { RegisterSW } from "@/components/pwa/register-sw";
+import { OfflineIndicator } from "@/components/offline/offline-indicator";
 import "../globals.css";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
@@ -56,6 +57,7 @@ export default async function LocaleLayout({
           <PostHogProvider />
         </Suspense>
         <RegisterSW />
+        <OfflineIndicator />
       </body>
     </html>
   );
