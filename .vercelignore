@@ -1,0 +1,35 @@
+# Claude Code
+.claude/
+
+# Android / Capacitor
+android/
+dist/
+
+# Firebase
+google-services.json
+
+# Ralph loop / dev files
+progress.md
+ralph-prompt.md
+tasks.json
+
+# Docs
+docs/
+
+# Scripts
+scripts/
+
+# PRD
+prd/
+
+# IDE
+.vscode/
+.idea/
+
+# Environment (should use Vercel env vars)
+.env
+.env.local
+.env.*.local
+
+# Build artifacts
+*.tsbuildinfo

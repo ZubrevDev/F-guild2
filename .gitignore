@@ -58,5 +58,15 @@ android/app/src/main/assets/capacitorhash
 *.apk
 *.aab
 
+# Ralph Loop / dev workflow
+progress.md
+ralph-prompt.md
+tasks.json
+
+# Internal docs
+prd/
+docs/
+
 # OS
 Thumbs.db
+.vercel
