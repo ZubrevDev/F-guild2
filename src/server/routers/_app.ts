@@ -8,6 +8,8 @@ import { diceRouter } from "./dice";
 import { buffRouter } from "./buff";
 import { shopRouter } from "./shop";
 import { prayerRouter } from "./prayer";
+import { activityRouter } from "./activity";
+import { settingsRouter } from "./settings";
 
 export const appRouter = router({
   auth: authRouter,
@@ -19,6 +21,8 @@ export const appRouter = router({
   buff: buffRouter,
   shop: shopRouter,
   prayer: prayerRouter,
+  activity: activityRouter,
+  settings: settingsRouter,
 
   healthcheck: publicProcedure.query(() => {
     return { status: "ok", timestamp: new Date().toISOString() };
