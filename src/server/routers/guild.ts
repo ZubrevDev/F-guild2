@@ -5,8 +5,60 @@ import { router, protectedProcedure } from "../trpc";
 
 const MAX_MASTERS = 5;
 
+const CHARACTER_CLASSES = [
+  "fighter",
+  "wizard",
+  "ranger",
+  "cleric",
+  "rogue",
+  "bard",
+] as const;
+
+const guildSettingsSchema = z.object({
+  maxPlayers: z.number().int().min(1).max(100).optional(),
+  xpModifier: z.number().min(0.1).max(10).optional(),
+  allowedClasses: z.array(z.enum(CHARACTER_CLASSES)).optional(),
+  features: z
+    .object({
+      prayersEnabled: z.boolean().optional(),
+      shopEnabled: z.boolean().optional(),
+      diceRollsEnabled: z.boolean().optional(),
+    })
+    .optional(),
+});
+
+type GuildSettings = z.infer<typeof guildSettingsSchema>;
+
+const DEFAULT_SETTINGS: Required<GuildSettings> = {
+  maxPlayers: 50,
+  xpModifier: 1,
+  allowedClasses: [...CHARACTER_CLASSES],
+  features: {
+    prayersEnabled: true,
+    shopEnabled: true,
+    diceRollsEnabled: true,
+  },
+};
+
 function generateInviteCode(): string {
   return randomBytes(4).toString("hex").toUpperCase();
+}
+
+function mergeSettings(stored: unknown): Required<GuildSettings> {
+  const parsed =
+    typeof stored === "object" && stored !== null ? (stored as Partial<GuildSettings>) : {};
+  return {
+    maxPlayers: parsed.maxPlayers ?? DEFAULT_SETTINGS.maxPlayers,
+    xpModifier: parsed.xpModifier ?? DEFAULT_SETTINGS.xpModifier,
+    allowedClasses: parsed.allowedClasses ?? DEFAULT_SETTINGS.allowedClasses,
+    features: {
+      prayersEnabled:
+        parsed.features?.prayersEnabled ?? DEFAULT_SETTINGS.features.prayersEnabled,
+      shopEnabled: parsed.features?.shopEnabled ?? DEFAULT_SETTINGS.features.shopEnabled,
+      diceRollsEnabled:
+        parsed.features?.diceRollsEnabled ?? DEFAULT_SETTINGS.features.diceRollsEnabled,
+    },
+  };
 }
 
 export const guildRouter = router({
@@ -139,6 +191,86 @@ export const guildRouter = router({
       return ctx.db.guildMaster.delete({
         where: { guildId_userId: { guildId: input.guildId, userId: input.userId } },
       });
+    }),
+
+  getSettings: protectedProcedure
+    .input(z.object({ guildId: z.uuid() }))
+    .query(async ({ ctx, input }) => {
+      await assertGuildMaster(ctx, input.guildId);
+      const guild = await ctx.db.guild.findUnique({
+        where: { id: input.guildId },
+        select: { settings: true, name: true, description: true, inviteCode: true },
+      });
+      if (!guild) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Guild not found" });
+      }
+      return {
+        name: guild.name,
+        description: guild.description,
+        inviteCode: guild.inviteCode,
+        ...mergeSettings(guild.settings),
+      };
+    }),
+
+  updateSettings: protectedProcedure
+    .input(
+      z.object({
+        guildId: z.uuid(),
+        name: z.string().min(1).max(100).optional(),
+        description: z.string().max(500).optional(),
+        settings: guildSettingsSchema.optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await assertGuildOwner(ctx, input.guildId);
+
+      const guild = await ctx.db.guild.findUnique({
+        where: { id: input.guildId },
+        select: { settings: true },
+      });
+      if (!guild) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Guild not found" });
+      }
+
+      const currentSettings = mergeSettings(guild.settings);
+      const newSettings = input.settings
+        ? {
+            maxPlayers: input.settings.maxPlayers ?? currentSettings.maxPlayers,
+            xpModifier: input.settings.xpModifier ?? currentSettings.xpModifier,
+            allowedClasses: input.settings.allowedClasses ?? currentSettings.allowedClasses,
+            features: {
+              prayersEnabled:
+                input.settings.features?.prayersEnabled ??
+                currentSettings.features.prayersEnabled,
+              shopEnabled:
+                input.settings.features?.shopEnabled ?? currentSettings.features.shopEnabled,
+              diceRollsEnabled:
+                input.settings.features?.diceRollsEnabled ??
+                currentSettings.features.diceRollsEnabled,
+            },
+          }
+        : currentSettings;
+
+      return ctx.db.guild.update({
+        where: { id: input.guildId },
+        data: {
+          ...(input.name !== undefined && { name: input.name }),
+          ...(input.description !== undefined && { description: input.description }),
+          settings: newSettings,
+        },
+      });
+    }),
+
+  regenerateInviteCode: protectedProcedure
+    .input(z.object({ guildId: z.uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      await assertGuildOwner(ctx, input.guildId);
+      const guild = await ctx.db.guild.update({
+        where: { id: input.guildId },
+        data: { inviteCode: generateInviteCode() },
+        select: { inviteCode: true },
+      });
+      return guild;
     }),
 });
 
