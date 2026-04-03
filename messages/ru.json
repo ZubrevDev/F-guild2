@@ -298,6 +298,25 @@
     "applied": "Бафф применён!",
     "removed": "Бафф убран"
   },
+  "prayers": {
+    "title": "Молитвы",
+    "sendPrayer": "Отправить молитву",
+    "prayerText": "Ваша молитва...",
+    "noPrayers": "Молитв пока нет",
+    "noPrayersDesc": "Игроки отправят молитвы сюда",
+    "noPlayerPrayers": "Вы ещё не отправляли молитв",
+    "noPlayerPrayersDesc": "Отправьте молитву мастеру гильдии",
+    "unanswered": "Без ответа",
+    "answered": "Отвечено",
+    "reply": "Ответить",
+    "replyPlaceholder": "Ваш ответ...",
+    "send": "Отправить",
+    "faithCost": "Стоимость: 1 очко веры",
+    "clericFree": "Бесплатно (способность жреца)",
+    "faithBalance": "Очки веры: {count}",
+    "sent": "Молитва отправлена!",
+    "replied": "Ответ отправлен!"
+  },
   "admin": {
     "common": {
       "loading": "Загрузка..."

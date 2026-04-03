@@ -298,6 +298,25 @@
     "applied": "Buff appliqué !",
     "removed": "Buff retiré"
   },
+  "prayers": {
+    "title": "Prières",
+    "sendPrayer": "Envoyer une prière",
+    "prayerText": "Votre prière...",
+    "noPrayers": "Pas encore de prières",
+    "noPrayersDesc": "Les joueurs enverront des prières ici",
+    "noPlayerPrayers": "Pas encore de prières envoyées",
+    "noPlayerPrayersDesc": "Envoyez une prière au maître de guilde",
+    "unanswered": "Sans réponse",
+    "answered": "Répondu",
+    "reply": "Répondre",
+    "replyPlaceholder": "Votre réponse...",
+    "send": "Envoyer",
+    "faithCost": "Coûte 1 point de foi",
+    "clericFree": "Gratuit (capacité du clerc)",
+    "faithBalance": "Points de foi : {count}",
+    "sent": "Prière envoyée !",
+    "replied": "Réponse envoyée !"
+  },
   "admin": {
     "common": {
       "loading": "Chargement..."

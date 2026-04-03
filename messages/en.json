@@ -298,6 +298,25 @@
     "applied": "Buff applied!",
     "removed": "Buff removed"
   },
+  "prayers": {
+    "title": "Prayers",
+    "sendPrayer": "Send Prayer",
+    "prayerText": "Your prayer...",
+    "noPrayers": "No prayers yet",
+    "noPrayersDesc": "Players will send prayers here",
+    "noPlayerPrayers": "No prayers sent yet",
+    "noPlayerPrayersDesc": "Send a prayer to the guild master",
+    "unanswered": "Unanswered",
+    "answered": "Answered",
+    "reply": "Reply",
+    "replyPlaceholder": "Your reply...",
+    "send": "Send",
+    "faithCost": "Costs 1 faith point",
+    "clericFree": "Free (Cleric ability)",
+    "faithBalance": "Faith Points: {count}",
+    "sent": "Prayer sent!",
+    "replied": "Reply sent!"
+  },
   "admin": {
     "common": {
       "loading": "Loading..."
