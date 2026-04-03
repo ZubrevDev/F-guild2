@@ -168,6 +168,169 @@ export const shopRouter = router({
         orderBy: { createdAt: "desc" },
       });
     }),
+
+  purchase: publicProcedure
+    .input(
+      z.object({
+        playerId: z.uuid(),
+        itemId: z.uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const item = await ctx.db.item.findUnique({
+        where: { id: input.itemId },
+      });
+      if (!item) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Item not found" });
+      }
+      if (!item.isActive) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Item is no longer available",
+        });
+      }
+
+      const player = await ctx.db.player.findUnique({
+        where: { id: input.playerId },
+        include: { character: true },
+      });
+      if (!player) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Player not found",
+        });
+      }
+      if (player.guildId !== item.guildId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Player does not belong to this guild",
+        });
+      }
+      if (!player.character) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Player has no character",
+        });
+      }
+
+      const character = player.character;
+
+      if (character.level < item.levelRequired) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Requires level ${item.levelRequired}`,
+        });
+      }
+      if (item.classRequired && item.classRequired !== character.class) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Requires class ${item.classRequired}`,
+        });
+      }
+      if (character.gold < item.price) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Insufficient gold",
+        });
+      }
+      if (item.stock !== null && item.stock <= 0) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Item is out of stock",
+        });
+      }
+
+      return ctx.db.$transaction(async (tx) => {
+        await tx.character.update({
+          where: { id: character.id },
+          data: { gold: { decrement: item.price } },
+        });
+
+        if (item.stock !== null) {
+          await tx.item.update({
+            where: { id: item.id },
+            data: { stock: { decrement: 1 } },
+          });
+        }
+
+        const inventoryItem = await tx.inventory.create({
+          data: {
+            characterId: character.id,
+            itemId: item.id,
+          },
+          include: { item: true },
+        });
+
+        return inventoryItem;
+      });
+    }),
+
+  inventory: publicProcedure
+    .input(
+      z.object({
+        playerId: z.uuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const player = await ctx.db.player.findUnique({
+        where: { id: input.playerId },
+        include: { character: true },
+      });
+      if (!player) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Player not found",
+        });
+      }
+      if (!player.character) {
+        return [];
+      }
+
+      return ctx.db.inventory.findMany({
+        where: { characterId: player.character.id },
+        include: { item: true },
+        orderBy: { acquiredAt: "desc" },
+      });
+    }),
+
+  purchaseHistory: publicProcedure
+    .input(
+      z.object({
+        playerId: z.uuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const player = await ctx.db.player.findUnique({
+        where: { id: input.playerId },
+        include: { character: true },
+      });
+      if (!player) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Player not found",
+        });
+      }
+      if (!player.character) {
+        return [];
+      }
+
+      return ctx.db.inventory.findMany({
+        where: { characterId: player.character.id },
+        include: {
+          item: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+              category: true,
+              price: true,
+              imageUrl: true,
+            },
+          },
+        },
+        orderBy: { acquiredAt: "desc" },
+      });
+    }),
 });
 
 async function assertGuildMaster(
