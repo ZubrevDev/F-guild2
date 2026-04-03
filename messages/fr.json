@@ -203,7 +203,33 @@
     "addProof": "Ajouter une preuve",
     "noQuests": "Pas de quêtes disponibles",
     "noQuestsDesc": "Revenez plus tard pour de nouvelles quêtes",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "diceRoll": "Lancer de dé"
+  },
+  "dice": {
+    "roll": "Lancer d20",
+    "result": "Résultat",
+    "total": "Total",
+    "modifiers": "Modificateurs",
+    "success": "Succès !",
+    "failure": "Échec",
+    "criticalHit": "Coup critique !",
+    "criticalFail": "Échec critique !",
+    "diceLog": "Journal des dés",
+    "totalRolls": "Total des lancers",
+    "avgRoll": "Lancer moyen",
+    "crits": "Coups critiques",
+    "fails": "Échecs critiques",
+    "successRate": "Taux de réussite",
+    "exportCsv": "Exporter CSV",
+    "noRolls": "Pas encore de lancers",
+    "noRollsDesc": "Les lancers apparaîtront ici après les jets",
+    "date": "Date",
+    "player": "Joueur",
+    "context": "Contexte",
+    "dc": "CD",
+    "filterByPlayer": "Filtrer par joueur",
+    "allPlayers": "Tous les joueurs"
   },
   "admin": {
     "common": {

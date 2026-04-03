@@ -203,7 +203,33 @@
     "addProof": "Add proof",
     "noQuests": "No quests available",
     "noQuestsDesc": "Check back later for new quests",
-    "logout": "Logout"
+    "logout": "Logout",
+    "diceRoll": "Dice Roll"
+  },
+  "dice": {
+    "roll": "Roll d20",
+    "result": "Result",
+    "total": "Total",
+    "modifiers": "Modifiers",
+    "success": "Success!",
+    "failure": "Failed",
+    "criticalHit": "Critical Hit!",
+    "criticalFail": "Critical Fail!",
+    "diceLog": "Dice Log",
+    "totalRolls": "Total Rolls",
+    "avgRoll": "Average Roll",
+    "crits": "Critical Hits",
+    "fails": "Critical Fails",
+    "successRate": "Success Rate",
+    "exportCsv": "Export CSV",
+    "noRolls": "No dice rolls yet",
+    "noRollsDesc": "Rolls will appear here after players roll",
+    "date": "Date",
+    "player": "Player",
+    "context": "Context",
+    "dc": "DC",
+    "filterByPlayer": "Filter by player",
+    "allPlayers": "All Players"
   },
   "admin": {
     "common": {

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CharacterCard } from "@/components/player/character-card";
+import { DiceRollButton } from "@/components/dice/dice-roll-button";
 import { trpc } from "@/lib/trpc";
 import { usePlayerSession } from "@/lib/player-session";
 
@@ -173,6 +174,18 @@ export default function PlayerDashboard() {
           <p className="text-sm text-muted-foreground">Loading character...</p>
         </div>
       ) : null}
+
+      {/* Dice roll section */}
+      {character && (
+        <div className="rounded-lg border border-border bg-card p-4 space-y-4">
+          <h3 className="font-semibold">{t("diceRoll")}</h3>
+          <DiceRollButton
+            characterId={character.id}
+            context="general"
+            dc={10}
+          />
+        </div>
+      )}
 
       {/* Quests section */}
       <div className="rounded-lg border border-border bg-card p-4 space-y-4">
