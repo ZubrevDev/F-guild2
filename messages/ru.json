@@ -183,6 +183,28 @@
     "deactivate": "Деактивировать",
     "awarded": "Начислено: {xp} XP, {gold} золота"
   },
+  "playerLogin": {
+    "title": "Вход игрока",
+    "guildCode": "Код гильдии",
+    "playerName": "Ваше имя",
+    "pin": "PIN-код",
+    "login": "Войти",
+    "wrongCredentials": "Неверный PIN или игрок не найден"
+  },
+  "playerDashboard": {
+    "welcome": "Добро пожаловать, {name}!",
+    "activeQuests": "Ваши квесты",
+    "available": "Доступные",
+    "accepted": "В процессе",
+    "pendingReview": "На проверке",
+    "completed": "Выполнены",
+    "acceptQuest": "Принять",
+    "submitQuest": "Сдать",
+    "addProof": "Добавить доказательство",
+    "noQuests": "Нет доступных квестов",
+    "noQuestsDesc": "Загляните позже за новыми квестами",
+    "logout": "Выйти"
+  },
   "admin": {
     "common": {
       "loading": "Загрузка..."

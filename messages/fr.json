@@ -183,6 +183,28 @@
     "deactivate": "Désactiver",
     "awarded": "Attribué : {xp} XP, {gold} or"
   },
+  "playerLogin": {
+    "title": "Connexion joueur",
+    "guildCode": "Code de guilde",
+    "playerName": "Votre nom",
+    "pin": "PIN",
+    "login": "Entrer",
+    "wrongCredentials": "PIN incorrect ou joueur non trouvé"
+  },
+  "playerDashboard": {
+    "welcome": "Bienvenue, {name} !",
+    "activeQuests": "Vos quêtes",
+    "available": "Disponibles",
+    "accepted": "En cours",
+    "pendingReview": "En attente de revue",
+    "completed": "Terminées",
+    "acceptQuest": "Accepter",
+    "submitQuest": "Soumettre",
+    "addProof": "Ajouter une preuve",
+    "noQuests": "Pas de quêtes disponibles",
+    "noQuestsDesc": "Revenez plus tard pour de nouvelles quêtes",
+    "logout": "Déconnexion"
+  },
   "admin": {
     "common": {
       "loading": "Chargement..."

@@ -183,6 +183,28 @@
     "deactivate": "Deactivate",
     "awarded": "Awarded: {xp} XP, {gold} Gold"
   },
+  "playerLogin": {
+    "title": "Player Login",
+    "guildCode": "Guild Code",
+    "playerName": "Your Name",
+    "pin": "PIN",
+    "login": "Enter",
+    "wrongCredentials": "Wrong PIN or player not found"
+  },
+  "playerDashboard": {
+    "welcome": "Welcome, {name}!",
+    "activeQuests": "Your Quests",
+    "available": "Available",
+    "accepted": "In Progress",
+    "pendingReview": "Awaiting Review",
+    "completed": "Completed",
+    "acceptQuest": "Accept",
+    "submitQuest": "Submit",
+    "addProof": "Add proof",
+    "noQuests": "No quests available",
+    "noQuestsDesc": "Check back later for new quests",
+    "logout": "Logout"
+  },
   "admin": {
     "common": {
       "loading": "Loading..."
