@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
+import { getRarityClass } from "@/lib/rarity";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +29,7 @@ interface CreateQuestForm {
   difficultyClass: number;
   confirmationType: ConfirmationType;
   assignedTo: string[];
+  itemRewards: Array<{ itemId: string; quantity: number }>;
 }
 
 const DEFAULT_FORM: CreateQuestForm = {
@@ -41,6 +43,7 @@ const DEFAULT_FORM: CreateQuestForm = {
   difficultyClass: 10,
   confirmationType: "text",
   assignedTo: [],
+  itemRewards: [],
 };
 
 export default function QuestsPage() {
@@ -79,6 +82,11 @@ export default function QuestsPage() {
     { enabled: !!guildId }
   );
 
+  const { data: guildItems } = trpc.shop.listItems.useQuery(
+    { guildId: guildId!, isActive: true },
+    { enabled: !!guildId }
+  );
+
   const createMutation = trpc.quest.create.useMutation({
     onSuccess: () => {
       utils.quest.list.invalidate({ guildId: guildId! });
@@ -100,11 +108,14 @@ export default function QuestsPage() {
   const reviewMutation = trpc.quest.review.useMutation({
     onSuccess: (data, variables) => {
       utils.quest.pending.invalidate({ guildId: guildId! });
+      utils.quest.list.invalidate({ guildId: guildId! });
       if (variables.action === "approve" && "xpAwarded" in data) {
-        const awarded = data as { xpAwarded: number; goldAwarded: number };
-        setReviewSuccess(
-          t("awarded", { xp: awarded.xpAwarded, gold: awarded.goldAwarded })
-        );
+        const awarded = data as { xpAwarded: number; goldAwarded: number; awardedItems?: Array<{ name: string }> };
+        let msg = t("awarded", { xp: awarded.xpAwarded, gold: awarded.goldAwarded });
+        if (awarded.awardedItems && awarded.awardedItems.length > 0) {
+          msg += " | " + t("awardedItems", { items: awarded.awardedItems.map((i) => i.name).join(", ") });
+        }
+        setReviewSuccess(msg);
         setTimeout(() => setReviewSuccess(""), 4000);
       }
     },
@@ -125,6 +136,7 @@ export default function QuestsPage() {
       difficultyClass: form.difficultyClass,
       confirmationType: form.confirmationType,
       assignedTo: form.assignedTo,
+      itemRewards: form.itemRewards,
     });
   }
 
@@ -310,6 +322,16 @@ export default function QuestsPage() {
                       <span>⚡ {quest.xpReward} XP</span>
                       <span>🪙 {quest.goldReward} Gold</span>
                       {quest.faithReward > 0 && <span>🙏 {quest.faithReward} Faith</span>}
+                      {/* Item rewards */}
+                      {(quest as unknown as { itemRewards?: Array<{ claimed: boolean; quantity: number; item: { name: string; rarity: string } }> }).itemRewards?.map((reward, i) => (
+                        <span
+                          key={i}
+                          className={`text-xs ${getRarityClass(reward.item.rarity)} ${reward.claimed ? "line-through opacity-50" : ""}`}
+                        >
+                          🎁 {reward.item.name} x{reward.quantity}
+                          {reward.claimed ? ` (${t("itemClaimed")})` : ""}
+                        </span>
+                      ))}
                     </div>
 
                     {/* DC */}
@@ -403,6 +425,16 @@ export default function QuestsPage() {
                       <div className="flex gap-3 text-xs text-muted-foreground">
                         <span>⚡ {instance.quest.xpReward} XP</span>
                         <span>🪙 {instance.quest.goldReward} Gold</span>
+                        {(instance.quest as unknown as { itemRewards?: Array<{ claimed: boolean; quantity: number; item: { name: string; rarity: string } }> }).itemRewards
+                          ?.filter((r) => !r.claimed)
+                          .map((reward, i) => (
+                            <span
+                              key={i}
+                              className={`text-xs ${getRarityClass(reward.item.rarity)}`}
+                            >
+                              🎁 {reward.item.name} x{reward.quantity}
+                            </span>
+                          ))}
                       </div>
 
                       {/* Feedback textarea (expandable for reject) */}
@@ -475,7 +507,7 @@ export default function QuestsPage() {
             }
           }}
         >
-          <div className="my-8 w-full max-w-lg rounded-lg bg-background p-6 shadow-xl">
+          <div className="my-8 w-full max-w-lg rounded-lg border border-purple-500/30 bg-[#1e1240] p-6 shadow-2xl shadow-purple-900/30">
             <h2 className="mb-4 text-lg font-semibold">{t("createQuest")}</h2>
             <form onSubmit={handleCreateSubmit} className="space-y-4">
               {/* Title */}
@@ -645,6 +677,68 @@ export default function QuestsPage() {
                   </div>
                 </div>
               )}
+
+              {/* Item Rewards */}
+              <div>
+                <label className="text-sm font-medium">{t("itemRewards")}</label>
+                <div className="space-y-2 mt-2">
+                  {form.itemRewards.map((reward, index) => {
+                    const item = guildItems?.find((i: { id: string }) => i.id === reward.itemId);
+                    return (
+                      <div key={index} className="flex items-center gap-2">
+                        <span className={`flex-1 text-sm ${item ? getRarityClass((item as { rarity?: string }).rarity ?? "common") : ""}`}>
+                          {(item as { name?: string })?.name ?? "..."}
+                        </span>
+                        <input
+                          type="number"
+                          min={1}
+                          value={reward.quantity}
+                          onChange={(e) => {
+                            const next = [...form.itemRewards];
+                            next[index] = { ...next[index], quantity: Number(e.target.value) || 1 };
+                            setForm((prev) => ({ ...prev, itemRewards: next }));
+                          }}
+                          className={INPUT_CLASS + " !w-16 text-center"}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setForm((prev) => ({
+                              ...prev,
+                              itemRewards: prev.itemRewards.filter((_, i) => i !== index),
+                            }));
+                          }}
+                          className="text-xs text-destructive hover:underline"
+                        >
+                          {t("removeItem")}
+                        </button>
+                      </div>
+                    );
+                  })}
+                  {guildItems && (guildItems as Array<{ id: string; name: string; rarity: string }>).length > 0 && (
+                    <select
+                      className={INPUT_CLASS}
+                      value=""
+                      onChange={(e) => {
+                        if (!e.target.value) return;
+                        setForm((prev) => ({
+                          ...prev,
+                          itemRewards: [...prev.itemRewards, { itemId: e.target.value, quantity: 1 }],
+                        }));
+                      }}
+                    >
+                      <option value="">{t("selectItem")}</option>
+                      {(guildItems as Array<{ id: string; name: string }>)
+                        .filter((item) => !form.itemRewards.some((r) => r.itemId === item.id))
+                        .map((item) => (
+                          <option key={item.id} value={item.id}>
+                            {item.name}
+                          </option>
+                        ))}
+                    </select>
+                  )}
+                </div>
+              </div>
 
               {createError && (
                 <p className="text-sm text-destructive">{createError}</p>
