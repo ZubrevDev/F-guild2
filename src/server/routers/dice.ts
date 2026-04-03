@@ -201,4 +201,157 @@ export const diceRouter = router({
       });
       return logs;
     }),
+
+  /** Master-only: filterable, paginated dice log for entire guild */
+  log: protectedProcedure
+    .input(
+      z.object({
+        guildId: z.uuid(),
+        playerId: z.uuid().optional(),
+        dateFrom: z.iso.datetime().optional(),
+        dateTo: z.iso.datetime().optional(),
+        context: z.string().max(100).optional(),
+        page: z.number().int().min(1).default(1),
+        limit: z.number().int().min(1).max(100).default(20),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      await assertGuildMaster(ctx, input.guildId);
+
+      const where = buildDiceLogWhere(input);
+      const skip = (input.page - 1) * input.limit;
+
+      const [logs, total] = await Promise.all([
+        ctx.db.diceLog.findMany({
+          where,
+          orderBy: { rolledAt: "desc" },
+          skip,
+          take: input.limit,
+          include: {
+            character: {
+              include: {
+                player: { select: { id: true, name: true } },
+              },
+            },
+          },
+        }),
+        ctx.db.diceLog.count({ where }),
+      ]);
+
+      return {
+        items: logs.map((log) => ({
+          id: log.id,
+          rollValue: log.rollValue,
+          modifiers: log.modifiers,
+          total: log.total,
+          difficultyClass: log.difficultyClass,
+          success: log.success,
+          context: log.context,
+          rolledAt: log.rolledAt,
+          playerName: log.character.player.name,
+          playerId: log.character.player.id,
+          characterId: log.characterId,
+        })),
+        total,
+        page: input.page,
+        totalPages: Math.ceil(total / input.limit),
+      };
+    }),
+
+  /** Master-only: dice roll statistics for guild */
+  stats: protectedProcedure
+    .input(
+      z.object({
+        guildId: z.uuid(),
+        playerId: z.uuid().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      await assertGuildMaster(ctx, input.guildId);
+
+      const where = buildDiceLogWhere(input);
+
+      const [aggregation, criticalHits, criticalFails, successCount, totalRolls] =
+        await Promise.all([
+          ctx.db.diceLog.aggregate({
+            where,
+            _avg: { rollValue: true },
+            _count: { id: true },
+          }),
+          ctx.db.diceLog.count({ where: { ...where, rollValue: 20 } }),
+          ctx.db.diceLog.count({ where: { ...where, rollValue: 1 } }),
+          ctx.db.diceLog.count({ where: { ...where, success: true } }),
+          ctx.db.diceLog.count({ where }),
+        ]);
+
+      return {
+        totalRolls: aggregation._count.id,
+        avgRoll: aggregation._avg.rollValue
+          ? Math.round(aggregation._avg.rollValue * 100) / 100
+          : 0,
+        criticalHits,
+        criticalFails,
+        successRate:
+          totalRolls > 0
+            ? Math.round((successCount / totalRolls) * 10000) / 100
+            : 0,
+      };
+    }),
 });
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+async function assertGuildMaster(
+  ctx: {
+    db: typeof import("../db").db;
+    session: { userId: string; role: string };
+  },
+  guildId: string,
+) {
+  const membership = await ctx.db.guildMaster.findUnique({
+    where: { guildId_userId: { guildId, userId: ctx.session.userId } },
+  });
+  if (!membership) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Not a master of this guild",
+    });
+  }
+  return membership;
+}
+
+/**
+ * Build a Prisma where clause for DiceLog filtered by guild, player,
+ * date range, and context.
+ */
+function buildDiceLogWhere(filters: {
+  guildId: string;
+  playerId?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  context?: string;
+}) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const where: Record<string, any> = {
+    character: {
+      player: {
+        guildId: filters.guildId,
+        ...(filters.playerId ? { id: filters.playerId } : {}),
+      },
+    },
+  };
+
+  if (filters.dateFrom || filters.dateTo) {
+    where.rolledAt = {};
+    if (filters.dateFrom) where.rolledAt.gte = new Date(filters.dateFrom);
+    if (filters.dateTo) where.rolledAt.lte = new Date(filters.dateTo);
+  }
+
+  if (filters.context) {
+    where.context = { contains: filters.context, mode: "insensitive" };
+  }
+
+  return where;
+}
