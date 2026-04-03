@@ -10,6 +10,8 @@ import { shopRouter } from "./shop";
 import { prayerRouter } from "./prayer";
 import { activityRouter } from "./activity";
 import { settingsRouter } from "./settings";
+import { notificationRouter } from "./notification";
+import { subscriptionRouter } from "./subscription";
 
 export const appRouter = router({
   auth: authRouter,
@@ -23,6 +25,8 @@ export const appRouter = router({
   prayer: prayerRouter,
   activity: activityRouter,
   settings: settingsRouter,
+  notification: notificationRouter,
+  subscription: subscriptionRouter,
 
   healthcheck: publicProcedure.query(() => {
     return { status: "ok", timestamp: new Date().toISOString() };

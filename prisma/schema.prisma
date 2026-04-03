@@ -97,6 +97,19 @@ enum SubscriptionTier {
   premium
 }
 
+enum NotificationType {
+  quest_completed
+  level_up
+  new_prayer
+  buff_applied
+  shop_purchase
+}
+
+enum RecipientType {
+  master
+  player
+}
+
 // ==================== MODELS ====================
 
 model Guild {
@@ -133,6 +146,8 @@ model User {
   notificationPreferences Json             @default("{}") @map("notification_preferences")
   theme                   String           @default("system")
   subscriptionTier        SubscriptionTier @default(free) @map("subscription_tier")
+  stripeCustomerId        String?          @unique @map("stripe_customer_id")
+  stripeSubscriptionId    String?          @unique @map("stripe_subscription_id")
   consentedAt             DateTime?        @map("consented_at")
   ageVerified             Boolean          @default(false) @map("age_verified")
   deletedAt               DateTime?        @map("deleted_at")
@@ -400,4 +415,20 @@ model ClassAbilityUsage {
   @@index([characterId, abilityName])
   @@index([resetsAt])
   @@map("class_ability_usages")
+}
+
+model Notification {
+  id            String           @id @default(uuid()) @db.Uuid
+  recipientType RecipientType    @map("recipient_type")
+  recipientId   String           @map("recipient_id") @db.Uuid
+  type          NotificationType
+  title         String
+  message       String
+  data          Json             @default("{}")
+  isRead        Boolean          @default(false) @map("is_read")
+  createdAt     DateTime         @default(now()) @map("created_at")
+
+  @@index([recipientType, recipientId, isRead])
+  @@index([createdAt])
+  @@map("notifications")
 }
