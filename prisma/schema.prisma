@@ -110,6 +110,24 @@ enum RecipientType {
   player
 }
 
+enum EquipSlot {
+  head
+  body
+  weapon
+  shield
+  gloves
+  boots
+  accessory
+}
+
+enum ItemRarity {
+  common
+  uncommon
+  rare
+  epic
+  legendary
+}
+
 // ==================== MODELS ====================
 
 model Guild {
@@ -243,6 +261,7 @@ model Quest {
   guild            Guild            @relation(fields: [guildId], references: [id], onDelete: Cascade)
   createdBy        User             @relation(fields: [createdById], references: [id])
   instances        QuestInstance[]
+  itemRewards      QuestItemReward[]
 
   @@index([guildId])
   @@map("quests")
@@ -277,12 +296,15 @@ model Item {
   levelRequired Int           @default(1) @map("level_required")
   classRequired CharacterClass? @map("class_required")
   effect        Json?
+  equipSlot     EquipSlot?    @map("equip_slot")
+  rarity        ItemRarity    @default(common)
   imageUrl      String?       @map("image_url")
   isActive      Boolean       @default(true) @map("is_active")
   createdAt     DateTime      @default(now()) @map("created_at")
 
   guild         Guild         @relation(fields: [guildId], references: [id], onDelete: Cascade)
   inventory     Inventory[]
+  questRewards  QuestItemReward[]
 
   @@index([guildId])
   @@map("items")
@@ -294,6 +316,7 @@ model Inventory {
   itemId      String    @map("item_id") @db.Uuid
   quantity    Int       @default(1)
   isEquipped  Boolean   @default(false) @map("is_equipped")
+  equipSlot   EquipSlot? @map("equip_slot")
   acquiredAt  DateTime  @default(now()) @map("acquired_at")
 
   character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
@@ -301,6 +324,20 @@ model Inventory {
 
   @@index([characterId])
   @@map("inventory")
+}
+
+model QuestItemReward {
+  id       String  @id @default(uuid()) @db.Uuid
+  questId  String  @map("quest_id") @db.Uuid
+  itemId   String  @map("item_id") @db.Uuid
+  quantity Int     @default(1)
+  claimed  Boolean @default(false)
+
+  quest Quest @relation(fields: [questId], references: [id], onDelete: Cascade)
+  item  Item  @relation(fields: [itemId], references: [id])
+
+  @@index([questId])
+  @@map("quest_item_rewards")
 }
 
 model Buff {
