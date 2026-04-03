@@ -290,3 +290,43 @@
 **Дата:** 2026-04-03
 **Коммит:** f840b61
 **Summary:** PostHog init с privacy-first defaults (no autocapture, no session recording, IP stripped), PostHogProvider компонент с page view tracking, centralized AnalyticsEvents, trackEvent/trackPageView helpers. No-op когда NEXT_PUBLIC_POSTHOG_KEY не установлен.
+
+### TASK-035: Push-уведомления через web-push
+**Статус:** done
+**Дата:** 2026-04-03
+**Коммит:** a6eedd2
+**Summary:** web-push библиотека с VAPID, PushSubscription Prisma модель, sendPushNotification() с quiet hours (22:00-08:00 UTC), push-subscription CRUD хелперы, push tRPC роутер (subscribe/unsubscribe/updatePreferences), sw.js обработчики push и notificationclick.
+
+### TASK-040: Оффлайн-режим (IndexedDB)
+**Статус:** done
+**Дата:** 2026-04-03
+**Коммит:** fd04a83
+**Summary:** idb-backed кэш для quests/character/inventory, sync queue с server-wins/client-wins conflict resolution, useOnlineStatus/useOfflineCache/useOfflineAction/useSyncOnReconnect хуки, OfflineIndicator баннер, Background Sync в sw.js.
+
+### TASK-044: Неактивные гильдии автоочистка
+**Статус:** done
+**Дата:** 2026-04-03
+**Коммит:** a6eedd2
+**Summary:** touchGuildActivity() хелпер, cron endpoint /api/cron/guild-cleanup с 3 стадиями (hard delete >30d, soft delete >12mo, warn 11-12mo), CRON_SECRET авторизация, email уведомления для предупреждений.
+
+### TASK-048: Redis caching
+**Статус:** done
+**Дата:** 2026-04-03
+**Коммит:** a6eedd2
+**Summary:** ioredis singleton с graceful fallback, generic cache helpers (get/set/delete/deletePattern), Redis-backed rate limiter с in-memory fallback, /api/health endpoint с Redis ping.
+
+### TASK-049: Password recovery
+**Статус:** done
+**Дата:** 2026-04-03
+**Коммит:** 2c805b6
+**Summary:** PasswordResetToken Prisma модель, requestPasswordReset/resetPassword tRPC procedures с rate limiting, password_reset email шаблон, forgot-password и reset-password страницы с формами.
+
+### TASK-050: Админ-панель платформы
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** isPlatformAdmin поле в User модели, adminProcedure middleware, admin tRPC роутер (stats/guilds/guildDetail/inactiveGuilds/triggerCleanup), admin layout с server-side auth check, 4 страницы (overview stats, guild list с поиском/фильтрами/пагинацией, guild detail, cleanup management), i18n для 3 языков.
+
+---
+
+## Проект завершён!
+Все 50 задач выполнены. Билд проходит без ошибок.
