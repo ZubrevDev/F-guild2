@@ -246,7 +246,8 @@ export const characterRouter = router({
     }),
 
   /** Use an active class ability (e.g. Fighter's Second Wind, Wizard's Arcane Focus). */
-  useClassAbility: protectedProcedure
+  // publicProcedure: players authenticate via PIN/localStorage, not NextAuth
+  useClassAbility: publicProcedure
     .input(
       z.object({
         characterId: z.uuid(),
@@ -262,7 +263,10 @@ export const characterRouter = router({
         throw new TRPCError({ code: "NOT_FOUND", message: "Character not found" });
       }
 
-      await assertGuildMaster(ctx, character.player.guildId);
+      // If caller is authenticated (master), verify guild membership
+      if (ctx.session) {
+        await assertGuildMaster(ctx as { db: typeof ctx.db; session: NonNullable<typeof ctx.session> }, character.player.guildId);
+      }
 
       // Verify the ability belongs to this character's class
       const classAbility = getClassAbility(character.class);
