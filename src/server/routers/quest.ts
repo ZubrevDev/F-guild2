@@ -23,6 +23,9 @@ export const questRouter = router({
         timerSeconds: z.number().int().min(1).optional(),
         assignedTo: z.array(z.uuid()).default([]),
         imageUrl: z.string().url().optional(),
+        itemRewards: z
+          .array(z.object({ itemId: z.uuid(), quantity: z.number().int().min(1) }))
+          .default([]),
       }).refine(
         (data) => {
           if (data.confirmationType === "timer") {
@@ -53,7 +56,16 @@ export const questRouter = router({
           timerSeconds: input.timerSeconds ?? null,
           assignedTo: input.assignedTo,
           imageUrl: input.imageUrl,
+          itemRewards: input.itemRewards.length > 0
+            ? {
+                create: input.itemRewards.map((r) => ({
+                  itemId: r.itemId,
+                  quantity: r.quantity,
+                })),
+              }
+            : undefined,
         },
+        include: { itemRewards: { include: { item: { select: { id: true, name: true, rarity: true } } } } },
       });
 
       return quest;
@@ -76,6 +88,9 @@ export const questRouter = router({
         timerSeconds: z.number().int().min(1).nullable().optional(),
         assignedTo: z.array(z.uuid()).optional(),
         imageUrl: z.string().url().nullable().optional(),
+        itemRewards: z
+          .array(z.object({ itemId: z.uuid(), quantity: z.number().int().min(1) }))
+          .optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -87,9 +102,24 @@ export const questRouter = router({
       }
       await assertGuildMaster(ctx, quest.guildId);
 
-      const { questId, ...data } = input;
+      // Handle itemRewards separately — replace strategy
+      if (input.itemRewards !== undefined) {
+        await ctx.db.questItemReward.deleteMany({ where: { questId: input.questId } });
+        if (input.itemRewards.length > 0) {
+          await ctx.db.questItemReward.createMany({
+            data: input.itemRewards.map((r) => ({
+              questId: input.questId,
+              itemId: r.itemId,
+              quantity: r.quantity,
+            })),
+          });
+        }
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { questId, itemRewards: _itemRewards, ...rest } = input;
       const updateData: Record<string, unknown> = {};
-      for (const [key, value] of Object.entries(data)) {
+      for (const [key, value] of Object.entries(rest)) {
         if (value !== undefined) {
           if (key === "deadline" && value !== null) {
             updateData[key] = new Date(value as string);
@@ -144,6 +174,9 @@ export const questRouter = router({
           instances: {
             select: { id: true, status: true, playerId: true },
           },
+          itemRewards: {
+            include: { item: { select: { id: true, name: true, rarity: true, equipSlot: true } } },
+          },
         },
       });
     }),
@@ -156,6 +189,9 @@ export const questRouter = router({
         include: {
           instances: {
             include: { player: { select: { id: true, name: true } } },
+          },
+          itemRewards: {
+            include: { item: { select: { id: true, name: true, rarity: true, equipSlot: true } } },
           },
         },
       });
@@ -190,16 +226,30 @@ export const questRouter = router({
           ],
         },
         orderBy: { createdAt: "desc" },
+        include: {
+          itemRewards: {
+            include: { item: { select: { id: true, name: true, rarity: true, equipSlot: true } } },
+          },
+        },
       });
 
-      // Optional quests (guild board)
+      // Optional quests (guild board) — if assignedTo is empty, visible to all
       const optionalQuests = await ctx.db.quest.findMany({
         where: {
           guildId: input.guildId,
           isActive: true,
           type: "optional",
+          OR: [
+            { assignedTo: { has: input.playerId } },
+            { assignedTo: { isEmpty: true } },
+          ],
         },
         orderBy: { createdAt: "desc" },
+        include: {
+          itemRewards: {
+            include: { item: { select: { id: true, name: true, rarity: true, equipSlot: true } } },
+          },
+        },
       });
 
       // Player's quest instances
@@ -210,7 +260,15 @@ export const questRouter = router({
             ? { status: "completed" }
             : { status: { in: ["available", "accepted", "pending_review"] } }),
         },
-        include: { quest: true },
+        include: {
+          quest: {
+            include: {
+              itemRewards: {
+                include: { item: { select: { id: true, name: true, rarity: true, equipSlot: true } } },
+              },
+            },
+          },
+        },
         orderBy: { createdAt: "desc" },
       });
 
@@ -503,6 +561,35 @@ export const questRouter = router({
             },
           });
 
+          // Claim unclaimed item rewards
+          const unclaimedRewards = await tx.questItemReward.findMany({
+            where: { questId: instance.questId, claimed: false },
+            include: { item: { select: { id: true, name: true, rarity: true } } },
+          });
+
+          const awardedItems: Array<{ name: string; rarity: string; quantity: number }> = [];
+
+          for (const reward of unclaimedRewards) {
+            await tx.questItemReward.update({
+              where: { id: reward.id },
+              data: { claimed: true },
+            });
+
+            await tx.inventory.create({
+              data: {
+                characterId: txCharacter.id,
+                itemId: reward.itemId,
+                quantity: reward.quantity,
+              },
+            });
+
+            awardedItems.push({
+              name: reward.item.name,
+              rarity: reward.item.rarity,
+              quantity: reward.quantity,
+            });
+          }
+
           // Create ActivityLog entries for each level gained
           for (let i = 1; i <= levelsGained; i++) {
             const gainedLevel = txCharacter.level + i;
@@ -524,7 +611,7 @@ export const questRouter = router({
             });
           }
 
-          return { levelsGained, newLevel };
+          return { levelsGained, newLevel, awardedItems };
         });
 
         return {
@@ -537,6 +624,7 @@ export const questRouter = router({
           goldModifier: modifiers.goldModifier,
           levelsGained: result.levelsGained,
           newLevel: result.newLevel,
+          awardedItems: result.awardedItems,
         };
       }
 
@@ -568,7 +656,16 @@ export const questRouter = router({
           quest: { guildId: input.guildId },
         },
         include: {
-          quest: { select: { title: true, xpReward: true, goldReward: true } },
+          quest: {
+            select: {
+              title: true,
+              xpReward: true,
+              goldReward: true,
+              itemRewards: {
+                include: { item: { select: { id: true, name: true, rarity: true } } },
+              },
+            },
+          },
           player: { select: { name: true } },
         },
         orderBy: { createdAt: "asc" },

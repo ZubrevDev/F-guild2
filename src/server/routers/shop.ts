@@ -21,6 +21,13 @@ export const shopRouter = router({
           .nullable()
           .default(null),
         effect: z.record(z.string(), z.unknown()).nullable().default(null),
+        equipSlot: z
+          .enum(["head", "body", "weapon", "shield", "gloves", "boots", "accessory"])
+          .nullable()
+          .default(null),
+        rarity: z
+          .enum(["common", "uncommon", "rare", "epic", "legendary"])
+          .default("common"),
         imageUrl: z.string().url().nullable().optional(),
       })
     )
@@ -38,6 +45,8 @@ export const shopRouter = router({
           levelRequired: input.levelRequired,
           classRequired: input.classRequired,
           effect: (input.effect as Prisma.InputJsonValue) ?? undefined,
+          equipSlot: input.equipSlot,
+          rarity: input.rarity,
           imageUrl: input.imageUrl ?? null,
         },
       });
@@ -91,6 +100,13 @@ export const shopRouter = router({
           .nullable()
           .optional(),
         effect: z.record(z.string(), z.unknown()).nullable().optional(),
+        equipSlot: z
+          .enum(["head", "body", "weapon", "shield", "gloves", "boots", "accessory"])
+          .nullable()
+          .optional(),
+        rarity: z
+          .enum(["common", "uncommon", "rare", "epic", "legendary"])
+          .optional(),
         imageUrl: z.string().url().nullable().optional(),
       })
     )
@@ -356,6 +372,29 @@ export const shopRouter = router({
       };
     }),
 
+  equippedItems: publicProcedure
+    .input(z.object({ playerId: z.uuid() }))
+    .query(async ({ ctx, input }) => {
+      const player = await ctx.db.player.findUnique({
+        where: { id: input.playerId },
+        include: { character: true },
+      });
+      if (!player?.character) return {};
+
+      const equipped = await ctx.db.inventory.findMany({
+        where: { characterId: player.character.id, isEquipped: true },
+        include: { item: true },
+      });
+
+      const slotMap: Record<string, typeof equipped[number]> = {};
+      for (const inv of equipped) {
+        if (inv.equipSlot) {
+          slotMap[inv.equipSlot] = inv;
+        }
+      }
+      return slotMap;
+    }),
+
   equip: publicProcedure
     .input(
       z.object({
@@ -405,10 +444,39 @@ export const shopRouter = router({
         });
       }
 
-      return ctx.db.inventory.update({
-        where: { id: input.inventoryItemId },
-        data: { isEquipped: !inventoryItem.isEquipped },
-        include: { item: true },
+      const item = inventoryItem.item;
+      if (!item.equipSlot) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This item cannot be equipped (no slot defined)",
+        });
+      }
+
+      // If already equipped in this slot — unequip
+      if (inventoryItem.isEquipped && inventoryItem.equipSlot === item.equipSlot) {
+        return ctx.db.inventory.update({
+          where: { id: input.inventoryItemId },
+          data: { isEquipped: false, equipSlot: null },
+          include: { item: true },
+        });
+      }
+
+      // Unequip any item currently in this slot, then equip the new one
+      return ctx.db.$transaction(async (tx) => {
+        await tx.inventory.updateMany({
+          where: {
+            characterId: player.character!.id,
+            equipSlot: item.equipSlot,
+            isEquipped: true,
+          },
+          data: { isEquipped: false, equipSlot: null },
+        });
+
+        return tx.inventory.update({
+          where: { id: input.inventoryItemId },
+          data: { isEquipped: true, equipSlot: item.equipSlot },
+          include: { item: true },
+        });
       });
     }),
 
