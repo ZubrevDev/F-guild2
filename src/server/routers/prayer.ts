@@ -1,8 +1,20 @@
 import { z } from "zod/v4";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
+import { canUseAbility } from "@/lib/class-mechanics";
 
 const DEFAULT_FAITH_COST = 1;
+
+/**
+ * Calculate the next daily reset time (midnight UTC).
+ */
+function getNextDailyReset(): Date {
+  const now = new Date();
+  const reset = new Date(now);
+  reset.setUTCDate(reset.getUTCDate() + 1);
+  reset.setUTCHours(0, 0, 0, 0);
+  return reset;
+}
 
 export const prayerRouter = router({
   send: publicProcedure
@@ -11,6 +23,7 @@ export const prayerRouter = router({
         playerId: z.uuid(),
         guildId: z.uuid(),
         message: z.string().min(1).max(1000),
+        useDivinePrayer: z.boolean().optional().default(false),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -25,7 +38,23 @@ export const prayerRouter = router({
           message: "Player has no character",
         });
       }
-      if (character.faithPoints < DEFAULT_FAITH_COST) {
+
+      // Cleric "Divine Prayer": once per day, prayer costs 0 faith points
+      let freePrayer = false;
+      if (input.useDivinePrayer && character.class === "cleric") {
+        const check = await canUseAbility(ctx.db, character.id, "divine_prayer");
+        if (!check.canUse) {
+          throw new TRPCError({
+            code: "PRECONDITION_FAILED",
+            message: check.reason,
+          });
+        }
+        freePrayer = true;
+      }
+
+      const faithCost = freePrayer ? 0 : DEFAULT_FAITH_COST;
+
+      if (!freePrayer && character.faithPoints < DEFAULT_FAITH_COST) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Insufficient faith points",
@@ -33,22 +62,33 @@ export const prayerRouter = router({
       }
 
       const prayer = await ctx.db.$transaction(async (tx) => {
-        await tx.character.update({
-          where: { id: character.id },
-          data: { faithPoints: { decrement: DEFAULT_FAITH_COST } },
-        });
+        if (freePrayer) {
+          // Record Divine Prayer class ability usage
+          await tx.classAbilityUsage.create({
+            data: {
+              characterId: character.id,
+              abilityName: "divine_prayer",
+              resetsAt: getNextDailyReset(),
+            },
+          });
+        } else {
+          await tx.character.update({
+            where: { id: character.id },
+            data: { faithPoints: { decrement: DEFAULT_FAITH_COST } },
+          });
+        }
 
         return tx.prayer.create({
           data: {
             playerId: input.playerId,
             guildId: input.guildId,
             message: input.message,
-            faithCost: DEFAULT_FAITH_COST,
+            faithCost,
           },
         });
       });
 
-      return prayer;
+      return { ...prayer, divinePrayerUsed: freePrayer };
     }),
 
   reply: protectedProcedure
