@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 import { TRPCError } from "@trpc/server";
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { xpProgress, MAX_LEVEL } from "@/lib/leveling";
 
 const CLASS_STATS: Record<
@@ -16,7 +16,7 @@ const CLASS_STATS: Record<
 };
 
 export const characterRouter = router({
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         playerId: z.uuid(),
@@ -31,6 +31,7 @@ export const characterRouter = router({
       if (!player) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Player not found" });
       }
+      await assertGuildMaster(ctx, player.guildId);
       if (player.character) {
         throw new TRPCError({
           code: "CONFLICT",
@@ -65,9 +66,11 @@ export const characterRouter = router({
       return character;
     }),
 
-  getByGuild: publicProcedure
+  getByGuild: protectedProcedure
     .input(z.object({ guildId: z.uuid() }))
     .query(async ({ ctx, input }) => {
+      await assertGuildMaster(ctx, input.guildId);
+
       const players = await ctx.db.player.findMany({
         where: { guildId: input.guildId },
         include: {
@@ -107,3 +110,16 @@ export const characterRouter = router({
       };
     }),
 });
+
+async function assertGuildMaster(
+  ctx: { db: typeof import("../db").db; session: { userId: string; role: string } },
+  guildId: string
+) {
+  const membership = await ctx.db.guildMaster.findUnique({
+    where: { guildId_userId: { guildId, userId: ctx.session.userId } },
+  });
+  if (!membership) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Not a master of this guild" });
+  }
+  return membership;
+}

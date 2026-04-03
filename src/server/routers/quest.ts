@@ -149,6 +149,7 @@ export const questRouter = router({
       if (!quest) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Quest not found" });
       }
+      await assertGuildMaster(ctx, quest.guildId);
       return quest;
     }),
 
@@ -162,6 +163,8 @@ export const questRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
+      await assertPlayerInGuild(ctx, input.playerId, input.guildId);
+
       // Mandatory quests assigned to this player (or to all)
       const mandatoryQuests = await ctx.db.quest.findMany({
         where: {
@@ -210,6 +213,7 @@ export const questRouter = router({
       if (!quest || !quest.isActive) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Quest not found or inactive" });
       }
+      await assertPlayerInGuild(ctx, input.playerId, quest.guildId);
 
       const existing = await ctx.db.questInstance.findFirst({
         where: {
@@ -234,6 +238,7 @@ export const questRouter = router({
     .input(
       z.object({
         instanceId: z.uuid(),
+        playerId: z.uuid(),
         confirmationData: z.object({
           type: z.enum(["text", "master_confirm"]),
           text: z.string().optional(),
@@ -246,6 +251,9 @@ export const questRouter = router({
       });
       if (!instance) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Quest instance not found" });
+      }
+      if (instance.playerId !== input.playerId) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Not your quest instance" });
       }
       if (instance.status !== "accepted") {
         throw new TRPCError({
@@ -399,4 +407,18 @@ async function assertGuildMaster(
     throw new TRPCError({ code: "FORBIDDEN", message: "Not a master of this guild" });
   }
   return membership;
+}
+
+async function assertPlayerInGuild(
+  ctx: { db: typeof import("../db").db },
+  playerId: string,
+  guildId: string
+) {
+  const player = await ctx.db.player.findUnique({
+    where: { id: playerId },
+  });
+  if (!player || player.guildId !== guildId) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Player does not belong to this guild" });
+  }
+  return player;
 }
