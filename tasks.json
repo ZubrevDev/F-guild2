@@ -62,7 +62,9 @@
         "Шаг 2: Проверить что Tailwind классы компилируются в CSS",
         "Шаг 3: shadcn Button компонент установлен и экспортируется"
       ],
-      "dependencies": ["TASK-001"],
+      "dependencies": [
+        "TASK-001"
+      ],
       "status": "done"
     },
     {
@@ -84,7 +86,9 @@
         "Шаг 3: Запустить npx prisma db seed — тестовые данные создаются",
         "Шаг 4: Открыть npx prisma studio — все таблицы видны с данными"
       ],
-      "dependencies": ["TASK-001"],
+      "dependencies": [
+        "TASK-001"
+      ],
       "status": "done"
     },
     {
@@ -107,7 +111,9 @@
         "Шаг 4: Переключить язык через UI — URL и контент меняются",
         "Шаг 5: Открыть / без prefix — редирект на язык браузера"
       ],
-      "dependencies": ["TASK-002"],
+      "dependencies": [
+        "TASK-002"
+      ],
       "status": "done"
     },
     {
@@ -129,7 +135,10 @@
         "Шаг 3: Проверить TypeScript автокомплит для роутеров в IDE",
         "Шаг 4: Проверить что Prisma клиент доступен в контексте процедур"
       ],
-      "dependencies": ["TASK-002", "TASK-003"],
+      "dependencies": [
+        "TASK-002",
+        "TASK-003"
+      ],
       "status": "done"
     },
     {
@@ -153,7 +162,9 @@
         "Шаг 4: Открыть /dashboard без авторизации — редирект на /login",
         "Шаг 5: Неверный пароль — ошибка, не пускает"
       ],
-      "dependencies": ["TASK-005"],
+      "dependencies": [
+        "TASK-005"
+      ],
       "status": "done"
     },
     {
@@ -175,7 +186,9 @@
         "Шаг 3: Выйти и войти повторно — сессия восстанавливается, тот же User",
         "Шаг 4: Проверить что oauth_provider сохраняется в User"
       ],
-      "dependencies": ["TASK-006"],
+      "dependencies": [
+        "TASK-006"
+      ],
       "status": "done"
     },
     {
@@ -199,7 +212,9 @@
         "Шаг 4: Owner удаляет мастера — запись удалена, мастер теряет доступ",
         "Шаг 5: Дополнительный мастер не может удалить owner — ошибка прав"
       ],
-      "dependencies": ["TASK-006"],
+      "dependencies": [
+        "TASK-006"
+      ],
       "status": "done"
     },
     {
@@ -222,7 +237,9 @@
         "Шаг 4: Мастер сбрасывает PIN — старый PIN не работает, новый работает",
         "Шаг 5: Создать 11-го игрока — ошибка лимита"
       ],
-      "dependencies": ["TASK-008"],
+      "dependencies": [
+        "TASK-008"
+      ],
       "status": "done"
     },
     {
@@ -243,7 +260,9 @@
         "Шаг 3: Использовать тот же QR повторно — ошибка (токен одноразовый)",
         "Шаг 4: Мастер регенерирует QR — новый токен работает"
       ],
-      "dependencies": ["TASK-009"],
+      "dependencies": [
+        "TASK-009"
+      ],
       "status": "pending"
     },
     {
@@ -266,7 +285,9 @@
         "Шаг 4: Повторный вход — экран создания не показывается, сразу дашборд",
         "Шаг 5: Мастер видит персонажа игрока в своём дашборде"
       ],
-      "dependencies": ["TASK-009"],
+      "dependencies": [
+        "TASK-009"
+      ],
       "status": "done"
     },
     {
@@ -289,7 +310,10 @@
         "Шаг 4: На мобильном (< 768px) sidebar заменяется bottom navigation",
         "Шаг 5: Activity feed отображает последние события"
       ],
-      "dependencies": ["TASK-008", "TASK-011"],
+      "dependencies": [
+        "TASK-008",
+        "TASK-011"
+      ],
       "status": "done"
     },
     {
@@ -312,7 +336,9 @@
         "Шаг 4: На desktop (> 1024px) layout адаптируется",
         "Шаг 5: Навигация между разделами работает"
       ],
-      "dependencies": ["TASK-011"],
+      "dependencies": [
+        "TASK-011"
+      ],
       "status": "done"
     },
     {
@@ -335,7 +361,10 @@
         "Шаг 4: Деактивировать квест — is_active=false, квест не виден игрокам",
         "Шаг 5: Назначить квест конкретному игроку — assigned_to содержит player_id"
       ],
-      "dependencies": ["TASK-005", "TASK-008"],
+      "dependencies": [
+        "TASK-005",
+        "TASK-008"
+      ],
       "status": "done"
     },
     {
@@ -358,7 +387,10 @@
         "Шаг 4: Квест с дедлайном показывает обратный отсчёт",
         "Шаг 5: Фильтр по статусу работает корректно"
       ],
-      "dependencies": ["TASK-013", "TASK-014"],
+      "dependencies": [
+        "TASK-013",
+        "TASK-014"
+      ],
       "status": "done"
     },
     {
@@ -381,7 +413,9 @@
         "Шаг 4: Мастер отклоняет другой квест с причиной — status=rejected, rejection_reason заполнен",
         "Шаг 5: Мастер возвращает квест — status=returned, игрок видит его снова в активных"
       ],
-      "dependencies": ["TASK-015"],
+      "dependencies": [
+        "TASK-015"
+      ],
       "status": "done"
     },
     {
@@ -404,7 +438,9 @@
         "Шаг 4: Загрузить файл > 5MB — ошибка размера",
         "Шаг 5: Фото доступно по URL из confirmation_data"
       ],
-      "dependencies": ["TASK-016"],
+      "dependencies": [
+        "TASK-016"
+      ],
       "status": "pending"
     },
     {
@@ -425,7 +461,9 @@
         "Шаг 3: Дождаться завершения (или ускорить для теста) — status=pending_review",
         "Шаг 4: Мастер видит timer_seconds в confirmation_data"
       ],
-      "dependencies": ["TASK-016"],
+      "dependencies": [
+        "TASK-016"
+      ],
       "status": "pending"
     },
     {
@@ -447,7 +485,9 @@
         "Шаг 4: Создать weekly квест — инстанс создаётся на текущую неделю",
         "Шаг 5: Мастер видит процент выполнения за период"
       ],
-      "dependencies": ["TASK-016"],
+      "dependencies": [
+        "TASK-016"
+      ],
       "status": "pending"
     },
     {
@@ -470,8 +510,10 @@
         "Шаг 4: XP-бар корректно отображает прогресс",
         "Шаг 5: ActivityLog содержит запись о повышении уровня"
       ],
-      "dependencies": ["TASK-016"],
-      "status": "pending"
+      "dependencies": [
+        "TASK-016"
+      ],
+      "status": "done"
     },
     {
       "id": "TASK-021",
@@ -493,7 +535,9 @@
         "Шаг 4: Способность с пререквизитом недоступна без предыдущей",
         "Шаг 5: Мастер видит список способностей игрока"
       ],
-      "dependencies": ["TASK-020"],
+      "dependencies": [
+        "TASK-020"
+      ],
       "status": "pending"
     },
     {
@@ -516,7 +560,9 @@
         "Шаг 4: Бросок с total < DC — success=false",
         "Шаг 5: Проверить DiceLog — запись с полной информацией создана"
       ],
-      "dependencies": ["TASK-020"],
+      "dependencies": [
+        "TASK-020"
+      ],
       "status": "pending"
     },
     {
@@ -538,7 +584,9 @@
         "Шаг 3: При успехе — зелёная подсветка, при провале — красная",
         "Шаг 4: Анимация плавная, без подвисаний"
       ],
-      "dependencies": ["TASK-022"],
+      "dependencies": [
+        "TASK-022"
+      ],
       "status": "pending"
     },
     {
@@ -561,7 +609,10 @@
         "Шаг 4: Создать дебафф 'Штраф -20 gold' (gold_drain) — применить, gold списано",
         "Шаг 5: Мастер отменяет бафф досрочно — is_active=false"
       ],
-      "dependencies": ["TASK-011", "TASK-014"],
+      "dependencies": [
+        "TASK-011",
+        "TASK-014"
+      ],
       "status": "pending"
     },
     {
@@ -583,7 +634,10 @@
         "Шаг 4: Без активных баффов — награды начисляются без модификации",
         "Шаг 5: ActivityLog содержит записи о модифицированных наградах"
       ],
-      "dependencies": ["TASK-024", "TASK-022"],
+      "dependencies": [
+        "TASK-024",
+        "TASK-022"
+      ],
       "status": "pending"
     },
     {
@@ -605,7 +659,9 @@
         "Шаг 4: Деактивировать товар — is_active=false, товар не виден в магазине игрока",
         "Шаг 5: Установить level_required=5, class_required=fighter — ограничения сохранены"
       ],
-      "dependencies": ["TASK-008"],
+      "dependencies": [
+        "TASK-008"
+      ],
       "status": "pending"
     },
     {
@@ -628,7 +684,10 @@
         "Шаг 4: Попытаться купить при недостатке gold — ошибка, транзакция не проходит",
         "Шаг 5: Купить реальную награду — мастер видит pending confirmation"
       ],
-      "dependencies": ["TASK-026", "TASK-013"],
+      "dependencies": [
+        "TASK-026",
+        "TASK-013"
+      ],
       "status": "pending"
     },
     {
@@ -651,7 +710,10 @@
         "Шаг 4: Купить 2 одинаковых предмета — quantity=2",
         "Шаг 5: Мастер видит инвентарь игрока в своём дашборде"
       ],
-      "dependencies": ["TASK-027", "TASK-022"],
+      "dependencies": [
+        "TASK-027",
+        "TASK-022"
+      ],
       "status": "pending"
     },
     {
@@ -674,7 +736,10 @@
         "Шаг 4: У игрока faith_points=0 — кнопка отправки неактивна",
         "Шаг 5: Другой игрок не видит чужих молитв"
       ],
-      "dependencies": ["TASK-011", "TASK-012"],
+      "dependencies": [
+        "TASK-011",
+        "TASK-012"
+      ],
       "status": "pending"
     },
     {
@@ -696,7 +761,10 @@
         "Шаг 4: Каждая запись содержит: roll_value, modifiers, total, DC, success",
         "Шаг 5: Пагинация работает при > 20 записей"
       ],
-      "dependencies": ["TASK-022", "TASK-012"],
+      "dependencies": [
+        "TASK-022",
+        "TASK-012"
+      ],
       "status": "pending"
     },
     {
@@ -718,7 +786,10 @@
         "Шаг 4: Activity feed на главной показывает последние события",
         "Шаг 5: Фильтрация по игроку работает"
       ],
-      "dependencies": ["TASK-016", "TASK-024"],
+      "dependencies": [
+        "TASK-016",
+        "TASK-024"
+      ],
       "status": "pending"
     },
     {
@@ -740,7 +811,10 @@
         "Шаг 4: Использование способностей логируется",
         "Шаг 5: Другой класс не может использовать чужую механику"
       ],
-      "dependencies": ["TASK-021", "TASK-025"],
+      "dependencies": [
+        "TASK-021",
+        "TASK-025"
+      ],
       "status": "pending"
     },
     {
@@ -762,7 +836,11 @@
         "Шаг 4: Попытаться использовать способность на кулдауне — ошибка",
         "Шаг 5: Все использования логируются"
       ],
-      "dependencies": ["TASK-021", "TASK-025", "TASK-027"],
+      "dependencies": [
+        "TASK-021",
+        "TASK-025",
+        "TASK-027"
+      ],
       "status": "pending"
     },
     {
@@ -785,7 +863,10 @@
         "Шаг 4: Клик на уведомление — переход к соответствующему разделу",
         "Шаг 5: Уведомления сохраняются и видны в истории"
       ],
-      "dependencies": ["TASK-016", "TASK-029"],
+      "dependencies": [
+        "TASK-016",
+        "TASK-029"
+      ],
       "status": "pending"
     },
     {
@@ -807,7 +888,9 @@
         "Шаг 4: В quiet hours push не отправляется",
         "Шаг 5: Нажать на push — открывается приложение на нужном разделе"
       ],
-      "dependencies": ["TASK-034"],
+      "dependencies": [
+        "TASK-034"
+      ],
       "status": "pending"
     },
     {
@@ -830,7 +913,9 @@
         "Шаг 4: Email приходит на языке из профиля мастера",
         "Шаг 5: Множественные события за 5 мин — один email (batching)"
       ],
-      "dependencies": ["TASK-006"],
+      "dependencies": [
+        "TASK-006"
+      ],
       "status": "pending"
     },
     {
@@ -853,7 +938,9 @@
         "Шаг 4: Установить quiet hours 22:00-08:00 — сохраняется",
         "Шаг 5: Сменить язык — интерфейс переключается"
       ],
-      "dependencies": ["TASK-012"],
+      "dependencies": [
+        "TASK-012"
+      ],
       "status": "pending"
     },
     {
@@ -876,7 +963,10 @@
         "Шаг 4: Обычный мастер не видит кнопку удаления гильдии",
         "Шаг 5: Owner нажимает 'Удалить гильдию' — подтверждение → soft delete"
       ],
-      "dependencies": ["TASK-008", "TASK-012"],
+      "dependencies": [
+        "TASK-008",
+        "TASK-012"
+      ],
       "status": "pending"
     },
     {
@@ -898,7 +988,9 @@
         "Шаг 4: Открыть через иконку на экране — fullscreen mode",
         "Шаг 5: Статические ресурсы загружаются из кэша при повторном посещении"
       ],
-      "dependencies": ["TASK-002"],
+      "dependencies": [
+        "TASK-002"
+      ],
       "status": "pending"
     },
     {
@@ -920,7 +1012,10 @@
         "Шаг 4: Конфликт XP (оффлайн vs сервер) — server-wins",
         "Шаг 5: Конфликт текста подтверждения — client-wins"
       ],
-      "dependencies": ["TASK-039", "TASK-016"],
+      "dependencies": [
+        "TASK-039",
+        "TASK-016"
+      ],
       "status": "pending"
     },
     {
@@ -943,7 +1038,9 @@
         "Шаг 4: Проверить CSP headers в DevTools — политика установлена",
         "Шаг 5: SQL injection в поиске — ошибка Prisma, не выполняется"
       ],
-      "dependencies": ["TASK-005"],
+      "dependencies": [
+        "TASK-005"
+      ],
       "status": "pending"
     },
     {
@@ -966,7 +1063,10 @@
         "Шаг 4: Игрок запрашивает молитвы другого игрока — 403 или пустой результат",
         "Шаг 5: Неавторизованный запрос к protected endpoint — 401"
       ],
-      "dependencies": ["TASK-006", "TASK-008"],
+      "dependencies": [
+        "TASK-006",
+        "TASK-008"
+      ],
       "status": "pending"
     },
     {
@@ -989,7 +1089,10 @@
         "Шаг 4: Удаление гильдии — soft delete, через 30 дней полное удаление",
         "Шаг 5: В БД нет лишних данных (геолокация, контакты и т.д.)"
       ],
-      "dependencies": ["TASK-009", "TASK-017"],
+      "dependencies": [
+        "TASK-009",
+        "TASK-017"
+      ],
       "status": "pending"
     },
     {
@@ -1011,7 +1114,10 @@
         "Шаг 4: Действие в гильдии обновляет last_activity_at",
         "Шаг 5: Активная гильдия не затронута очисткой"
       ],
-      "dependencies": ["TASK-036", "TASK-003"],
+      "dependencies": [
+        "TASK-036",
+        "TASK-003"
+      ],
       "status": "pending"
     },
     {
@@ -1034,7 +1140,9 @@
         "Шаг 4: Webhook endpoint /api/stripe/webhook существует (возвращает 200)",
         "Шаг 5: Вся функциональность MVP доступна без подписки"
       ],
-      "dependencies": ["TASK-006"],
+      "dependencies": [
+        "TASK-006"
+      ],
       "status": "pending"
     },
     {
@@ -1056,7 +1164,9 @@
         "Шаг 4: Cookie banner не нужен (cookie-free tracking)",
         "Шаг 5: Дашборд аналитики показывает события"
       ],
-      "dependencies": ["TASK-002"],
+      "dependencies": [
+        "TASK-002"
+      ],
       "status": "pending"
     },
     {
@@ -1078,7 +1188,9 @@
         "Шаг 4: pnpm lint локально — те же правила что в CI",
         "Шаг 5: pnpm test — тесты проходят"
       ],
-      "dependencies": ["TASK-001"],
+      "dependencies": [
+        "TASK-001"
+      ],
       "status": "pending"
     },
     {
@@ -1100,7 +1212,10 @@
         "Шаг 4: Rate limit — счётчик в Redis увеличивается",
         "Шаг 5: Redis connection — проверить health check"
       ],
-      "dependencies": ["TASK-005", "TASK-041"],
+      "dependencies": [
+        "TASK-005",
+        "TASK-041"
+      ],
       "status": "pending"
     },
     {
@@ -1122,7 +1237,10 @@
         "Шаг 4: Подождать > 1 час, перейти по ссылке — ошибка 'Токен истёк'",
         "Шаг 5: 4-й запрос сброса за 15 мин — rate limit"
       ],
-      "dependencies": ["TASK-006", "TASK-036"],
+      "dependencies": [
+        "TASK-006",
+        "TASK-036"
+      ],
       "status": "pending"
     },
     {
@@ -1145,7 +1263,10 @@
         "Шаг 4: Статистика отображает актуальные цифры",
         "Шаг 5: Запуск автоочистки вручную — неактивные гильдии помечены"
       ],
-      "dependencies": ["TASK-044", "TASK-042"],
+      "dependencies": [
+        "TASK-044",
+        "TASK-042"
+      ],
       "status": "pending"
     }
   ]

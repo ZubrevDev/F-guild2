@@ -120,3 +120,10 @@
 **Summary:** Google и Apple OAuth providers в Auth.js v5. signIn callback создаёт User при первом OAuth входе или линкует к существующему email. oauthProvider сохраняется. Кнопки Google/Apple на login и register с SVG иконками. i18n переводы en/ru/fr.
 **Коммит:** f06d371
 **Заметки:** Требует GOOGLE_CLIENT_ID/SECRET и APPLE_ID/SECRET в .env для работы. Placeholder значения в .env.
+
+### TASK-020: Система уровней: XP-прогрессия и повышение уровня
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Формула XP: 100 * level * 1.5. Автоматический level-up с переносом XP. Max level 20. ActivityLog при повышении уровня. Race-safe транзакция. Shared xpProgress() утилита для сервера и клиента. XP bar в CharacterCard.
+**Коммит:** 69c4efb
+**Заметки:** Уведомления игрокам о level-up будут в TASK-030 (система уведомлений). publicProcedure на character endpoints — в TASK-042 (авторизация).
