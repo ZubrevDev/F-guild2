@@ -127,3 +127,10 @@
 **Summary:** Формула XP: 100 * level * 1.5. Автоматический level-up с переносом XP. Max level 20. ActivityLog при повышении уровня. Race-safe транзакция. Shared xpProgress() утилита для сервера и клиента. XP bar в CharacterCard.
 **Коммит:** 69c4efb
 **Заметки:** Уведомления игрокам о level-up будут в TASK-030 (система уведомлений). publicProcedure на character endpoints — в TASK-042 (авторизация).
+
+### TASK-041: Безопасность: rate limiting, CSRF, XSS-защита, sanitization
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** In-memory rate limiter (100 req/min auth, 300 req/min API). HTML sanitization на tRPC POST body. CSP + 6 security headers в next.config.ts. ESLint: no-eval, no-implied-eval, no-new-func, react/no-danger. Auth.js CSRF — built-in.
+**Коммит:** 500fe11
+**Заметки:** Rate limiter in-memory — не персистентный, сбрасывается при рестарте. Redis будет позже. CSP содержит unsafe-inline/unsafe-eval для совместимости с Next.js.
