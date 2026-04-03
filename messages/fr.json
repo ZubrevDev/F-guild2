@@ -40,7 +40,10 @@
     "hasAccount": "Déjà un compte ?",
     "invalidCredentials": "Email ou mot de passe invalide",
     "emailTaken": "Email déjà enregistré",
-    "registrationSuccess": "Compte créé ! Connectez-vous."
+    "registrationSuccess": "Compte créé ! Connectez-vous.",
+    "orContinueWith": "Ou continuer avec",
+    "signInWithGoogle": "Se connecter avec Google",
+    "signInWithApple": "Se connecter avec Apple"
   },
   "player": {
     "level": "Niv.",

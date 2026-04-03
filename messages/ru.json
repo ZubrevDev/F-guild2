@@ -40,7 +40,10 @@
     "hasAccount": "Уже есть аккаунт?",
     "invalidCredentials": "Неверный email или пароль",
     "emailTaken": "Email уже зарегистрирован",
-    "registrationSuccess": "Аккаунт создан! Войдите."
+    "registrationSuccess": "Аккаунт создан! Войдите.",
+    "orContinueWith": "Или продолжить с",
+    "signInWithGoogle": "Войти через Google",
+    "signInWithApple": "Войти через Apple"
   },
   "player": {
     "level": "Ур.",

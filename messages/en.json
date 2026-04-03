@@ -40,7 +40,10 @@
     "hasAccount": "Already have an account?",
     "invalidCredentials": "Invalid email or password",
     "emailTaken": "Email already registered",
-    "registrationSuccess": "Account created! Please sign in."
+    "registrationSuccess": "Account created! Please sign in.",
+    "orContinueWith": "Or continue with",
+    "signInWithGoogle": "Sign in with Google",
+    "signInWithApple": "Sign in with Apple"
   },
   "player": {
     "level": "Lvl",
