@@ -627,7 +627,7 @@ export const questRouter = router({
               id: true,
               playerId: true,
               status: true,
-              periodStart: true,
+              createdAt: true,
             },
           },
         },
@@ -641,8 +641,8 @@ export const questRouter = router({
         // Current period instances
         const currentInstances = quest.instances.filter(
           (i) =>
-            i.periodStart &&
-            i.periodStart.getTime() === periodStart.getTime()
+            i.createdAt &&
+            i.createdAt.getTime() >= periodStart.getTime()
         );
 
         const currentCompleted = currentInstances.filter(

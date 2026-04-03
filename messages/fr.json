@@ -43,7 +43,13 @@
     "registrationSuccess": "Compte créé ! Connectez-vous.",
     "orContinueWith": "Ou continuer avec",
     "signInWithGoogle": "Se connecter avec Google",
-    "signInWithApple": "Se connecter avec Apple"
+    "signInWithApple": "Se connecter avec Apple",
+    "consentLabel": "J'accepte les {terms} et la {privacy}",
+    "termsOfService": "Conditions d'utilisation",
+    "privacyPolicy": "Politique de confidentialité",
+    "ageVerification": "Je confirme avoir au moins 13 ans",
+    "consentRequired": "Vous devez accepter les Conditions et la Politique de confidentialité",
+    "ageRequired": "Vous devez confirmer avoir au moins 13 ans"
   },
   "player": {
     "level": "Niv.",

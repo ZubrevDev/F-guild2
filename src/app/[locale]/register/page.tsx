@@ -15,6 +15,8 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [consent, setConsent] = useState(false);
+  const [ageVerified, setAgeVerified] = useState(false);
   const [error, setError] = useState("");
 
   const registerMutation = trpc.auth.register.useMutation({
@@ -33,7 +35,15 @@ export default function RegisterPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    registerMutation.mutate({ name, email, password });
+    if (!consent) {
+      setError(t("consentRequired"));
+      return;
+    }
+    if (!ageVerified) {
+      setError(t("ageRequired"));
+      return;
+    }
+    registerMutation.mutate({ name, email, password, consent, ageVerified });
   }
 
   return (
@@ -97,10 +107,47 @@ export default function RegisterPage() {
             />
           </div>
 
+          <div className="flex items-start gap-2">
+            <input
+              id="consent"
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              className="mt-1 size-4 rounded border-input"
+            />
+            <label htmlFor="consent" className="text-sm text-muted-foreground">
+              {t.rich("consentLabel", {
+                terms: () => (
+                  <Link href="/terms" className="text-primary hover:underline">
+                    {t("termsOfService")}
+                  </Link>
+                ),
+                privacy: () => (
+                  <Link href="/privacy" className="text-primary hover:underline">
+                    {t("privacyPolicy")}
+                  </Link>
+                ),
+              })}
+            </label>
+          </div>
+
+          <div className="flex items-start gap-2">
+            <input
+              id="ageVerified"
+              type="checkbox"
+              checked={ageVerified}
+              onChange={(e) => setAgeVerified(e.target.checked)}
+              className="mt-1 size-4 rounded border-input"
+            />
+            <label htmlFor="ageVerified" className="text-sm text-muted-foreground">
+              {t("ageVerification")}
+            </label>
+          </div>
+
           <Button
             type="submit"
             className="w-full"
-            disabled={registerMutation.isPending}
+            disabled={registerMutation.isPending || !consent || !ageVerified}
           >
             {registerMutation.isPending ? "..." : t("registerButton")}
           </Button>

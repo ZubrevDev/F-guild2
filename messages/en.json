@@ -43,7 +43,13 @@
     "registrationSuccess": "Account created! Please sign in.",
     "orContinueWith": "Or continue with",
     "signInWithGoogle": "Sign in with Google",
-    "signInWithApple": "Sign in with Apple"
+    "signInWithApple": "Sign in with Apple",
+    "consentLabel": "I accept the {terms} and {privacy}",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "ageVerification": "I confirm that I am at least 13 years old",
+    "consentRequired": "You must accept the Terms and Privacy Policy",
+    "ageRequired": "You must confirm you are at least 13 years old"
   },
   "player": {
     "level": "Lvl",
