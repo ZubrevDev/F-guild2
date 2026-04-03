@@ -1,7 +1,7 @@
 import { z } from "zod/v4";
 import { TRPCError } from "@trpc/server";
 import { router, publicProcedure } from "../trpc";
-import { xpToNextLevel, MAX_LEVEL } from "@/lib/leveling";
+import { xpProgress, MAX_LEVEL } from "@/lib/leveling";
 
 const CLASS_STATS: Record<
   string,
@@ -81,15 +81,7 @@ export const characterRouter = router({
         character: p.character
           ? {
               ...p.character,
-              xpToNext: xpToNextLevel(p.character.level),
-              xpPercent:
-                p.character.level >= MAX_LEVEL
-                  ? 100
-                  : Math.min(
-                      (p.character.xp / xpToNextLevel(p.character.level)) * 100,
-                      100
-                    ),
-              isMaxLevel: p.character.level >= MAX_LEVEL,
+              ...xpProgress(p.character.level, p.character.xp),
             }
           : null,
       }));
@@ -105,17 +97,12 @@ export const characterRouter = router({
         throw new TRPCError({ code: "NOT_FOUND", message: "Character not found" });
       }
 
-      const xpNeeded = xpToNextLevel(character.level);
-      const isMaxLevel = character.level >= MAX_LEVEL;
+      const progress = xpProgress(character.level, character.xp);
 
       return {
         level: character.level,
         currentXp: character.xp,
-        xpToNext: xpNeeded,
-        xpPercent: isMaxLevel
-          ? 100
-          : Math.min((character.xp / xpNeeded) * 100, 100),
-        isMaxLevel,
+        ...progress,
         maxLevel: MAX_LEVEL,
       };
     }),

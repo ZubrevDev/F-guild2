@@ -289,19 +289,21 @@ export const questRouter = router({
       await assertGuildMaster(ctx, instance.quest.guildId);
 
       if (input.action === "approve") {
-        // Atomically update instance and character rewards
-        const character = instance.player.character;
-        if (!character) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: "Player has no character" });
-        }
+        const result = await ctx.db.$transaction(async (tx) => {
+          // Read character inside transaction to prevent race conditions
+          const character = await tx.character.findUnique({
+            where: { playerId: instance.playerId },
+          });
+          if (!character) {
+            throw new TRPCError({ code: "BAD_REQUEST", message: "Player has no character" });
+          }
 
-        const newTotalXp = character.xp + instance.quest.xpReward;
-        const { newLevel, remainingXp, levelsGained } = checkLevelUp(
-          character.level,
-          newTotalXp
-        );
+          const newTotalXp = character.xp + instance.quest.xpReward;
+          const { newLevel, remainingXp, levelsGained } = checkLevelUp(
+            character.level,
+            newTotalXp
+          );
 
-        await ctx.db.$transaction(async (tx) => {
           await tx.questInstance.update({
             where: { id: input.instanceId },
             data: { status: "completed", completedAt: new Date() },
@@ -324,7 +326,7 @@ export const questRouter = router({
               data: {
                 guildId: instance.quest.guildId,
                 actorType: "system",
-                actorId: ctx.session.userId,
+                actorId: ctx.session!.userId,
                 action: "level_up",
                 details: {
                   playerId: instance.playerId,
@@ -337,14 +339,16 @@ export const questRouter = router({
               },
             });
           }
+
+          return { levelsGained, newLevel };
         });
 
         return {
-          status: "completed",
+          status: "completed" as const,
           xpAwarded: instance.quest.xpReward,
           goldAwarded: instance.quest.goldReward,
-          levelsGained,
-          newLevel,
+          levelsGained: result.levelsGained,
+          newLevel: result.newLevel,
         };
       }
 

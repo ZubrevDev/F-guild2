@@ -37,4 +37,17 @@ export function checkLevelUp(
   };
 }
 
+/**
+ * Calculate XP progress info for display.
+ */
+export function xpProgress(level: number, xp: number) {
+  const isMaxLevel = level >= MAX_LEVEL;
+  const xpToNext = xpToNextLevel(level);
+  return {
+    xpToNext,
+    xpPercent: isMaxLevel ? 100 : Math.min((xp / xpToNext) * 100, 100),
+    isMaxLevel,
+  };
+}
+
 export { MAX_LEVEL };

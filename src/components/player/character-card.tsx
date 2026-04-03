@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useTranslations } from "next-intl";
 import { Coins, Sparkles, Shield, Sword, Wand2, TreePine, Cross, Eye, Music } from "lucide-react";
+import { xpProgress } from "@/lib/leveling";
 
 const CLASS_ICONS: Record<string, typeof Shield> = {
   fighter: Sword,
@@ -14,13 +15,6 @@ const CLASS_ICONS: Record<string, typeof Shield> = {
   rogue: Eye,
   bard: Music,
 };
-
-const MAX_LEVEL = 20;
-
-function xpToNextLevel(level: number): number {
-  if (level >= MAX_LEVEL) return Infinity;
-  return Math.floor(100 * level * 1.5);
-}
 
 interface CharacterCardProps {
   playerName: string;
@@ -36,9 +30,7 @@ interface CharacterCardProps {
 export function CharacterCard({ playerName, character }: CharacterCardProps) {
   const t = useTranslations("player");
   const ClassIcon = CLASS_ICONS[character.class] || Shield;
-  const isMaxLevel = character.level >= MAX_LEVEL;
-  const xpNeeded = xpToNextLevel(character.level);
-  const xpPercent = isMaxLevel ? 100 : Math.min((character.xp / xpNeeded) * 100, 100);
+  const { xpToNext, xpPercent, isMaxLevel } = xpProgress(character.level, character.xp);
 
   return (
     <Card>
@@ -64,7 +56,7 @@ export function CharacterCard({ playerName, character }: CharacterCardProps) {
           <div className="mb-1 flex justify-between text-xs text-muted-foreground">
             <span>XP</span>
             <span>
-              {isMaxLevel ? "MAX" : `${character.xp} / ${xpNeeded}`}
+              {isMaxLevel ? "MAX" : `${character.xp} / ${xpToNext}`}
             </span>
           </div>
           <Progress value={xpPercent} className="h-2" />
