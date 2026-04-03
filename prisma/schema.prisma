@@ -102,6 +102,7 @@ enum SubscriptionTier {
 model Guild {
   id              String   @id @default(uuid()) @db.Uuid
   name            String
+  description     String   @default("")
   inviteCode      String   @unique @map("invite_code")
   createdById     String   @map("created_by") @db.Uuid
   settings        Json     @default("{}")
@@ -130,6 +131,7 @@ model User {
   oauthProvider           String?          @map("oauth_provider")
   locale                  String           @default("en")
   notificationPreferences Json             @default("{}") @map("notification_preferences")
+  theme                   String           @default("system")
   subscriptionTier        SubscriptionTier @default(free) @map("subscription_tier")
   consentedAt             DateTime?        @map("consented_at")
   ageVerified             Boolean          @default(false) @map("age_verified")
@@ -192,10 +194,11 @@ model Character {
   abilities   Json           @default("[]")
   updatedAt   DateTime       @updatedAt @map("updated_at")
 
-  player      Player         @relation(fields: [playerId], references: [id], onDelete: Cascade)
-  inventory   Inventory[]
-  activeBuffs ActiveBuff[]
-  diceLogs    DiceLog[]
+  player             Player              @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  inventory          Inventory[]
+  activeBuffs        ActiveBuff[]
+  diceLogs           DiceLog[]
+  classAbilityUsages ClassAbilityUsage[]
 
   @@map("characters")
 }
@@ -383,4 +386,18 @@ model ActivityLog {
   @@index([guildId])
   @@index([createdAt])
   @@map("activity_logs")
+}
+
+model ClassAbilityUsage {
+  id          String    @id @default(uuid()) @db.Uuid
+  characterId String    @map("character_id") @db.Uuid
+  abilityName String    @map("ability_name")
+  usedAt      DateTime  @default(now()) @map("used_at")
+  resetsAt    DateTime  @map("resets_at")
+
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@index([characterId, abilityName])
+  @@index([resetsAt])
+  @@map("class_ability_usages")
 }
