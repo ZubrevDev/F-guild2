@@ -4,6 +4,7 @@ import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { checkLevelUp } from "@/lib/leveling";
 import { generateRecurringInstances, getRecurringProgress, getPeriodStart, getTotalForPeriod } from "@/lib/recurring-quests";
 import { calculateBuffModifiers, applyModifier } from "@/lib/buff-modifiers";
+import { createNotification } from "@/lib/notifications";
 
 export const questRouter = router({
   create: protectedProcedure
@@ -344,13 +345,32 @@ export const questRouter = router({
         });
       }
 
-      return ctx.db.questInstance.update({
+      const updated = await ctx.db.questInstance.update({
         where: { id: input.instanceId },
+        include: { quest: { select: { title: true, guildId: true } }, player: { select: { name: true } } },
         data: {
           status: "pending_review",
           confirmationData: input.confirmationData,
         },
       });
+
+      // Notify guild masters about the submission
+      const masters = await ctx.db.guildMaster.findMany({
+        where: { guildId: updated.quest.guildId },
+        select: { userId: true },
+      });
+      for (const master of masters) {
+        await createNotification(ctx.db, {
+          recipientType: "master",
+          recipientId: master.userId,
+          type: "quest_submitted",
+          title: `Quest submitted: ${updated.quest.title}`,
+          message: `${updated.player.name} submitted "${updated.quest.title}" for review`,
+          data: { questId: updated.questId, instanceId: updated.id },
+        });
+      }
+
+      return updated;
     }),
 
   startTimer: publicProcedure
@@ -614,6 +634,28 @@ export const questRouter = router({
           return { levelsGained, newLevel, awardedItems };
         });
 
+        // Notify player about approval
+        await createNotification(ctx.db, {
+          recipientType: "player",
+          recipientId: instance.playerId,
+          type: "quest_completed",
+          title: `Quest completed!`,
+          message: `"${instance.quest.title}" approved! +${finalXp} XP, +${finalGold} Gold${result.awardedItems.length > 0 ? ", +" + result.awardedItems.map(i => i.name).join(", ") : ""}`,
+          data: { questId: instance.questId, instanceId: instance.id },
+        });
+
+        // Notify about level ups
+        if (result.levelsGained > 0) {
+          await createNotification(ctx.db, {
+            recipientType: "player",
+            recipientId: instance.playerId,
+            type: "level_up",
+            title: `Level up!`,
+            message: `You reached level ${result.newLevel}!`,
+            data: { newLevel: result.newLevel },
+          });
+        }
+
         return {
           status: "completed" as const,
           baseXp,
@@ -629,13 +671,24 @@ export const questRouter = router({
       }
 
       if (input.action === "reject") {
-        return ctx.db.questInstance.update({
+        const rejected = await ctx.db.questInstance.update({
           where: { id: input.instanceId },
           data: {
             status: "rejected",
             rejectionReason: input.rejectionReason || null,
           },
         });
+
+        await createNotification(ctx.db, {
+          recipientType: "player",
+          recipientId: instance.playerId,
+          type: "quest_rejected",
+          title: `Quest rejected`,
+          message: `"${instance.quest.title}" was rejected${input.rejectionReason ? ": " + input.rejectionReason : ""}`,
+          data: { questId: instance.questId, instanceId: instance.id },
+        });
+
+        return rejected;
       }
 
       // return
