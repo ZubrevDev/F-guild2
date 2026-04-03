@@ -13,6 +13,7 @@ import {
   Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 
 const navItems = [
   { key: "overview", href: "/dashboard", icon: LayoutDashboard },
@@ -60,6 +61,9 @@ export default function DashboardLayout({
             );
           })}
         </nav>
+        <div className="mt-auto border-t border-border p-4">
+          <LocaleSwitcher />
+        </div>
       </aside>
 
       {/* Main content */}
