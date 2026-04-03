@@ -13,7 +13,8 @@ import {
 import { cn } from "@/lib/utils";
 
 interface NotificationBellProps {
-  userId: string;
+  recipientType: "master" | "player";
+  recipientId: string;
 }
 
 /**
@@ -36,43 +37,52 @@ function formatTimeAgo(
 
 /**
  * Notification bell icon with unread badge and popover list.
- * Accepts the session user ID and queries as a master recipient.
+ * Works for both master (NextAuth session) and player (localStorage) recipients.
  */
-export function NotificationBell({ userId }: NotificationBellProps) {
+export function NotificationBell({ recipientType, recipientId }: NotificationBellProps) {
   const t = useTranslations("notifications");
   const utils = trpc.useUtils();
   const [open, setOpen] = useState(false);
 
-  const recipientInput = {
-    recipientType: "master" as const,
-    recipientId: userId,
-  };
+  const isPlayer = recipientType === "player";
 
-  const { data: countData } = trpc.notification.unreadCount.useQuery(
-    recipientInput,
-    {
-      refetchInterval: 30_000,
-    }
-  );
+  // Queries — pick the right procedure based on recipientType
+  const masterInput = { recipientType: "master" as const, recipientId };
+  const playerInput = { playerId: recipientId };
 
-  const { data: listData } = trpc.notification.list.useQuery(
-    recipientInput,
-    {
-      enabled: open,
-    }
-  );
+  const { data: countData } = isPlayer
+    ? trpc.notification.playerUnreadCount.useQuery(playerInput, { refetchInterval: 30_000 })
+    : trpc.notification.unreadCount.useQuery(masterInput, { refetchInterval: 30_000 });
 
-  const markRead = trpc.notification.markRead.useMutation({
+  const { data: listData } = isPlayer
+    ? trpc.notification.playerList.useQuery(playerInput, { enabled: open })
+    : trpc.notification.list.useQuery(masterInput, { enabled: open });
+
+  const markReadMaster = trpc.notification.markRead.useMutation({
     onSuccess: () => {
-      void utils.notification.unreadCount.invalidate(recipientInput);
-      void utils.notification.list.invalidate(recipientInput);
+      void utils.notification.unreadCount.invalidate(masterInput);
+      void utils.notification.list.invalidate(masterInput);
     },
   });
 
-  const markAllRead = trpc.notification.markAllRead.useMutation({
+  const markReadPlayer = trpc.notification.playerMarkRead.useMutation({
     onSuccess: () => {
-      void utils.notification.unreadCount.invalidate(recipientInput);
-      void utils.notification.list.invalidate(recipientInput);
+      void utils.notification.playerUnreadCount.invalidate(playerInput);
+      void utils.notification.playerList.invalidate(playerInput);
+    },
+  });
+
+  const markAllReadMaster = trpc.notification.markAllRead.useMutation({
+    onSuccess: () => {
+      void utils.notification.unreadCount.invalidate(masterInput);
+      void utils.notification.list.invalidate(masterInput);
+    },
+  });
+
+  const markAllReadPlayer = trpc.notification.playerMarkAllRead.useMutation({
+    onSuccess: () => {
+      void utils.notification.playerUnreadCount.invalidate(playerInput);
+      void utils.notification.playerList.invalidate(playerInput);
     },
   });
 
@@ -81,12 +91,24 @@ export function NotificationBell({ userId }: NotificationBellProps) {
   const hasUnread = unreadCount > 0;
 
   function handleMarkAllRead() {
-    markAllRead.mutate(recipientInput);
+    if (isPlayer) {
+      markAllReadPlayer.mutate(playerInput);
+    } else {
+      markAllReadMaster.mutate(masterInput);
+    }
   }
 
   function handleMarkRead(notificationId: string) {
-    markRead.mutate({ notificationId });
+    if (isPlayer) {
+      markReadPlayer.mutate({ notificationId, playerId: recipientId });
+    } else {
+      markReadMaster.mutate({ notificationId });
+    }
   }
+
+  const isPending = isPlayer
+    ? markReadPlayer.isPending || markAllReadPlayer.isPending
+    : markReadMaster.isPending || markAllReadMaster.isPending;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -119,7 +141,7 @@ export function NotificationBell({ userId }: NotificationBellProps) {
           {hasUnread && (
             <button
               onClick={handleMarkAllRead}
-              disabled={markAllRead.isPending}
+              disabled={isPending}
               className="text-xs text-primary hover:underline disabled:opacity-50"
             >
               {t("markAllRead")}
@@ -143,7 +165,7 @@ export function NotificationBell({ userId }: NotificationBellProps) {
                         handleMarkRead(notification.id);
                       }
                     }}
-                    disabled={notification.isRead || markRead.isPending}
+                    disabled={notification.isRead || isPending}
                     className={cn(
                       "w-full cursor-default px-4 py-3 text-left transition-colors",
                       !notification.isRead

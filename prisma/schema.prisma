@@ -99,6 +99,8 @@ enum SubscriptionTier {
 
 enum NotificationType {
   quest_completed
+  quest_submitted
+  quest_rejected
   level_up
   new_prayer
   buff_applied

@@ -60,22 +60,22 @@ export default function DashboardLayout({
   return (
     <div className="flex min-h-screen">
       {/* Desktop sidebar */}
-      <aside className="hidden w-60 shrink-0 border-r border-border bg-card md:flex md:flex-col">
-        <div className="flex items-center gap-3 p-4">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+      <aside className="hidden w-56 shrink-0 border-r border-purple-500/15 bg-[#130e28] md:flex md:flex-col">
+        <div className="flex items-center gap-3 p-4 pb-5">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-xs font-bold text-white shadow-lg shadow-purple-500/20">
             {userInitials}
           </div>
           <div className="min-w-0 flex-1">
-            <h2 className="text-lg font-bold text-primary leading-none">F-Guild</h2>
+            <h2 className="text-base font-bold text-white leading-none">F-Guild</h2>
             {userName && (
-              <p className="truncate text-xs text-muted-foreground">{userName}</p>
+              <p className="truncate text-[11px] text-muted-foreground mt-0.5">{userName}</p>
             )}
           </div>
           {session?.user?.id && (
-            <NotificationBell userId={session.user.id} />
+            <NotificationBell recipientType="master" recipientId={session.user.id} />
           )}
         </div>
-        <nav className="flex flex-col gap-1 px-3">
+        <nav className="flex flex-col gap-0.5 px-3">
           {navItems.map(({ key, href, icon: Icon }) => {
             const isActive = isNavItemActive(pathname, href);
             return (
@@ -83,19 +83,19 @@ export default function DashboardLayout({
                 key={key}
                 href={href}
                 className={cn(
-                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
+                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200",
                   isActive
-                    ? "bg-primary/10 text-primary font-medium"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    ? "sidebar-active-item text-white font-medium shadow-md shadow-purple-500/10"
+                    : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
                 )}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-[18px] w-[18px]" />
                 {t(key)}
               </Link>
             );
           })}
         </nav>
-        <div className="mt-auto border-t border-border p-4">
+        <div className="mt-auto border-t border-purple-500/15 p-4">
           <LocaleSwitcher />
         </div>
       </aside>
@@ -106,12 +106,12 @@ export default function DashboardLayout({
       {/* Mobile notification bell — fixed top-right */}
       {session?.user?.id && (
         <div className="fixed right-4 top-3 z-50 md:hidden">
-          <NotificationBell userId={session.user.id} />
+          <NotificationBell recipientType="master" recipientId={session.user.id} />
         </div>
       )}
 
       {/* Mobile bottom nav */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-purple-500/15 bg-[#130e28] md:hidden">
         <div className="flex justify-around">
           {navItems.slice(0, 5).map(({ key, href, icon: Icon }) => {
             const isActive = isNavItemActive(pathname, href);
@@ -120,8 +120,8 @@ export default function DashboardLayout({
                 key={key}
                 href={href}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 px-2 py-2 text-[10px]",
-                  isActive ? "text-primary" : "text-muted-foreground"
+                  "flex flex-col items-center gap-0.5 px-2 py-2 text-[10px] transition-colors",
+                  isActive ? "text-purple-400" : "text-muted-foreground"
                 )}
               >
                 <Icon className="h-5 w-5" />
