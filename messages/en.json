@@ -269,6 +269,35 @@
     "deactivate": "Deactivate",
     "yourGold": "Your Gold"
   },
+  "buffs": {
+    "title": "Buffs & Debuffs",
+    "templates": "Buff Templates",
+    "createBuff": "Create Buff",
+    "noBuffs": "No buff templates yet",
+    "noBuffsDesc": "Create buff templates to enhance or challenge your players",
+    "buffName": "Name",
+    "buffDescription": "Description",
+    "effectType": "Effect Type",
+    "effectValue": "Value",
+    "duration": "Duration (minutes)",
+    "apply": "Apply",
+    "remove": "Remove",
+    "activeBuffs": "Active Buffs",
+    "noActive": "No active buffs",
+    "noActiveDesc": "Apply buffs to players to see them here",
+    "selectPlayer": "Select Player",
+    "expires": "Expires",
+    "xpBonus": "XP Bonus",
+    "goldBonus": "Gold Bonus",
+    "diceBonus": "Dice Bonus",
+    "xpPenalty": "XP Penalty",
+    "goldPenalty": "Gold Penalty",
+    "dicePenalty": "Dice Penalty",
+    "shopDiscount": "Shop Discount",
+    "goldDrain": "Gold Drain",
+    "applied": "Buff applied!",
+    "removed": "Buff removed"
+  },
   "admin": {
     "common": {
       "loading": "Loading..."

@@ -269,6 +269,35 @@
     "deactivate": "Деактивировать",
     "yourGold": "Ваше золото"
   },
+  "buffs": {
+    "title": "Баффы и дебаффы",
+    "templates": "Шаблоны баффов",
+    "createBuff": "Создать бафф",
+    "noBuffs": "Шаблонов пока нет",
+    "noBuffsDesc": "Создайте шаблоны баффов для усиления или испытания игроков",
+    "buffName": "Название",
+    "buffDescription": "Описание",
+    "effectType": "Тип эффекта",
+    "effectValue": "Значение",
+    "duration": "Длительность (минуты)",
+    "apply": "Применить",
+    "remove": "Убрать",
+    "activeBuffs": "Активные баффы",
+    "noActive": "Нет активных баффов",
+    "noActiveDesc": "Примените баффы к игрокам, чтобы увидеть их здесь",
+    "selectPlayer": "Выбрать игрока",
+    "expires": "Истекает",
+    "xpBonus": "Бонус XP",
+    "goldBonus": "Бонус золота",
+    "diceBonus": "Бонус броска",
+    "xpPenalty": "Штраф XP",
+    "goldPenalty": "Штраф золота",
+    "dicePenalty": "Штраф броска",
+    "shopDiscount": "Скидка в магазине",
+    "goldDrain": "Дренаж золота",
+    "applied": "Бафф применён!",
+    "removed": "Бафф убран"
+  },
   "admin": {
     "common": {
       "loading": "Загрузка..."

@@ -269,6 +269,35 @@
     "deactivate": "Désactiver",
     "yourGold": "Votre or"
   },
+  "buffs": {
+    "title": "Buffs et debuffs",
+    "templates": "Modèles de buffs",
+    "createBuff": "Créer un buff",
+    "noBuffs": "Pas encore de modèles",
+    "noBuffsDesc": "Créez des modèles de buffs pour renforcer ou défier vos joueurs",
+    "buffName": "Nom",
+    "buffDescription": "Description",
+    "effectType": "Type d'effet",
+    "effectValue": "Valeur",
+    "duration": "Durée (minutes)",
+    "apply": "Appliquer",
+    "remove": "Retirer",
+    "activeBuffs": "Buffs actifs",
+    "noActive": "Aucun buff actif",
+    "noActiveDesc": "Appliquez des buffs aux joueurs pour les voir ici",
+    "selectPlayer": "Sélectionner un joueur",
+    "expires": "Expire",
+    "xpBonus": "Bonus XP",
+    "goldBonus": "Bonus or",
+    "diceBonus": "Bonus dé",
+    "xpPenalty": "Malus XP",
+    "goldPenalty": "Malus or",
+    "dicePenalty": "Malus dé",
+    "shopDiscount": "Réduction boutique",
+    "goldDrain": "Drain d'or",
+    "applied": "Buff appliqué !",
+    "removed": "Buff retiré"
+  },
   "admin": {
     "common": {
       "loading": "Chargement..."
