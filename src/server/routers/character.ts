@@ -8,6 +8,13 @@ import {
   getAbilityPoints,
   findAbility,
 } from "@/lib/ability-trees";
+import {
+  canUseAbility,
+  useAbility,
+  getAbilityStatus,
+  getClassAbility,
+  resetDailyCooldowns,
+} from "@/lib/class-mechanics";
 
 const CLASS_STATS: Record<
   string,
@@ -235,6 +242,195 @@ export const characterRouter = router({
       return {
         learned: ability,
         remainingPoints: totalPoints - updatedAbilities.length,
+      };
+    }),
+
+  /** Use an active class ability (e.g. Fighter's Second Wind, Wizard's Arcane Focus). */
+  useClassAbility: protectedProcedure
+    .input(
+      z.object({
+        characterId: z.uuid(),
+        abilityName: z.string().min(1).max(50),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const character = await ctx.db.character.findUnique({
+        where: { id: input.characterId },
+        include: { player: { select: { guildId: true } } },
+      });
+      if (!character) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Character not found" });
+      }
+
+      await assertGuildMaster(ctx, character.player.guildId);
+
+      // Verify the ability belongs to this character's class
+      const classAbility = getClassAbility(character.class);
+      if (!classAbility || classAbility.name !== input.abilityName) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Ability does not belong to your class",
+        });
+      }
+
+      const check = await canUseAbility(ctx.db, input.characterId, input.abilityName);
+      if (!check.canUse) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: check.reason,
+        });
+      }
+
+      const effect = await useAbility(ctx.db, input.characterId, input.abilityName);
+
+      return {
+        abilityName: input.abilityName,
+        displayName: classAbility.displayName,
+        effect,
+      };
+    }),
+
+  /** Get class ability status for a character (cooldown, uses remaining). */
+  classAbilityStatus: publicProcedure
+    .input(z.object({ characterId: z.uuid() }))
+    .query(async ({ ctx, input }) => {
+      const character = await ctx.db.character.findUnique({
+        where: { id: input.characterId },
+      });
+      if (!character) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Character not found" });
+      }
+
+      const status = await getAbilityStatus(ctx.db, input.characterId, character.class);
+      return status;
+    }),
+
+  /** Admin: reset all expired daily ability cooldowns. */
+  resetClassCooldowns: protectedProcedure
+    .mutation(async ({ ctx }) => {
+      const cleared = await resetDailyCooldowns(ctx.db);
+      return { cleared };
+    }),
+
+  /**
+   * Bard "Inspire": give another player +3 to their next dice roll.
+   * Can only be used once per day by a bard character.
+   * The target must be in the same guild.
+   */
+  inspire: protectedProcedure
+    .input(
+      z.object({
+        bardCharacterId: z.uuid(),
+        targetCharacterId: z.uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.bardCharacterId === input.targetCharacterId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Cannot inspire yourself",
+        });
+      }
+
+      // Fetch the bard character
+      const bardChar = await ctx.db.character.findUnique({
+        where: { id: input.bardCharacterId },
+        include: { player: { select: { guildId: true, name: true } } },
+      });
+
+      if (!bardChar) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Bard character not found",
+        });
+      }
+
+      if (bardChar.class !== "bard") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Only bards can use Inspire",
+        });
+      }
+
+      // Verify the caller is a master of this guild
+      await assertGuildMaster(ctx, bardChar.player.guildId);
+
+      // Fetch the target character and verify same guild
+      const targetChar = await ctx.db.character.findUnique({
+        where: { id: input.targetCharacterId },
+        include: { player: { select: { guildId: true, name: true } } },
+      });
+
+      if (!targetChar) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Target character not found",
+        });
+      }
+
+      if (targetChar.player.guildId !== bardChar.player.guildId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Target must be in the same guild",
+        });
+      }
+
+      // Check cooldown
+      const check = await canUseAbility(ctx.db, bardChar.id, "inspire");
+      if (!check.canUse) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: check.reason,
+        });
+      }
+
+      // Check if target already has a pending inspire buff
+      const existingInspire = await ctx.db.classAbilityUsage.findFirst({
+        where: {
+          characterId: input.targetCharacterId,
+          abilityName: "inspire_received",
+          resetsAt: { gt: new Date() },
+        },
+      });
+
+      if (existingInspire) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Target already has an active Inspire buff",
+        });
+      }
+
+      const now = new Date();
+      const resetsAt = new Date(now);
+      resetsAt.setUTCDate(resetsAt.getUTCDate() + 1);
+      resetsAt.setUTCHours(0, 0, 0, 0);
+
+      // Record bard's usage and place inspire buff on target in a transaction
+      await ctx.db.$transaction(async (tx) => {
+        // Record the bard used their ability
+        await tx.classAbilityUsage.create({
+          data: {
+            characterId: bardChar.id,
+            abilityName: "inspire",
+            resetsAt,
+          },
+        });
+
+        // Place the inspire buff on the target (consumed on next roll)
+        await tx.classAbilityUsage.create({
+          data: {
+            characterId: input.targetCharacterId,
+            abilityName: "inspire_received",
+            resetsAt,
+          },
+        });
+      });
+
+      return {
+        bardName: bardChar.player.name,
+        targetName: targetChar.player.name,
+        bonus: 3,
+        message: `${bardChar.player.name} inspired ${targetChar.player.name} with +3 to their next roll!`,
       };
     }),
 });

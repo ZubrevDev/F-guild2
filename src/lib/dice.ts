@@ -22,7 +22,7 @@ export function rollD20(): number {
 
 export type DiceModifier = {
   source: string;
-  type: "ability" | "item" | "buff";
+  type: "ability" | "item" | "buff" | "class";
   value: number;
 };
 

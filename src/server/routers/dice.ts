@@ -2,6 +2,12 @@ import { z } from "zod/v4";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../trpc";
 import { rollD20, abilityModifier, type DiceModifier, type DiceRollResult } from "@/lib/dice";
+import {
+  getClassPassives,
+  canUseAbility,
+  INSPIRE_BUFF_SOURCE,
+  INSPIRE_BONUS,
+} from "@/lib/class-mechanics";
 
 /**
  * Expected JSON shape for Item.effect and Buff.effect:
@@ -59,6 +65,19 @@ function contextToStat(context: string): keyof CharacterStats {
   const key = context.toLowerCase().trim();
   return mapping[key] ?? "strength";
 }
+
+/**
+ * Calculate the next daily reset time (midnight UTC).
+ */
+function getNextDailyReset(): Date {
+  const now = new Date();
+  const reset = new Date(now);
+  reset.setUTCDate(reset.getUTCDate() + 1);
+  reset.setUTCHours(0, 0, 0, 0);
+  return reset;
+}
+
+const LUCKY_BREAK_BONUS = 5;
 
 export const diceRouter = router({
   roll: protectedProcedure
@@ -158,6 +177,30 @@ export const diceRouter = router({
         });
       }
 
+      // 4. Class passive modifiers (e.g. Ranger's Nature's Guide)
+      const classPassives = getClassPassives(character.class, input.context);
+      modifiers.push(...classPassives);
+
+      // 5. Bard Inspire buff: check if this character has a pending inspire
+      const inspireRecord = await ctx.db.classAbilityUsage.findFirst({
+        where: {
+          characterId: input.characterId,
+          abilityName: "inspire_received",
+          resetsAt: { gt: new Date() },
+        },
+      });
+      if (inspireRecord) {
+        modifiers.push({
+          source: INSPIRE_BUFF_SOURCE,
+          type: "class",
+          value: INSPIRE_BONUS,
+        });
+        // Consume the inspire buff (one-time use)
+        await ctx.db.classAbilityUsage.delete({
+          where: { id: inspireRecord.id },
+        });
+      }
+
       // Roll the d20
       const roll = rollD20();
       const totalModifier = modifiers.reduce((sum, m) => sum + m.value, 0);
@@ -183,6 +226,124 @@ export const diceRouter = router({
         total,
         dc: input.dc,
         success,
+      };
+    }),
+
+  /**
+   * Rogue "Lucky Break": retroactively add +5 to a recent dice roll.
+   * Can only be used once per day by a rogue character.
+   */
+  luckyBreak: protectedProcedure
+    .input(
+      z.object({
+        characterId: z.uuid(),
+        diceLogId: z.uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Fetch character and verify class
+      const character = await ctx.db.character.findUnique({
+        where: { id: input.characterId },
+        include: { player: { select: { guildId: true } } },
+      });
+
+      if (!character) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Character not found",
+        });
+      }
+
+      if (character.class !== "rogue") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Only rogues can use Lucky Break",
+        });
+      }
+
+      // Verify the caller is a master of this guild
+      await assertGuildMaster(ctx, character.player.guildId);
+
+      // Check cooldown
+      const check = await canUseAbility(ctx.db, character.id, "lucky_break");
+      if (!check.canUse) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: check.reason,
+        });
+      }
+
+      // Find the dice log entry
+      const diceLog = await ctx.db.diceLog.findUnique({
+        where: { id: input.diceLogId },
+      });
+
+      if (!diceLog) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Dice log entry not found",
+        });
+      }
+
+      if (diceLog.characterId !== input.characterId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Dice log does not belong to this character",
+        });
+      }
+
+      // Ensure the roll was made recently (within last 10 minutes)
+      const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+      if (diceLog.rolledAt < tenMinutesAgo) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Can only apply Lucky Break to rolls made within the last 10 minutes",
+        });
+      }
+
+      // Apply the +5 bonus
+      const existingModifiers = (
+        typeof diceLog.modifiers === "string"
+          ? JSON.parse(diceLog.modifiers)
+          : diceLog.modifiers
+      ) as DiceModifier[];
+
+      const luckyBreakMod: DiceModifier = {
+        source: "Lucky Break (Rogue)",
+        type: "class",
+        value: LUCKY_BREAK_BONUS,
+      };
+      const updatedModifiers = [...existingModifiers, luckyBreakMod];
+      const newTotal = diceLog.total + LUCKY_BREAK_BONUS;
+      const newSuccess = newTotal >= diceLog.difficultyClass;
+
+      // Update the dice log and record ability usage in a transaction
+      const updated = await ctx.db.$transaction(async (tx) => {
+        await tx.classAbilityUsage.create({
+          data: {
+            characterId: character.id,
+            abilityName: "lucky_break",
+            resetsAt: getNextDailyReset(),
+          },
+        });
+
+        return tx.diceLog.update({
+          where: { id: input.diceLogId },
+          data: {
+            modifiers: JSON.stringify(updatedModifiers),
+            total: newTotal,
+            success: newSuccess,
+          },
+        });
+      });
+
+      return {
+        diceLogId: updated.id,
+        previousTotal: diceLog.total,
+        previousSuccess: diceLog.success,
+        newTotal,
+        newSuccess,
+        bonusApplied: LUCKY_BREAK_BONUS,
       };
     }),
 
