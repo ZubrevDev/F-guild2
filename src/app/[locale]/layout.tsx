@@ -10,6 +10,7 @@ import { TRPCProvider } from "@/components/providers";
 import { PostHogProvider } from "@/components/analytics/posthog-provider";
 import { RegisterSW } from "@/components/pwa/register-sw";
 import { OfflineIndicator } from "@/components/offline/offline-indicator";
+import { CapacitorProvider } from "@/components/capacitor/capacitor-provider";
 import "../globals.css";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
@@ -58,6 +59,7 @@ export default async function LocaleLayout({
         </Suspense>
         <RegisterSW />
         <OfflineIndicator />
+        <CapacitorProvider />
       </body>
     </html>
   );
