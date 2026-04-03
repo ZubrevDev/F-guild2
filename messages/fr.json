@@ -76,8 +76,15 @@
     "pendingQuests": "Quêtes en attente",
     "unreadPrayers": "Prières non lues",
     "players": "Joueurs",
+    "todayActivity": "Activité d'aujourd'hui",
     "activity": "Activité récente",
-    "noActivity": "Aucune activité récente"
+    "noActivity": "Aucune activité récente",
+    "quickActions": "Actions rapides",
+    "createQuest": "Créer une quête",
+    "addPlayer": "Ajouter un joueur",
+    "viewShop": "Voir la boutique",
+    "noGuildId": "Aucune guilde sélectionnée. Veuillez d'abord sélectionner une guilde.",
+    "noCharacter": "Pas de personnage"
   },
   "home": {
     "title": "F-Guild",

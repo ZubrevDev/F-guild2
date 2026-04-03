@@ -76,8 +76,15 @@
     "pendingQuests": "Ожидают проверки",
     "unreadPrayers": "Непрочитанные молитвы",
     "players": "Игроки",
+    "todayActivity": "Активность сегодня",
     "activity": "Последние действия",
-    "noActivity": "Нет недавних действий"
+    "noActivity": "Нет недавних действий",
+    "quickActions": "Быстрые действия",
+    "createQuest": "Создать квест",
+    "addPlayer": "Добавить игрока",
+    "viewShop": "Открыть магазин",
+    "noGuildId": "Гильдия не выбрана. Пожалуйста, выберите гильдию.",
+    "noCharacter": "Нет персонажа"
   },
   "home": {
     "title": "F-Guild",
