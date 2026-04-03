@@ -1,11 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { Suspense } from "react";
 import { Inter } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { TRPCProvider } from "@/components/providers";
+import { PostHogProvider } from "@/components/analytics/posthog-provider";
 import { RegisterSW } from "@/components/pwa/register-sw";
 import "../globals.css";
 
@@ -50,6 +52,9 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <TRPCProvider>{children}</TRPCProvider>
         </NextIntlClientProvider>
+        <Suspense fallback={null}>
+          <PostHogProvider />
+        </Suspense>
         <RegisterSW />
       </body>
     </html>
