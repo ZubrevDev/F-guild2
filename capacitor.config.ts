@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: "F-Guild",
   webDir: "dist",
   server: {
-    url: "https://f-guild.example.com",
+    url: "https://f-guild.vercel.app",
     cleartext: false,
   },
   plugins: {
