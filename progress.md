@@ -141,3 +141,10 @@
 **Summary:** character.create и getByGuild → protectedProcedure + assertGuildMaster. Quest endpoints: assertGuildMaster на get, assertPlayerInGuild на forPlayer/accept/submit. Ownership check на submit (instance.playerId !== input.playerId). Player-facing read endpoints остались public (PIN-auth без Auth.js сессии).
 **Коммит:** 63d26bd
 **Заметки:** assertGuildMaster дублируется в guild.ts, quest.ts, player.ts, character.ts — будущий рефакторинг вынесет в shared module. Prayer router ещё не существует.
+
+### TASK-017: Выполнение квестов: подтверждение фото (загрузка файлов)
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Upload API route (POST /api/upload) с валидацией MIME (jpeg/png/gif/webp/avif) и размера (5MB). Локальное хранилище public/uploads/. Quest submit schema расширена: type "photo" + photoUrl. Refine валидация photoUrl.
+**Коммит:** 9485d1d
+**Заметки:** Клиентская компрессия (browser-image-compression) будет при создании UI. Для прода нужна миграция на S3/R2.
