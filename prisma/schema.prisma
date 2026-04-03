@@ -211,6 +211,7 @@ model Quest {
   faithReward      Int              @default(0) @map("faith_reward")
   difficultyClass  Int              @map("difficulty_class")
   confirmationType ConfirmationType @map("confirmation_type")
+  timerSeconds     Int?             @map("timer_seconds")
   assignedTo       String[]         @map("assigned_to") @db.Uuid
   imageUrl         String?          @map("image_url")
   isActive         Boolean          @default(true) @map("is_active")

@@ -18,9 +18,18 @@ export const questRouter = router({
         faithReward: z.number().int().min(0).default(0),
         difficultyClass: z.number().int().min(1).max(30),
         confirmationType: z.enum(["photo", "text", "timer", "master_confirm"]),
+        timerSeconds: z.number().int().min(1).optional(),
         assignedTo: z.array(z.uuid()).default([]),
         imageUrl: z.string().url().optional(),
-      })
+      }).refine(
+        (data) => {
+          if (data.confirmationType === "timer") {
+            return typeof data.timerSeconds === "number" && data.timerSeconds > 0;
+          }
+          return true;
+        },
+        { message: "timerSeconds is required and must be positive when confirmationType is timer" }
+      )
     )
     .mutation(async ({ ctx, input }) => {
       await assertGuildMaster(ctx, input.guildId);
@@ -39,6 +48,7 @@ export const questRouter = router({
           faithReward: input.faithReward,
           difficultyClass: input.difficultyClass,
           confirmationType: input.confirmationType,
+          timerSeconds: input.timerSeconds ?? null,
           assignedTo: input.assignedTo,
           imageUrl: input.imageUrl,
         },
@@ -61,6 +71,7 @@ export const questRouter = router({
         faithReward: z.number().int().min(0).optional(),
         difficultyClass: z.number().int().min(1).max(30).optional(),
         confirmationType: z.enum(["photo", "text", "timer", "master_confirm"]).optional(),
+        timerSeconds: z.number().int().min(1).nullable().optional(),
         assignedTo: z.array(z.uuid()).optional(),
         imageUrl: z.string().url().nullable().optional(),
       })
@@ -240,9 +251,11 @@ export const questRouter = router({
         instanceId: z.uuid(),
         playerId: z.uuid(),
         confirmationData: z.object({
-          type: z.enum(["text", "photo", "master_confirm"]),
+          type: z.enum(["text", "photo", "timer", "master_confirm"]),
           text: z.string().optional(),
           photoUrl: z.string().optional(),
+          timerStartedAt: z.string().datetime().optional(),
+          timerSeconds: z.number().int().min(1).optional(),
         }).refine(
           (data) => {
             if (data.type === "photo") {
@@ -276,6 +289,133 @@ export const questRouter = router({
         data: {
           status: "pending_review",
           confirmationData: input.confirmationData,
+        },
+      });
+    }),
+
+  startTimer: publicProcedure
+    .input(
+      z.object({
+        instanceId: z.uuid(),
+        playerId: z.uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const instance = await ctx.db.questInstance.findUnique({
+        where: { id: input.instanceId },
+        include: { quest: true },
+      });
+      if (!instance) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Quest instance not found" });
+      }
+      if (instance.playerId !== input.playerId) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Not your quest instance" });
+      }
+      if (instance.status !== "accepted") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Quest must be in accepted status to start timer",
+        });
+      }
+      if (instance.quest.confirmationType !== "timer") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Quest confirmation type is not timer",
+        });
+      }
+      if (!instance.quest.timerSeconds) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Quest does not have timerSeconds configured",
+        });
+      }
+
+      // Check if timer was already started
+      const existingData = instance.confirmationData as Record<string, unknown> | null;
+      if (existingData?.timerStartedAt) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Timer already started",
+        });
+      }
+
+      const now = new Date().toISOString();
+
+      return ctx.db.questInstance.update({
+        where: { id: input.instanceId },
+        data: {
+          confirmationData: {
+            type: "timer",
+            timerStartedAt: now,
+            timerSeconds: instance.quest.timerSeconds,
+          },
+        },
+        include: { quest: { select: { timerSeconds: true } } },
+      });
+    }),
+
+  completeTimer: publicProcedure
+    .input(
+      z.object({
+        instanceId: z.uuid(),
+        playerId: z.uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const instance = await ctx.db.questInstance.findUnique({
+        where: { id: input.instanceId },
+        include: { quest: true },
+      });
+      if (!instance) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Quest instance not found" });
+      }
+      if (instance.playerId !== input.playerId) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Not your quest instance" });
+      }
+      if (instance.status !== "accepted") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Quest must be in accepted status to complete timer",
+        });
+      }
+      if (instance.quest.confirmationType !== "timer") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Quest confirmation type is not timer",
+        });
+      }
+
+      const confirmationData = instance.confirmationData as Record<string, unknown> | null;
+      if (!confirmationData?.timerStartedAt) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Timer has not been started",
+        });
+      }
+
+      const timerStartedAt = new Date(confirmationData.timerStartedAt as string);
+      const requiredSeconds = instance.quest.timerSeconds ?? 0;
+      const elapsedMs = Date.now() - timerStartedAt.getTime();
+      const elapsedSeconds = Math.floor(elapsedMs / 1000);
+
+      // Allow 2-second tolerance for network latency
+      if (elapsedSeconds < requiredSeconds - 2) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Timer has not expired yet. ${requiredSeconds - elapsedSeconds} seconds remaining.`,
+        });
+      }
+
+      return ctx.db.questInstance.update({
+        where: { id: input.instanceId },
+        data: {
+          status: "pending_review",
+          confirmationData: {
+            type: "timer",
+            timerStartedAt: confirmationData.timerStartedAt,
+            timerSeconds: requiredSeconds,
+            timerCompletedAt: new Date().toISOString(),
+          },
         },
       });
     }),
