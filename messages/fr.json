@@ -49,7 +49,21 @@
     "privacyPolicy": "Politique de confidentialité",
     "ageVerification": "Je confirme avoir au moins 13 ans",
     "consentRequired": "Vous devez accepter les Conditions et la Politique de confidentialité",
-    "ageRequired": "Vous devez confirmer avoir au moins 13 ans"
+    "ageRequired": "Vous devez confirmer avoir au moins 13 ans",
+    "forgotPassword": "Mot de passe oublié ?",
+    "forgotPasswordTitle": "Mot de passe oublié",
+    "forgotPasswordDescription": "Entrez votre email et nous vous enverrons un lien de réinitialisation",
+    "forgotPasswordButton": "Envoyer le lien",
+    "forgotPasswordSuccess": "Si un compte avec cet email existe, nous avons envoyé un lien de réinitialisation",
+    "backToLogin": "Retour à la connexion",
+    "resetPasswordTitle": "Réinitialiser le mot de passe",
+    "resetPasswordDescription": "Entrez votre nouveau mot de passe ci-dessous",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "resetPasswordButton": "Définir le nouveau mot de passe",
+    "resetPasswordSuccess": "Mot de passe modifié avec succès. Vous pouvez maintenant vous connecter.",
+    "passwordMismatch": "Les mots de passe ne correspondent pas",
+    "invalidResetToken": "Ce lien de réinitialisation est invalide ou a expiré"
   },
   "player": {
     "level": "Niv.",

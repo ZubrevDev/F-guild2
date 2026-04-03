@@ -7,7 +7,9 @@ export type EmailTemplateType =
   | "welcome"
   | "quest_completed"
   | "level_up"
-  | "prayer_answer";
+  | "prayer_answer"
+  | "guild_warning"
+  | "password_reset";
 
 type WelcomeData = {
   username: string;
@@ -33,11 +35,26 @@ type PrayerAnswerData = {
   answeredBy: string;
 };
 
+type GuildWarningData = {
+  masterName: string;
+  guildName: string;
+  lastActivityAt: string;
+  deletionDate: string;
+};
+
+type PasswordResetData = {
+  username: string;
+  resetUrl: string;
+  expiresIn: string;
+};
+
 export type EmailTemplateData = {
   welcome: WelcomeData;
   quest_completed: QuestCompletedData;
   level_up: LevelUpData;
   prayer_answer: PrayerAnswerData;
+  guild_warning: GuildWarningData;
+  password_reset: PasswordResetData;
 };
 
 type RenderedEmail = {
@@ -126,6 +143,38 @@ const templates: {
         `<h2>Your Prayer Was Answered</h2>
         <p><span class="highlight">${data.username}</span>, your prayer <strong>${data.prayerTitle}</strong> received a response from <span class="highlight">${data.answeredBy}</span>:</p>
         <blockquote style="border-left: 3px solid #c4a24e; padding-left: 12px; margin: 16px 0; color: #ccc;">${data.answer}</blockquote>`
+      ),
+    };
+  },
+
+  guild_warning(data: GuildWarningData): RenderedEmail {
+    return {
+      subject: `Action Required: Your guild "${data.guildName}" will be deleted soon`,
+      html: layout(
+        "Guild Inactivity Warning",
+        `<h2>Your Guild Is About to Be Deleted</h2>
+        <p>Hello <span class="highlight">${data.masterName}</span>,</p>
+        <p>Your guild <span class="highlight">${data.guildName}</span> has been inactive for 11 months.</p>
+        <p><span class="stat">Last activity: ${data.lastActivityAt}</span></p>
+        <p>If no activity is recorded by <strong>${data.deletionDate}</strong>, the guild will be permanently deleted.</p>
+        <p>Log in and perform any action in your guild to reset the inactivity timer and keep it alive.</p>`
+      ),
+    };
+  },
+
+  password_reset(data: PasswordResetData): RenderedEmail {
+    return {
+      subject: "Reset your password",
+      html: layout(
+        "Password Reset",
+        `<h2>Password Reset Request</h2>
+        <p>Hello <span class="highlight">${data.username}</span>,</p>
+        <p>We received a request to reset the password for your account. Click the button below to set a new password:</p>
+        <p style="text-align: center; margin: 32px 0;">
+          <a href="${data.resetUrl}" style="display: inline-block; background: #c4a24e; color: #0f0f23; text-decoration: none; font-weight: 700; padding: 12px 32px; border-radius: 6px; font-size: 15px;">Reset Password</a>
+        </p>
+        <p>This link will expire in <strong>${data.expiresIn}</strong>.</p>
+        <p style="color: #888; font-size: 13px;">If you did not request a password reset, you can safely ignore this email. Your password will not change.</p>`
       ),
     };
   },

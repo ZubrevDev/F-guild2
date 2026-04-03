@@ -49,7 +49,21 @@
     "privacyPolicy": "Privacy Policy",
     "ageVerification": "I confirm that I am at least 13 years old",
     "consentRequired": "You must accept the Terms and Privacy Policy",
-    "ageRequired": "You must confirm you are at least 13 years old"
+    "ageRequired": "You must confirm you are at least 13 years old",
+    "forgotPassword": "Forgot password?",
+    "forgotPasswordTitle": "Forgot Password",
+    "forgotPasswordDescription": "Enter your email and we will send you a reset link",
+    "forgotPasswordButton": "Send Reset Link",
+    "forgotPasswordSuccess": "If an account with that email exists, we sent a reset link",
+    "backToLogin": "Back to login",
+    "resetPasswordTitle": "Reset Password",
+    "resetPasswordDescription": "Enter your new password below",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "resetPasswordButton": "Set New Password",
+    "resetPasswordSuccess": "Password changed successfully. You can now sign in.",
+    "passwordMismatch": "Passwords do not match",
+    "invalidResetToken": "This reset link is invalid or has expired"
   },
   "player": {
     "level": "Lvl",

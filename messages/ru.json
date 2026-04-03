@@ -49,7 +49,21 @@
     "privacyPolicy": "Политику конфиденциальности",
     "ageVerification": "Я подтверждаю, что мне не менее 13 лет",
     "consentRequired": "Необходимо принять Условия и Политику конфиденциальности",
-    "ageRequired": "Необходимо подтвердить, что вам не менее 13 лет"
+    "ageRequired": "Необходимо подтвердить, что вам не менее 13 лет",
+    "forgotPassword": "Забыли пароль?",
+    "forgotPasswordTitle": "Забыли пароль",
+    "forgotPasswordDescription": "Введите email и мы отправим ссылку для сброса",
+    "forgotPasswordButton": "Отправить ссылку",
+    "forgotPasswordSuccess": "Если аккаунт с таким email существует, мы отправили ссылку для сброса",
+    "backToLogin": "Вернуться ко входу",
+    "resetPasswordTitle": "Сброс пароля",
+    "resetPasswordDescription": "Введите новый пароль",
+    "newPassword": "Новый пароль",
+    "confirmPassword": "Подтвердите пароль",
+    "resetPasswordButton": "Установить новый пароль",
+    "resetPasswordSuccess": "Пароль успешно изменён. Теперь вы можете войти.",
+    "passwordMismatch": "Пароли не совпадают",
+    "invalidResetToken": "Ссылка для сброса недействительна или устарела"
   },
   "player": {
     "level": "Ур.",

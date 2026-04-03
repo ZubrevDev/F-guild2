@@ -3,6 +3,8 @@ import { hash } from "bcryptjs";
 import { TRPCError } from "@trpc/server";
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { createStripeCustomer } from "@/lib/stripe";
+import { sendEmail } from "@/lib/email";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export const authRouter = router({
   register: publicProcedure
@@ -136,6 +138,105 @@ export const authRouter = router({
       activityLogs,
     };
   }),
+
+  requestPasswordReset: publicProcedure
+    .input(
+      z.object({
+        email: z.email(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Rate limit: 3 requests per 15 minutes per email address
+      const rateLimitKey = `password_reset:${input.email.toLowerCase()}`;
+      const rateCheck = checkRateLimit(rateLimitKey, {
+        max: 3,
+        windowMs: 15 * 60 * 1000,
+      });
+
+      if (!rateCheck.allowed) {
+        // Return generic success to prevent timing-based enumeration
+        return { success: true };
+      }
+
+      const user = await ctx.db.user.findUnique({
+        where: { email: input.email },
+        select: { id: true, email: true, name: true, deletedAt: true },
+      });
+
+      // Always return success to prevent email enumeration
+      if (!user || user.deletedAt !== null) {
+        return { success: true };
+      }
+
+      const token = crypto.randomUUID();
+      const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour TTL
+
+      await ctx.db.passwordResetToken.create({
+        data: {
+          userId: user.id,
+          token,
+          expiresAt,
+        },
+      });
+
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+      const resetUrl = `${appUrl}/reset-password?token=${token}`;
+
+      await sendEmail(
+        user.email,
+        "password_reset",
+        {
+          username: user.name,
+          resetUrl,
+          expiresIn: "1 hour",
+        },
+        user.id
+      );
+
+      return { success: true };
+    }),
+
+  resetPassword: publicProcedure
+    .input(
+      z.object({
+        token: z.string().min(1),
+        newPassword: z.string().min(8).max(128),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const resetToken = await ctx.db.passwordResetToken.findUnique({
+        where: { token: input.token },
+        include: { user: { select: { id: true, deletedAt: true } } },
+      });
+
+      if (
+        !resetToken ||
+        resetToken.usedAt !== null ||
+        resetToken.expiresAt < new Date() ||
+        resetToken.user.deletedAt !== null
+      ) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid or expired reset token",
+        });
+      }
+
+      const passwordHash = await hash(input.newPassword, 12);
+
+      // Mark token as used and update password in a transaction
+      await ctx.db.$transaction([
+        ctx.db.passwordResetToken.update({
+          where: { id: resetToken.id },
+          data: { usedAt: new Date() },
+        }),
+        ctx.db.user.update({
+          where: { id: resetToken.userId },
+          data: { passwordHash },
+        }),
+      ]);
+
+      return { success: true };
+    }),
 
   deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {
     const userId = ctx.session.userId;

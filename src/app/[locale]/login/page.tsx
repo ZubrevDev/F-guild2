@@ -96,6 +96,15 @@ export default function LoginPage() {
           </Button>
         </form>
 
+        <p className="text-center text-sm">
+          <Link
+            href="/forgot-password"
+            className="text-muted-foreground hover:text-primary hover:underline"
+          >
+            {t("forgotPassword")}
+          </Link>
+        </p>
+
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t border-border" />
