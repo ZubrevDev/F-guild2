@@ -328,5 +328,97 @@
 
 ---
 
-## Проект завершён!
-Все 50 задач выполнены. Билд проходит без ошибок.
+## MVP Phase
+
+### MVP-TASK-01: Add guildId and role to auth session
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** JWT и session callbacks расширены: role (master/platform_admin) и guildId из первой GuildMaster записи. Поддержка session.update({ guildId }) с DB membership check. Мертвые callbacks удалены из auth.config.ts. tRPC context теперь включает guildId. Route handler больше не делает DB-запрос для isPlatformAdmin.
+**Файлы:** src/types/next-auth.d.ts (создан), src/auth.config.ts, src/auth.ts, src/server/trpc.ts, src/app/api/trpc/[trpc]/route.ts
+
+### MVP-TASK-02: Guild selection/creation screen after login
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Страница /guilds с 3 состояниями: 0 гильдий (создание/присоединение), 1 гильдия (авто-редирект), 2+ гильдий (выбор). guild.joinByInviteCode процедура. Middleware редиректит /dashboard → /guilds без guildId. i18n 14 ключей на 3 языках.
+**Файлы:** src/app/[locale]/guilds/page.tsx (создан), src/server/routers/guild.ts, src/middleware.ts, messages/*.json
+
+### MVP-TASK-03: Players page — create and list players
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Страница Players полностью переписана: грид карточек игроков с аватарами, бейджами метода входа, классом/уровнем. Диалоги создания игрока, QR-кода, сброса PIN. Empty state. i18n 18 ключей на 3 языках.
+**Файлы:** src/app/[locale]/dashboard/players/page.tsx, messages/*.json
+
+### MVP-TASK-04: Character creation for players
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Модал выбора класса с 6 карточками (fighter/wizard/ranger/cleric/rogue/bard). CharacterCard компонент с уровнем, XP баром, золотом, верой, статами. i18n 25 ключей на 3 языках.
+**Файлы:** src/app/[locale]/dashboard/players/page.tsx, src/components/character/character-card.tsx (создан), messages/*.json
+
+### MVP-TASK-05: Quests page — create, list, moderate
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Страница Quests: 2 табы (все квесты + на проверке), фильтры, карточки квестов с бейджами/наградами, модал создания с 10 полями, модерация (approve/reject с feedback). Empty states. i18n 36 ключей на 3 языках.
+**Файлы:** src/app/[locale]/dashboard/quests/page.tsx, messages/*.json
+
+### MVP-TASK-06: Player login + dashboard with real data
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Player login по PIN (inviteCode + name + pin), localStorage сессия, dashboard с CharacterCard, квесты по статусам (accept/submit), logout. QR deep links поддержаны. i18n 19 ключей на 3 языках.
+**Файлы:** src/lib/player-session.ts (создан), src/app/[locale]/player-login/page.tsx (создан), src/app/[locale]/player/page.tsx, messages/*.json
+
+### MVP-TASK-07: Dice roller + dice log
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** DiceRollButton на player dashboard, dice-log страница для мастеров (stats, пагинированная таблица, фильтр по игроку, CSV экспорт). dice.roll переведён на publicProcedure для поддержки player session. i18n 22 ключа на 3 языках.
+**Файлы:** src/app/[locale]/player/page.tsx, src/app/[locale]/dashboard/dice-log/page.tsx, src/server/routers/dice.ts, messages/*.json
+
+### MVP-TASK-08: Dashboard overview with real data
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Dashboard полностью переписан: 4 stat-карточки (players, pending quests, unread prayers, activity), мини-карточки игроков, activity feed (последние 10 событий), quick actions. Ноль моковых данных.
+**Файлы:** src/app/[locale]/dashboard/page.tsx, messages/*.json
+
+### MVP-TASK-09: Shop pages (master + player)
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Master shop: CRUD товаров, деактивация. Player shop: покупка, инвентарь, equip/use. i18n 30 ключей.
+**Файлы:** src/app/[locale]/dashboard/shop/page.tsx, src/app/[locale]/player/shop/page.tsx, messages/*.json
+
+### MVP-TASK-10: Buffs page
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Шаблоны баффов, применение к игрокам, таблица активных баффов с удалением. 11 типов эффектов. i18n 30 ключей.
+**Файлы:** src/app/[locale]/dashboard/buffs/page.tsx, messages/*.json
+
+### MVP-TASK-11: Prayers pages
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Master: список молитв с фильтром, ответы. Player: отправка (1 faith), cleric divine prayer, просмотр ответов. i18n 17 ключей.
+**Файлы:** src/app/[locale]/dashboard/prayers/page.tsx, src/app/[locale]/player/prayers/page.tsx, messages/*.json
+
+### MVP-TASK-12: Settings page
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Профиль (имя, язык, тема), настройки гильдии (owner), уведомления (toggles), GDPR (экспорт/удаление). i18n 30 ключей.
+**Файлы:** src/app/[locale]/dashboard/settings/page.tsx, messages/*.json
+
+### MVP-TASK-13: Player character page
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Полная страница персонажа игрока: CharacterCard, class ability (use), дерево способностей (learn), инвентарь (equip/unequip), активные баффы. useClassAbility переведён на publicProcedure. i18n 20 ключей.
+**Файлы:** src/app/[locale]/player/character/page.tsx, src/server/routers/character.ts, messages/*.json
+**Коммиты:** 03c214a, 8ab2e9f
+
+### MVP-TASK-14: UI polish — DnD theme
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** DnD тема: фиолетовый фон, game accent vars (gold, xp-green, danger-red, mana-blue). Sidebar fix (isNavItemActive). EmptyState и SkeletonCard компоненты. User initials avatar. LocaleSwitcher в sidebar.
+**Файлы:** src/app/globals.css, src/app/[locale]/dashboard/layout.tsx, src/components/ui/empty-state.tsx, src/components/ui/skeleton-card.tsx
+**Коммит:** b816cbb
+
+### MVP-TASK-15: Notification bell
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** NotificationBell компонент: Bell icon с красным badge непрочитанных, Popover со списком уведомлений, mark as read/mark all as read. Polling каждые 30с. Интеграция в sidebar (desktop) и fixed top-right (mobile). shadcn Popover добавлен. i18n 8 ключей с ICU plural на 3 языках.
+**Файлы:** src/components/notifications/notification-bell.tsx (создан), src/components/ui/popover.tsx (создан), src/app/[locale]/dashboard/layout.tsx, messages/*.json
+**Коммит:** 1973906
