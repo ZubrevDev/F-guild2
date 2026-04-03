@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
+import { RARITY_CONFIG, getRarityClass } from "@/lib/rarity";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +29,7 @@ interface CreateItemForm {
   levelRequired: number;
   classRequired: ClassRequired;
   effectJson: string;
+  rarity: string;
 }
 
 const DEFAULT_FORM: CreateItemForm = {
@@ -40,6 +42,7 @@ const DEFAULT_FORM: CreateItemForm = {
   levelRequired: 1,
   classRequired: "",
   effectJson: "",
+  rarity: "common",
 };
 
 interface EditItemForm {
@@ -52,6 +55,7 @@ interface EditItemForm {
   levelRequired: number;
   classRequired: ClassRequired;
   effectJson: string;
+  rarity: string;
 }
 
 export default function ShopPage() {
@@ -129,6 +133,7 @@ export default function ShopPage() {
       levelRequired: form.levelRequired,
       classRequired: form.classRequired || null,
       effect: form.effectJson.trim() ? parseEffect(form.effectJson) : null,
+      rarity: form.rarity as "common" | "uncommon" | "rare" | "epic" | "legendary",
     });
   }
 
@@ -142,6 +147,7 @@ export default function ShopPage() {
     levelRequired: number;
     classRequired: string | null;
     effect: unknown;
+    rarity?: string;
   }) {
     setEditItemId(item.id);
     setEditForm({
@@ -154,6 +160,7 @@ export default function ShopPage() {
       levelRequired: item.levelRequired,
       classRequired: (item.classRequired ?? "") as ClassRequired,
       effectJson: item.effect ? JSON.stringify(item.effect, null, 2) : "",
+      rarity: (item as { rarity?: string }).rarity ?? "common",
     });
     setEditError("");
     setEditOpen(true);
@@ -176,6 +183,7 @@ export default function ShopPage() {
       levelRequired: editForm.levelRequired,
       classRequired: editForm.classRequired || null,
       effect: editForm.effectJson.trim() ? parseEffect(editForm.effectJson) : null,
+      rarity: editForm.rarity as "common" | "uncommon" | "rare" | "epic" | "legendary",
     });
   }
 
@@ -221,7 +229,9 @@ export default function ShopPage() {
             <Card key={item.id} className={!item.isActive ? "opacity-50" : ""}>
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between gap-2">
-                  <CardTitle className="text-base leading-snug">{item.name}</CardTitle>
+                  <CardTitle className={`text-base leading-snug ${getRarityClass((item as { rarity?: string }).rarity ?? "common")}`}>
+                  {item.name}
+                </CardTitle>
                   <Badge
                     className={
                       item.category === "game_item"
@@ -300,7 +310,7 @@ export default function ShopPage() {
             }
           }}
         >
-          <div className="my-8 w-full max-w-lg rounded-lg bg-background p-6 shadow-xl">
+          <div className="my-8 w-full max-w-lg rounded-lg border border-purple-500/30 bg-[#1e1240] p-6 shadow-2xl shadow-purple-900/30">
             <h2 className="mb-4 text-lg font-semibold">{t("createItem")}</h2>
             <form onSubmit={handleCreateSubmit} className="space-y-4">
               <ItemFormFields form={form} setForm={setForm} t={t} />
@@ -346,7 +356,7 @@ export default function ShopPage() {
             }
           }}
         >
-          <div className="my-8 w-full max-w-lg rounded-lg bg-background p-6 shadow-xl">
+          <div className="my-8 w-full max-w-lg rounded-lg border border-purple-500/30 bg-[#1e1240] p-6 shadow-2xl shadow-purple-900/30">
             <h2 className="mb-4 text-lg font-semibold">{t("edit")}</h2>
             <form onSubmit={handleEditSubmit} className="space-y-4">
               <ItemFormFields form={editForm} setForm={setEditForm} t={t} />
@@ -435,6 +445,24 @@ function ItemFormFields({ form, setForm, t }: ItemFormFieldsProps) {
         >
           <option value="game_item">{t("gameItem")}</option>
           <option value="real_reward">{t("realReward")}</option>
+        </select>
+      </div>
+
+      {/* Rarity */}
+      <div>
+        <label className="text-sm font-medium">{t("rarity")}</label>
+        <select
+          className={INPUT_CLASS_FORM}
+          value={form.rarity}
+          onChange={(e) =>
+            setForm((prev) => ({ ...prev, rarity: e.target.value }))
+          }
+        >
+          {Object.entries(RARITY_CONFIG).map(([key, config]) => (
+            <option key={key} value={key} style={{ color: config.color }}>
+              {t(key as "common" | "uncommon" | "rare" | "epic" | "legendary")}
+            </option>
+          ))}
         </select>
       </div>
 
