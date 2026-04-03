@@ -100,6 +100,25 @@
     "players": "{count} players",
     "created": "Created {date}"
   },
+  "players": {
+    "title": "Players",
+    "addPlayer": "Add Player",
+    "noPlayers": "No players yet",
+    "noPlayersDesc": "Add your first player to start the adventure",
+    "playerName": "Player Name",
+    "pin": "PIN Code",
+    "authMethod": "Login Method",
+    "showQr": "Show QR Code",
+    "resetPin": "Reset PIN",
+    "createCharacter": "Create Character",
+    "noCharacter": "No character",
+    "level": "Level {level}",
+    "pinMethod": "PIN",
+    "qrMethod": "QR Code",
+    "emailMethod": "Email",
+    "playerCreated": "Player created successfully",
+    "pinReset": "PIN reset successfully"
+  },
   "admin": {
     "common": {
       "loading": "Loading..."

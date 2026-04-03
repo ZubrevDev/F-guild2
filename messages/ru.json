@@ -100,6 +100,25 @@
     "players": "{count} игроков",
     "created": "Создана {date}"
   },
+  "players": {
+    "title": "Игроки",
+    "addPlayer": "Добавить игрока",
+    "noPlayers": "Игроков пока нет",
+    "noPlayersDesc": "Добавьте первого игрока, чтобы начать приключение",
+    "playerName": "Имя игрока",
+    "pin": "PIN-код",
+    "authMethod": "Метод входа",
+    "showQr": "Показать QR-код",
+    "resetPin": "Сбросить PIN",
+    "createCharacter": "Создать персонажа",
+    "noCharacter": "Нет персонажа",
+    "level": "Уровень {level}",
+    "pinMethod": "PIN",
+    "qrMethod": "QR-код",
+    "emailMethod": "Email",
+    "playerCreated": "Игрок создан",
+    "pinReset": "PIN сброшен"
+  },
   "admin": {
     "common": {
       "loading": "Загрузка..."

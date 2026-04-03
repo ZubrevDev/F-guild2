@@ -100,6 +100,25 @@
     "players": "{count} joueurs",
     "created": "Créée le {date}"
   },
+  "players": {
+    "title": "Joueurs",
+    "addPlayer": "Ajouter un joueur",
+    "noPlayers": "Pas encore de joueurs",
+    "noPlayersDesc": "Ajoutez votre premier joueur pour commencer l'aventure",
+    "playerName": "Nom du joueur",
+    "pin": "Code PIN",
+    "authMethod": "Méthode de connexion",
+    "showQr": "Afficher le QR Code",
+    "resetPin": "Réinitialiser le PIN",
+    "createCharacter": "Créer un personnage",
+    "noCharacter": "Pas de personnage",
+    "level": "Niveau {level}",
+    "pinMethod": "PIN",
+    "qrMethod": "QR Code",
+    "emailMethod": "Email",
+    "playerCreated": "Joueur créé avec succès",
+    "pinReset": "PIN réinitialisé avec succès"
+  },
   "admin": {
     "common": {
       "loading": "Chargement..."
