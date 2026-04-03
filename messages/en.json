@@ -317,6 +317,36 @@
     "sent": "Prayer sent!",
     "replied": "Reply sent!"
   },
+  "settings": {
+    "title": "Settings",
+    "profile": "Profile",
+    "profileName": "Display Name",
+    "language": "Language",
+    "theme": "Theme",
+    "themeDark": "Dark",
+    "themeLight": "Light",
+    "themeSystem": "System",
+    "save": "Save Changes",
+    "saved": "Settings saved",
+    "guild": "Guild Settings",
+    "guildName": "Guild Name",
+    "guildDescription": "Description",
+    "inviteCode": "Invite Code",
+    "regenerateCode": "Regenerate",
+    "codeRegenerated": "Invite code regenerated",
+    "maxPlayers": "Max Players",
+    "xpModifier": "XP Modifier",
+    "notifications": "Notifications",
+    "notifQuestCompleted": "Quest completed",
+    "notifLevelUp": "Level up",
+    "notifPrayerReceived": "Prayer received",
+    "notifBuffApplied": "Buff applied",
+    "account": "Account",
+    "exportData": "Export My Data",
+    "deleteAccount": "Delete Account",
+    "deleteConfirm": "Are you sure? This action cannot be undone.",
+    "deleteButton": "Yes, Delete My Account"
+  },
   "admin": {
     "common": {
       "loading": "Loading..."

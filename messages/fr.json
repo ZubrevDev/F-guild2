@@ -317,6 +317,36 @@
     "sent": "Prière envoyée !",
     "replied": "Réponse envoyée !"
   },
+  "settings": {
+    "title": "Paramètres",
+    "profile": "Profil",
+    "profileName": "Nom",
+    "language": "Langue",
+    "theme": "Thème",
+    "themeDark": "Sombre",
+    "themeLight": "Clair",
+    "themeSystem": "Système",
+    "save": "Enregistrer",
+    "saved": "Paramètres enregistrés",
+    "guild": "Paramètres de guilde",
+    "guildName": "Nom de la guilde",
+    "guildDescription": "Description",
+    "inviteCode": "Code d'invitation",
+    "regenerateCode": "Régénérer",
+    "codeRegenerated": "Code régénéré",
+    "maxPlayers": "Max joueurs",
+    "xpModifier": "Modificateur XP",
+    "notifications": "Notifications",
+    "notifQuestCompleted": "Quête terminée",
+    "notifLevelUp": "Montée de niveau",
+    "notifPrayerReceived": "Prière reçue",
+    "notifBuffApplied": "Buff appliqué",
+    "account": "Compte",
+    "exportData": "Exporter mes données",
+    "deleteAccount": "Supprimer le compte",
+    "deleteConfirm": "Êtes-vous sûr ? Cette action est irréversible.",
+    "deleteButton": "Oui, supprimer mon compte"
+  },
   "admin": {
     "common": {
       "loading": "Chargement..."

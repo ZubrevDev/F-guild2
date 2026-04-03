@@ -317,6 +317,36 @@
     "sent": "Молитва отправлена!",
     "replied": "Ответ отправлен!"
   },
+  "settings": {
+    "title": "Настройки",
+    "profile": "Профиль",
+    "profileName": "Имя",
+    "language": "Язык",
+    "theme": "Тема",
+    "themeDark": "Тёмная",
+    "themeLight": "Светлая",
+    "themeSystem": "Системная",
+    "save": "Сохранить",
+    "saved": "Настройки сохранены",
+    "guild": "Настройки гильдии",
+    "guildName": "Название гильдии",
+    "guildDescription": "Описание",
+    "inviteCode": "Код приглашения",
+    "regenerateCode": "Обновить",
+    "codeRegenerated": "Код обновлён",
+    "maxPlayers": "Макс. игроков",
+    "xpModifier": "Множитель XP",
+    "notifications": "Уведомления",
+    "notifQuestCompleted": "Квест выполнен",
+    "notifLevelUp": "Повышение уровня",
+    "notifPrayerReceived": "Получена молитва",
+    "notifBuffApplied": "Бафф применён",
+    "account": "Аккаунт",
+    "exportData": "Экспорт данных",
+    "deleteAccount": "Удалить аккаунт",
+    "deleteConfirm": "Вы уверены? Это действие необратимо.",
+    "deleteButton": "Да, удалить аккаунт"
+  },
   "admin": {
     "common": {
       "loading": "Загрузка..."
