@@ -226,3 +226,8 @@
 **Дата:** 2026-04-03
 **Summary:** consentedAt, ageVerified в User модели. auth.register требует consent + ageVerified. auth.exportData, auth.deleteAccount эндпоинты. Чекбоксы на register page. i18n en/ru/fr.
 **Коммит:** f9d5d04
+
+### TASK-047: CI/CD — GitHub Actions for lint, test, build, deploy
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** GitHub Actions CI workflow (.github/workflows/ci.yml): checkout, pnpm 9, Node 20, install, lint, type-check, build. Next.js cache. Deploy placeholder (Vercel). Added type-check script to package.json. Concurrency group to cancel stale runs.
