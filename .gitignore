@@ -46,6 +46,9 @@ prisma/*.db-journal
 public/uploads/*
 !public/uploads/.gitkeep
 
+# Firebase (contains API keys)
+google-services.json
+
 # Android build artifacts
 android/app/build/
 android/.gradle/
