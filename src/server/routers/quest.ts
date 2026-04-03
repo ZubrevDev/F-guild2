@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { checkLevelUp } from "@/lib/leveling";
 import { generateRecurringInstances, getRecurringProgress, getPeriodStart, getTotalForPeriod } from "@/lib/recurring-quests";
+import { calculateBuffModifiers, applyModifier } from "@/lib/buff-modifiers";
 
 export const questRouter = router({
   create: protectedProcedure
@@ -447,18 +448,43 @@ export const questRouter = router({
       await assertGuildMaster(ctx, instance.quest.guildId);
 
       if (input.action === "approve") {
+        // Fetch active buffs for the player's character to apply reward modifiers
+        const now = new Date();
+        const character = await ctx.db.character.findUnique({
+          where: { playerId: instance.playerId },
+        });
+        if (!character) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "Player has no character" });
+        }
+
+        const activeBuffs = await ctx.db.activeBuff.findMany({
+          where: {
+            characterId: character.id,
+            isActive: true,
+            OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
+          },
+          include: { buff: { select: { effect: true } } },
+        });
+
+        const modifiers = calculateBuffModifiers(activeBuffs);
+
+        const baseXp = instance.quest.xpReward;
+        const baseGold = instance.quest.goldReward;
+        const finalXp = applyModifier(baseXp, modifiers.xpModifier);
+        const finalGold = applyModifier(baseGold, modifiers.goldModifier);
+
         const result = await ctx.db.$transaction(async (tx) => {
-          // Read character inside transaction to prevent race conditions
-          const character = await tx.character.findUnique({
+          // Re-read character inside transaction to prevent race conditions
+          const txCharacter = await tx.character.findUnique({
             where: { playerId: instance.playerId },
           });
-          if (!character) {
+          if (!txCharacter) {
             throw new TRPCError({ code: "BAD_REQUEST", message: "Player has no character" });
           }
 
-          const newTotalXp = character.xp + instance.quest.xpReward;
+          const newTotalXp = txCharacter.xp + finalXp;
           const { newLevel, remainingXp, levelsGained } = checkLevelUp(
-            character.level,
+            txCharacter.level,
             newTotalXp
           );
 
@@ -468,18 +494,18 @@ export const questRouter = router({
           });
 
           await tx.character.update({
-            where: { id: character.id },
+            where: { id: txCharacter.id },
             data: {
               xp: remainingXp,
               level: newLevel,
-              gold: { increment: instance.quest.goldReward },
+              gold: { increment: finalGold },
               faithPoints: { increment: instance.quest.faithReward },
             },
           });
 
           // Create ActivityLog entries for each level gained
           for (let i = 1; i <= levelsGained; i++) {
-            const gainedLevel = character.level + i;
+            const gainedLevel = txCharacter.level + i;
             await tx.activityLog.create({
               data: {
                 guildId: instance.quest.guildId,
@@ -489,7 +515,7 @@ export const questRouter = router({
                 details: {
                   playerId: instance.playerId,
                   playerName: instance.player.name,
-                  characterId: character.id,
+                  characterId: txCharacter.id,
                   oldLevel: gainedLevel - 1,
                   newLevel: gainedLevel,
                 },
@@ -503,8 +529,12 @@ export const questRouter = router({
 
         return {
           status: "completed" as const,
-          xpAwarded: instance.quest.xpReward,
-          goldAwarded: instance.quest.goldReward,
+          baseXp,
+          baseGold,
+          xpAwarded: finalXp,
+          goldAwarded: finalGold,
+          xpModifier: modifiers.xpModifier,
+          goldModifier: modifiers.goldModifier,
           levelsGained: result.levelsGained,
           newLevel: result.newLevel,
         };
