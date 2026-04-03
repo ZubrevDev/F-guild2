@@ -1,6 +1,7 @@
 import { z } from "zod/v4";
 import { TRPCError } from "@trpc/server";
 import { router, publicProcedure } from "../trpc";
+import { xpToNextLevel, MAX_LEVEL } from "@/lib/leveling";
 
 const CLASS_STATS: Record<
   string,
@@ -77,7 +78,45 @@ export const characterRouter = router({
       return players.map((p) => ({
         playerId: p.id,
         playerName: p.name,
-        character: p.character,
+        character: p.character
+          ? {
+              ...p.character,
+              xpToNext: xpToNextLevel(p.character.level),
+              xpPercent:
+                p.character.level >= MAX_LEVEL
+                  ? 100
+                  : Math.min(
+                      (p.character.xp / xpToNextLevel(p.character.level)) * 100,
+                      100
+                    ),
+              isMaxLevel: p.character.level >= MAX_LEVEL,
+            }
+          : null,
       }));
+    }),
+
+  xpProgress: publicProcedure
+    .input(z.object({ playerId: z.uuid() }))
+    .query(async ({ ctx, input }) => {
+      const character = await ctx.db.character.findUnique({
+        where: { playerId: input.playerId },
+      });
+      if (!character) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Character not found" });
+      }
+
+      const xpNeeded = xpToNextLevel(character.level);
+      const isMaxLevel = character.level >= MAX_LEVEL;
+
+      return {
+        level: character.level,
+        currentXp: character.xp,
+        xpToNext: xpNeeded,
+        xpPercent: isMaxLevel
+          ? 100
+          : Math.min((character.xp / xpNeeded) * 100, 100),
+        isMaxLevel,
+        maxLevel: MAX_LEVEL,
+      };
     }),
 });

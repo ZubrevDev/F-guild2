@@ -1,6 +1,7 @@
 import { z } from "zod/v4";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
+import { checkLevelUp } from "@/lib/leveling";
 
 export const questRouter = router({
   create: protectedProcedure
@@ -294,22 +295,57 @@ export const questRouter = router({
           throw new TRPCError({ code: "BAD_REQUEST", message: "Player has no character" });
         }
 
-        await ctx.db.$transaction([
-          ctx.db.questInstance.update({
+        const newTotalXp = character.xp + instance.quest.xpReward;
+        const { newLevel, remainingXp, levelsGained } = checkLevelUp(
+          character.level,
+          newTotalXp
+        );
+
+        await ctx.db.$transaction(async (tx) => {
+          await tx.questInstance.update({
             where: { id: input.instanceId },
             data: { status: "completed", completedAt: new Date() },
-          }),
-          ctx.db.character.update({
+          });
+
+          await tx.character.update({
             where: { id: character.id },
             data: {
-              xp: { increment: instance.quest.xpReward },
+              xp: remainingXp,
+              level: newLevel,
               gold: { increment: instance.quest.goldReward },
               faithPoints: { increment: instance.quest.faithReward },
             },
-          }),
-        ]);
+          });
 
-        return { status: "completed", xpAwarded: instance.quest.xpReward, goldAwarded: instance.quest.goldReward };
+          // Create ActivityLog entries for each level gained
+          for (let i = 1; i <= levelsGained; i++) {
+            const gainedLevel = character.level + i;
+            await tx.activityLog.create({
+              data: {
+                guildId: instance.quest.guildId,
+                actorType: "system",
+                actorId: ctx.session.userId,
+                action: "level_up",
+                details: {
+                  playerId: instance.playerId,
+                  playerName: instance.player.name,
+                  characterId: character.id,
+                  oldLevel: gainedLevel - 1,
+                  newLevel: gainedLevel,
+                },
+                logLevel: "important",
+              },
+            });
+          }
+        });
+
+        return {
+          status: "completed",
+          xpAwarded: instance.quest.xpReward,
+          goldAwarded: instance.quest.goldReward,
+          levelsGained,
+          newLevel,
+        };
       }
 
       if (input.action === "reject") {

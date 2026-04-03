@@ -15,8 +15,11 @@ const CLASS_ICONS: Record<string, typeof Shield> = {
   bard: Music,
 };
 
-function xpForLevel(level: number): number {
-  return level * 100;
+const MAX_LEVEL = 20;
+
+function xpToNextLevel(level: number): number {
+  if (level >= MAX_LEVEL) return Infinity;
+  return Math.floor(100 * level * 1.5);
 }
 
 interface CharacterCardProps {
@@ -33,8 +36,9 @@ interface CharacterCardProps {
 export function CharacterCard({ playerName, character }: CharacterCardProps) {
   const t = useTranslations("player");
   const ClassIcon = CLASS_ICONS[character.class] || Shield;
-  const xpNeeded = xpForLevel(character.level);
-  const xpPercent = Math.min((character.xp / xpNeeded) * 100, 100);
+  const isMaxLevel = character.level >= MAX_LEVEL;
+  const xpNeeded = xpToNextLevel(character.level);
+  const xpPercent = isMaxLevel ? 100 : Math.min((character.xp / xpNeeded) * 100, 100);
 
   return (
     <Card>
@@ -60,7 +64,7 @@ export function CharacterCard({ playerName, character }: CharacterCardProps) {
           <div className="mb-1 flex justify-between text-xs text-muted-foreground">
             <span>XP</span>
             <span>
-              {character.xp} / {xpNeeded}
+              {isMaxLevel ? "MAX" : `${character.xp} / ${xpNeeded}`}
             </span>
           </div>
           <Progress value={xpPercent} className="h-2" />
