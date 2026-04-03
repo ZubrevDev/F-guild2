@@ -83,5 +83,72 @@
     "title": "F-Guild",
     "description": "Превратите повседневные дела в эпические приключения с механикой DnD",
     "getStarted": "Начать приключение"
+  },
+  "admin": {
+    "common": {
+      "loading": "Загрузка..."
+    },
+    "nav": {
+      "overview": "Обзор",
+      "guilds": "Гильдии",
+      "cleanup": "Очистка"
+    },
+    "overview": {
+      "title": "Панель администратора",
+      "stats": {
+        "totalUsers": "Всего пользователей",
+        "totalGuilds": "Всего гильдий",
+        "activeGuilds": "Активных гильдий",
+        "totalPlayers": "Всего игроков"
+      }
+    },
+    "guilds": {
+      "title": "Управление гильдиями",
+      "searchPlaceholder": "Поиск гильдий...",
+      "filterAll": "Все статусы",
+      "statusActive": "Активные",
+      "statusInactive": "Неактивные",
+      "statusDeleted": "Удалённые",
+      "noResults": "Гильдии не найдены.",
+      "membersCount": "{count} мастеров",
+      "playersCount": "{count} игроков",
+      "lastActivity": "Последняя активность:",
+      "pageInfo": "Страница {page} из {totalPages} (всего {total})"
+    },
+    "guildDetail": {
+      "back": "Назад к гильдиям",
+      "notFound": "Гильдия не найдена.",
+      "masters": "Мастера",
+      "players": "Игроки",
+      "quests": "Квесты",
+      "guildId": "ID гильдии",
+      "createdBy": "Создана",
+      "createdAt": "Дата создания",
+      "lastActivity": "Последняя активность",
+      "deletedAt": "Удалена",
+      "inviteCode": "Код приглашения",
+      "mastersList": "Мастера гильдии",
+      "joinedAt": "Присоединился"
+    },
+    "cleanup": {
+      "title": "Управление очисткой",
+      "manualTrigger": "Ручная очистка",
+      "manualTriggerDescription": "Запустить очистку вручную: предупредить владельцев гильдий неактивных 11+ месяцев, мягко удалить неактивные 12+ месяцев, жёстко удалить мягко-удалённые 30+ дней назад.",
+      "triggerButton": "Запустить очистку",
+      "confirmButton": "Подтвердить — Запустить очистку",
+      "cancelButton": "Отмена",
+      "confirmWarning": "Будут отправлены предупреждения и удалены гильдии. Нажмите Подтвердить для продолжения.",
+      "resultTitle": "Очистка завершена:",
+      "resultWarned": "{count} гильдий предупреждено",
+      "resultSoftDeleted": "{count} гильдий мягко удалено",
+      "resultHardDeleted": "{count} гильдий жёстко удалено",
+      "inactiveGuildsTitle": "Неактивные гильдии (11+ месяцев)",
+      "noInactiveGuilds": "Неактивных гильдий нет.",
+      "noOwner": "Нет владельца",
+      "lastActivityLabel": "Последняя активность:",
+      "playersCount": "{count} игроков",
+      "deletionImminent": "Скоро удаление",
+      "warningSoon": "Скоро предупреждение"
+    }
   }
 }

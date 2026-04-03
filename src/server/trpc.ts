@@ -4,7 +4,7 @@ import { db } from "./db";
 
 export type Context = {
   db: typeof db;
-  session: { userId: string; role: "master" | "player" } | null;
+  session: { userId: string; role: "master" | "player" | "platform_admin" } | null;
 };
 
 export function createContext(opts?: {
@@ -48,3 +48,19 @@ const isAuthed = middleware(({ ctx, next }) => {
 });
 
 export const protectedProcedure = t.procedure.use(isAuthed);
+
+const isAdmin = middleware(({ ctx, next }) => {
+  if (!ctx.session || ctx.session.role !== "platform_admin") {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Admin access required",
+    });
+  }
+  return next({
+    ctx: {
+      session: ctx.session,
+    },
+  });
+});
+
+export const adminProcedure = t.procedure.use(isAdmin);

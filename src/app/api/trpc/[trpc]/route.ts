@@ -59,16 +59,27 @@ async function handler(req: Request) {
 
   const session = await auth();
 
+  let sessionCtx: { userId: string; role: "master" | "player" | "platform_admin" } | undefined;
+
+  if (session?.user?.id) {
+    // Check isPlatformAdmin flag from DB for the authenticated user
+    const { db } = await import("@/server/db");
+    const dbUser = await db.user.findUnique({
+      where: { id: session.user.id },
+      select: { isPlatformAdmin: true },
+    });
+
+    sessionCtx = {
+      userId: session.user.id,
+      role: dbUser?.isPlatformAdmin ? "platform_admin" : "master",
+    };
+  }
+
   return fetchRequestHandler({
     endpoint: "/api/trpc",
     req: sanitizedReq,
     router: appRouter,
-    createContext: () =>
-      createContext({
-        session: session?.user?.id
-          ? { userId: session.user.id, role: "master" }
-          : undefined,
-      }),
+    createContext: () => createContext({ session: sessionCtx }),
   });
 }
 

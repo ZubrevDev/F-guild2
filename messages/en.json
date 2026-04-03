@@ -83,5 +83,72 @@
     "title": "F-Guild",
     "description": "Turn everyday chores into epic adventures with DnD mechanics",
     "getStarted": "Start Your Adventure"
+  },
+  "admin": {
+    "common": {
+      "loading": "Loading..."
+    },
+    "nav": {
+      "overview": "Overview",
+      "guilds": "Guilds",
+      "cleanup": "Cleanup"
+    },
+    "overview": {
+      "title": "Admin Overview",
+      "stats": {
+        "totalUsers": "Total Users",
+        "totalGuilds": "Total Guilds",
+        "activeGuilds": "Active Guilds",
+        "totalPlayers": "Total Players"
+      }
+    },
+    "guilds": {
+      "title": "Guild Management",
+      "searchPlaceholder": "Search guilds...",
+      "filterAll": "All statuses",
+      "statusActive": "Active",
+      "statusInactive": "Inactive",
+      "statusDeleted": "Deleted",
+      "noResults": "No guilds found.",
+      "membersCount": "{count} masters",
+      "playersCount": "{count} players",
+      "lastActivity": "Last active:",
+      "pageInfo": "Page {page} of {totalPages} ({total} total)"
+    },
+    "guildDetail": {
+      "back": "Back to guilds",
+      "notFound": "Guild not found.",
+      "masters": "Masters",
+      "players": "Players",
+      "quests": "Quests",
+      "guildId": "Guild ID",
+      "createdBy": "Created by",
+      "createdAt": "Created at",
+      "lastActivity": "Last activity",
+      "deletedAt": "Deleted at",
+      "inviteCode": "Invite code",
+      "mastersList": "Guild Masters",
+      "joinedAt": "Joined"
+    },
+    "cleanup": {
+      "title": "Cleanup Management",
+      "manualTrigger": "Manual Cleanup",
+      "manualTriggerDescription": "Run the guild lifecycle cleanup manually: warn owners of guilds inactive for 11+ months, soft-delete guilds inactive for 12+ months, and hard-delete guilds soft-deleted 30+ days ago.",
+      "triggerButton": "Run Cleanup",
+      "confirmButton": "Confirm — Run Cleanup",
+      "cancelButton": "Cancel",
+      "confirmWarning": "This will send warning emails and delete guilds. Click Confirm to proceed.",
+      "resultTitle": "Cleanup completed:",
+      "resultWarned": "{count} guilds warned",
+      "resultSoftDeleted": "{count} guilds soft-deleted",
+      "resultHardDeleted": "{count} guilds hard-deleted",
+      "inactiveGuildsTitle": "Inactive Guilds (11+ months)",
+      "noInactiveGuilds": "No inactive guilds at this time.",
+      "noOwner": "No owner",
+      "lastActivityLabel": "Last active:",
+      "playersCount": "{count} players",
+      "deletionImminent": "Deletion imminent",
+      "warningSoon": "Warning soon"
+    }
   }
 }

@@ -83,5 +83,72 @@
     "title": "F-Guild",
     "description": "Transformez les tâches quotidiennes en aventures épiques avec la mécanique DnD",
     "getStarted": "Commencer l'aventure"
+  },
+  "admin": {
+    "common": {
+      "loading": "Chargement..."
+    },
+    "nav": {
+      "overview": "Aperçu",
+      "guilds": "Guildes",
+      "cleanup": "Nettoyage"
+    },
+    "overview": {
+      "title": "Panneau d'administration",
+      "stats": {
+        "totalUsers": "Utilisateurs totaux",
+        "totalGuilds": "Guildes totales",
+        "activeGuilds": "Guildes actives",
+        "totalPlayers": "Joueurs totaux"
+      }
+    },
+    "guilds": {
+      "title": "Gestion des guildes",
+      "searchPlaceholder": "Rechercher des guildes...",
+      "filterAll": "Tous les statuts",
+      "statusActive": "Active",
+      "statusInactive": "Inactive",
+      "statusDeleted": "Supprimée",
+      "noResults": "Aucune guilde trouvée.",
+      "membersCount": "{count} maîtres",
+      "playersCount": "{count} joueurs",
+      "lastActivity": "Dernière activité :",
+      "pageInfo": "Page {page} sur {totalPages} ({total} au total)"
+    },
+    "guildDetail": {
+      "back": "Retour aux guildes",
+      "notFound": "Guilde introuvable.",
+      "masters": "Maîtres",
+      "players": "Joueurs",
+      "quests": "Quêtes",
+      "guildId": "ID de la guilde",
+      "createdBy": "Créée par",
+      "createdAt": "Créée le",
+      "lastActivity": "Dernière activité",
+      "deletedAt": "Supprimée le",
+      "inviteCode": "Code d'invitation",
+      "mastersList": "Maîtres de la guilde",
+      "joinedAt": "Rejoint le"
+    },
+    "cleanup": {
+      "title": "Gestion du nettoyage",
+      "manualTrigger": "Nettoyage manuel",
+      "manualTriggerDescription": "Lancer le nettoyage manuellement : avertir les propriétaires des guildes inactives depuis 11+ mois, supprimer doucement les inactives depuis 12+ mois, supprimer définitivement celles supprimées doucement il y a 30+ jours.",
+      "triggerButton": "Lancer le nettoyage",
+      "confirmButton": "Confirmer — Lancer le nettoyage",
+      "cancelButton": "Annuler",
+      "confirmWarning": "Des e-mails d'avertissement seront envoyés et des guildes supprimées. Cliquez sur Confirmer pour continuer.",
+      "resultTitle": "Nettoyage terminé :",
+      "resultWarned": "{count} guildes avertie(s)",
+      "resultSoftDeleted": "{count} guildes supprimées doucement",
+      "resultHardDeleted": "{count} guildes supprimées définitivement",
+      "inactiveGuildsTitle": "Guildes inactives (11+ mois)",
+      "noInactiveGuilds": "Aucune guilde inactive pour l'instant.",
+      "noOwner": "Pas de propriétaire",
+      "lastActivityLabel": "Dernière activité :",
+      "playersCount": "{count} joueurs",
+      "deletionImminent": "Suppression imminente",
+      "warningSoon": "Avertissement bientôt"
+    }
   }
 }

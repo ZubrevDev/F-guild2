@@ -1,4 +1,5 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { adminRouter } from "./admin";
 import { authRouter } from "./auth";
 import { guildRouter } from "./guild";
 import { playerRouter } from "./player";
@@ -15,6 +16,7 @@ import { subscriptionRouter } from "./subscription";
 import { pushRouter } from "./push";
 
 export const appRouter = router({
+  admin: adminRouter,
   auth: authRouter,
   guild: guildRouter,
   player: playerRouter,
