@@ -2,6 +2,7 @@ import { z } from "zod/v4";
 import { TRPCError } from "@trpc/server";
 import { hash, compare } from "bcryptjs";
 import { randomBytes } from "crypto";
+import QRCode from "qrcode";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 
 const MAX_PLAYERS = 10;
@@ -95,6 +96,60 @@ export const playerRouter = router({
       });
 
       return { success: true };
+    }),
+
+  getQrCode: protectedProcedure
+    .input(z.object({ playerId: z.uuid() }))
+    .query(async ({ ctx, input }) => {
+      const player = await ctx.db.player.findUnique({
+        where: { id: input.playerId },
+        include: { guild: { select: { id: true, inviteCode: true } } },
+      });
+      if (!player) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Player not found" });
+      }
+
+      await assertGuildMaster(ctx, player.guildId);
+
+      const loginUrl = `/player-login?invite=${encodeURIComponent(player.guild.inviteCode)}&name=${encodeURIComponent(player.name)}&guild=${player.guild.id}`;
+
+      const dataUrl = await QRCode.toDataURL(loginUrl, {
+        width: 400,
+        margin: 2,
+        color: { dark: "#000000", light: "#ffffff" },
+      });
+
+      return { qrDataUrl: dataUrl, loginUrl };
+    }),
+
+  regenerateQrToken: protectedProcedure
+    .input(z.object({ playerId: z.uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const player = await ctx.db.player.findUnique({
+        where: { id: input.playerId },
+        include: { guild: { select: { id: true, inviteCode: true } } },
+      });
+      if (!player) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Player not found" });
+      }
+
+      await assertGuildMaster(ctx, player.guildId);
+
+      const newToken = randomBytes(32).toString("hex");
+      await ctx.db.player.update({
+        where: { id: input.playerId },
+        data: { qrToken: newToken },
+      });
+
+      const loginUrl = `/player-login?invite=${encodeURIComponent(player.guild.inviteCode)}&name=${encodeURIComponent(player.name)}&guild=${player.guild.id}`;
+
+      const dataUrl = await QRCode.toDataURL(loginUrl, {
+        width: 400,
+        margin: 2,
+        color: { dark: "#000000", light: "#ffffff" },
+      });
+
+      return { qrDataUrl: dataUrl, loginUrl };
     }),
 
   loginByPin: publicProcedure
