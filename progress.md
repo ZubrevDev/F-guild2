@@ -134,3 +134,10 @@
 **Summary:** In-memory rate limiter (100 req/min auth, 300 req/min API). HTML sanitization на tRPC POST body. CSP + 6 security headers в next.config.ts. ESLint: no-eval, no-implied-eval, no-new-func, react/no-danger. Auth.js CSRF — built-in.
 **Коммит:** 500fe11
 **Заметки:** Rate limiter in-memory — не персистентный, сбрасывается при рестарте. Redis будет позже. CSP содержит unsafe-inline/unsafe-eval для совместимости с Next.js.
+
+### TASK-042: Авторизация: проверка доступа на уровне API (гильдия, роли)
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** character.create и getByGuild → protectedProcedure + assertGuildMaster. Quest endpoints: assertGuildMaster на get, assertPlayerInGuild на forPlayer/accept/submit. Ownership check на submit (instance.playerId !== input.playerId). Player-facing read endpoints остались public (PIN-auth без Auth.js сессии).
+**Коммит:** 63d26bd
+**Заметки:** assertGuildMaster дублируется в guild.ts, quest.ts, player.ts, character.ts — будущий рефакторинг вынесет в shared module. Prayer router ещё не существует.
