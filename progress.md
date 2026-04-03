@@ -162,3 +162,31 @@
 **Summary:** src/lib/dice.ts: rollD20() через crypto.getRandomValues. Dice router: roll procedure с characterId, context, dc. Формула: d20 + ability + item + buff модификаторы. Каждый бросок → DiceLog запись. Возвращает {roll, modifiers, total, success, dc}.
 **Коммит:** b4dfe49
 **Заметки:** Модификаторы собираются из character stats, inventory items, active buffs. DiceLog хранит полную историю бросков.
+
+### TASK-019: Повторяющиеся квесты: автоматическая генерация инстансов
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** recurring-quests.ts: generateRecurringInstances, getRecurringProgress, getPeriodStart, getTotalForPeriod. Quest router: generateRecurring, recurringProgress, recurringStats процедуры. Cron route /api/cron/recurring-quests. periodStart в QuestInstance schema.
+**Коммит:** 14ab7c3
+**Заметки:** Cron endpoint защищён CRON_SECRET. Поддерживает daily/weekly/monthly рекуррентность.
+
+### TASK-024: Баффы/дебаффы: CRUD шаблонов и применение к игрокам
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Buff router: create, list, update, delete, apply, remove, activeForPlayer, expireBuffs. Шаблоны баффов для гильдии. ActiveBuff с expiresAt. gold_drain мгновенное списание. assertGuildMaster на master operations.
+**Коммит:** 6c4f19d
+**Заметки:** expireBuffs — публичный endpoint для cron. Типы эффектов: xp_bonus/penalty, gold_bonus/penalty, gold_drain, dice_bonus/penalty, shop_discount/markup, faith_bonus, custom.
+
+### TASK-026: Торговая гильдия: CRUD товаров (мастер)
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Shop router: createItem, listItems, getItem, updateItem, deactivateItem, playerItems. Категории: real_reward/game_item. Stock=null → бесконечный запас. level_required, class_required фильтрация. Effect JSON для game_item.
+**Коммит:** f43988b
+**Заметки:** playerItems фильтрует по уровню и классу персонажа. assertGuildMaster на master operations.
+
+### TASK-029: Система молитв: отправка, ответы, списание очков веры
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Prayer router: send, reply, listForMaster, listForPlayer, getThread, unreadCount. Стоимость молитвы: 1 faith point. Серверная валидация баланса. Threaded replies. Приватность: игрок видит только свои молитвы.
+**Коммит:** 0669e00
+**Заметки:** assertGuildMaster на master endpoints. Другие игроки не видят чужих молитв.
