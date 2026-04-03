@@ -364,6 +364,16 @@
     "noBuffs": "Aucun buff actif",
     "expiresIn": "Expire dans {time}"
   },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "Aucune notification",
+    "markAllRead": "Tout marquer comme lu",
+    "markRead": "Marquer comme lu",
+    "justNow": "À l'instant",
+    "minutesAgo": "{count, plural, one {il y a # minute} other {il y a # minutes}}",
+    "hoursAgo": "{count, plural, one {il y a # heure} other {il y a # heures}}",
+    "daysAgo": "{count, plural, one {il y a # jour} other {il y a # jours}}"
+  },
   "admin": {
     "common": {
       "loading": "Chargement..."

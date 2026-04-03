@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 import { useSession } from "next-auth/react";
 
 const navItems = [
@@ -64,12 +65,15 @@ export default function DashboardLayout({
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
             {userInitials}
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <h2 className="text-lg font-bold text-primary leading-none">F-Guild</h2>
             {userName && (
               <p className="truncate text-xs text-muted-foreground">{userName}</p>
             )}
           </div>
+          {session?.user?.id && (
+            <NotificationBell userId={session.user.id} />
+          )}
         </div>
         <nav className="flex flex-col gap-1 px-3">
           {navItems.map(({ key, href, icon: Icon }) => {
@@ -98,6 +102,13 @@ export default function DashboardLayout({
 
       {/* Main content */}
       <main className="flex-1 p-4 pb-20 md:p-6 md:pb-6">{children}</main>
+
+      {/* Mobile notification bell — fixed top-right */}
+      {session?.user?.id && (
+        <div className="fixed right-4 top-3 z-50 md:hidden">
+          <NotificationBell userId={session.user.id} />
+        </div>
+      )}
 
       {/* Mobile bottom nav */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card md:hidden">

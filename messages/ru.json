@@ -364,6 +364,16 @@
     "noBuffs": "Нет активных баффов",
     "expiresIn": "Истекает через {time}"
   },
+  "notifications": {
+    "title": "Уведомления",
+    "empty": "Нет уведомлений",
+    "markAllRead": "Отметить все как прочитанные",
+    "markRead": "Отметить как прочитанное",
+    "justNow": "Только что",
+    "minutesAgo": "{count, plural, one {# минуту назад} few {# минуты назад} other {# минут назад}}",
+    "hoursAgo": "{count, plural, one {# час назад} few {# часа назад} other {# часов назад}}",
+    "daysAgo": "{count, plural, one {# день назад} few {# дня назад} other {# дней назад}}"
+  },
   "admin": {
     "common": {
       "loading": "Загрузка..."
