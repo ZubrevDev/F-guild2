@@ -867,7 +867,7 @@
         "TASK-016",
         "TASK-029"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-035",
@@ -916,7 +916,7 @@
       "dependencies": [
         "TASK-006"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-037",
@@ -1143,7 +1143,7 @@
       "dependencies": [
         "TASK-006"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-046",
@@ -1167,7 +1167,7 @@
       "dependencies": [
         "TASK-002"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-047",

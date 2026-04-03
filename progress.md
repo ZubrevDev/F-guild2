@@ -266,3 +266,27 @@
 **Статус:** done
 **Дата:** 2026-04-03
 **Коммит:** ede99f3
+
+### TASK-034: Система уведомлений (in-app)
+**Статус:** done
+**Дата:** 2026-04-03
+**Коммит:** 4f215f7, f840b61
+**Summary:** Notification model в Prisma, createNotification/createNotifications хелперы, tRPC notification router (list с пагинацией, unreadCount, markRead, markAllRead). Уведомления сохраняются в БД.
+
+### TASK-036: Email-уведомления через Resend
+**Статус:** done
+**Дата:** 2026-04-03
+**Коммит:** 4f215f7
+**Summary:** Resend SDK, 4 HTML email шаблона (welcome, quest_completed, level_up, prayer_answer), sendEmail с rate limiting (10/час), per-type toggles через env vars, .env.example обновлён.
+
+### TASK-045: Stripe subscription infrastructure
+**Статус:** done
+**Дата:** 2026-04-03
+**Коммит:** 4dd9aaf
+**Summary:** Stripe client singleton за ENABLE_BILLING feature flag, subscription router (createCheckoutSession, getStatus, cancel), webhook handler (checkout.session.completed, subscription.updated/deleted), feature gates (canAccessFeature, getTierLimits), auto-create Stripe customer при регистрации.
+
+### TASK-046: PostHog analytics
+**Статус:** done
+**Дата:** 2026-04-03
+**Коммит:** f840b61
+**Summary:** PostHog init с privacy-first defaults (no autocapture, no session recording, IP stripped), PostHogProvider компонент с page view tracking, centralized AnalyticsEvents, trackEvent/trackPageView helpers. No-op когда NEXT_PUBLIC_POSTHOG_KEY не установлен.
