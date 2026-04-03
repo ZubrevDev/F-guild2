@@ -42,5 +42,9 @@ next-env.d.ts
 prisma/*.db
 prisma/*.db-journal
 
+# Uploads (keep directory, ignore files)
+public/uploads/*
+!public/uploads/.gitkeep
+
 # OS
 Thumbs.db

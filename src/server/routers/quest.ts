@@ -240,9 +240,18 @@ export const questRouter = router({
         instanceId: z.uuid(),
         playerId: z.uuid(),
         confirmationData: z.object({
-          type: z.enum(["text", "master_confirm"]),
+          type: z.enum(["text", "photo", "master_confirm"]),
           text: z.string().optional(),
-        }),
+          photoUrl: z.string().optional(),
+        }).refine(
+          (data) => {
+            if (data.type === "photo") {
+              return typeof data.photoUrl === "string" && data.photoUrl.startsWith("/uploads/");
+            }
+            return true;
+          },
+          { message: "photoUrl is required and must start with /uploads/ when type is photo" }
+        ),
       })
     )
     .mutation(async ({ ctx, input }) => {
