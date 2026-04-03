@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { useSession } from "next-auth/react";
 
 const navItems = [
   { key: "overview", href: "/dashboard", icon: LayoutDashboard },
@@ -26,6 +27,23 @@ const navItems = [
   { key: "settings", href: "/dashboard/settings", icon: Settings },
 ] as const;
 
+function getInitials(name: string | null | undefined): string {
+  if (!name) return "?";
+  return name
+    .split(" ")
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
+
+function isNavItemActive(pathname: string, href: string): boolean {
+  if (href === "/dashboard") {
+    return pathname === "/dashboard";
+  }
+  return pathname === href || pathname.startsWith(href + "/");
+}
+
 export default function DashboardLayout({
   children,
 }: {
@@ -33,17 +51,29 @@ export default function DashboardLayout({
 }) {
   const t = useTranslations("nav");
   const pathname = usePathname();
+  const { data: session } = useSession();
+
+  const userName = session?.user?.name;
+  const userInitials = getInitials(userName);
 
   return (
     <div className="flex min-h-screen">
       {/* Desktop sidebar */}
-      <aside className="hidden w-60 shrink-0 border-r border-border bg-card md:block">
-        <div className="p-4">
-          <h2 className="text-lg font-bold text-primary">F-Guild</h2>
+      <aside className="hidden w-60 shrink-0 border-r border-border bg-card md:flex md:flex-col">
+        <div className="flex items-center gap-3 p-4">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+            {userInitials}
+          </div>
+          <div className="min-w-0">
+            <h2 className="text-lg font-bold text-primary leading-none">F-Guild</h2>
+            {userName && (
+              <p className="truncate text-xs text-muted-foreground">{userName}</p>
+            )}
+          </div>
         </div>
         <nav className="flex flex-col gap-1 px-3">
           {navItems.map(({ key, href, icon: Icon }) => {
-            const isActive = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
+            const isActive = isNavItemActive(pathname, href);
             return (
               <Link
                 key={key}
@@ -73,7 +103,7 @@ export default function DashboardLayout({
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card md:hidden">
         <div className="flex justify-around">
           {navItems.slice(0, 5).map(({ key, href, icon: Icon }) => {
-            const isActive = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
+            const isActive = isNavItemActive(pathname, href);
             return (
               <Link
                 key={key}

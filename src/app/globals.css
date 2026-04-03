@@ -27,25 +27,30 @@
 }
 
 .dark {
-  --background: oklch(0.141 0.005 285.823);
+  --background: oklch(0.13 0.018 285);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.141 0.005 285.823);
+  --card: oklch(0.16 0.015 285);
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.141 0.005 285.823);
+  --popover: oklch(0.16 0.015 285);
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.707 0.217 269.069);
   --primary-foreground: oklch(0.263 0.052 265.22);
-  --secondary: oklch(0.218 0.006 285.885);
+  --secondary: oklch(0.218 0.012 285);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.218 0.006 285.885);
+  --muted: oklch(0.218 0.012 285);
   --muted-foreground: oklch(0.715 0.012 286.067);
-  --accent: oklch(0.218 0.006 285.885);
+  --accent: oklch(0.218 0.012 285);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.704 0.191 22.216);
-  --border: oklch(0.274 0.006 286.033);
-  --input: oklch(0.274 0.006 286.033);
+  --border: oklch(0.274 0.012 285);
+  --input: oklch(0.274 0.012 285);
   --ring: oklch(0.551 0.229 264.364);
+  /* Game accent colors */
+  --gold: oklch(0.75 0.15 85);
+  --xp-green: oklch(0.7 0.2 145);
+  --danger-red: oklch(0.6 0.25 25);
+  --mana-blue: oklch(0.65 0.2 260);
 }
 
 @theme inline {
