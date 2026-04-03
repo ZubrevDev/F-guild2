@@ -230,4 +230,39 @@
 ### TASK-047: CI/CD — GitHub Actions for lint, test, build, deploy
 **Статус:** done
 **Дата:** 2026-04-03
-**Summary:** GitHub Actions CI workflow (.github/workflows/ci.yml): checkout, pnpm 9, Node 20, install, lint, type-check, build. Next.js cache. Deploy placeholder (Vercel). Added type-check script to package.json. Concurrency group to cancel stale runs.
+**Коммит:** 45c7932
+
+### TASK-023: Анимация броска d20
+**Статус:** done
+**Дата:** 2026-04-03
+**Коммит:** a7d7ec6
+
+### TASK-039: PWA: Service Worker, manifest, оффлайн-заглушка
+**Статус:** done
+**Дата:** 2026-04-03
+**Коммит:** 2ddfd71
+
+### TASK-031: Activity Log: настраиваемый лог действий гильдии
+**Статус:** done
+**Дата:** 2026-04-03
+**Коммит:** 54eb0db
+
+### TASK-028: Инвентарь игрока: отображение, экипировка, использование
+**Статус:** done
+**Дата:** 2026-04-03
+**Коммит:** 9f2621c
+
+### TASK-037: Настройки профиля мастера
+**Статус:** done
+**Дата:** 2026-04-03
+**Коммит:** dfcf954
+
+### TASK-038: Настройки гильдии
+**Статус:** done
+**Дата:** 2026-04-03
+**Коммит:** 9179cef
+
+### TASK-032+033: Уникальные механики классов (все 6 классов)
+**Статус:** done
+**Дата:** 2026-04-03
+**Коммит:** ede99f3
