@@ -176,7 +176,7 @@
         "Шаг 4: Проверить что oauth_provider сохраняется в User"
       ],
       "dependencies": ["TASK-006"],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "TASK-008",

@@ -113,3 +113,10 @@
 **Summary:** Dashboard layout: sidebar (desktop, md:block) / bottom-nav (mobile, md:hidden). 8 разделов навигации. Player cards с классами, уровнями, XP. Counters pending quests / unread prayers. Activity feed placeholder. 7 placeholder страниц для разделов.
 **Коммит:** e3e324a
 **Заметки:** Все 5 test_steps пройдены. Мок-данные для игроков; реальные данные при подключении guild context.
+
+### TASK-007: OAuth-аутентификация мастера: Google и Apple
+**Статус:** done
+**Дата:** 2026-04-03
+**Summary:** Google и Apple OAuth providers в Auth.js v5. signIn callback создаёт User при первом OAuth входе или линкует к существующему email. oauthProvider сохраняется. Кнопки Google/Apple на login и register с SVG иконками. i18n переводы en/ru/fr.
+**Коммит:** f06d371
+**Заметки:** Требует GOOGLE_CLIENT_ID/SECRET и APPLE_ID/SECRET в .env для работы. Placeholder значения в .env.
