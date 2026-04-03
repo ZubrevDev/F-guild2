@@ -347,6 +347,23 @@
     "deleteConfirm": "Вы уверены? Это действие необратимо.",
     "deleteButton": "Да, удалить аккаунт"
   },
+  "characterPage": {
+    "title": "Персонаж",
+    "classAbility": "Классовая способность",
+    "useAbility": "Использовать",
+    "abilityUsed": "Использовано сегодня",
+    "availableTomorrow": "Доступно завтра",
+    "abilityTree": "Способности",
+    "learn": "Изучить",
+    "learned": "Изучено",
+    "locked": "Заблокировано",
+    "abilityPoints": "Очки способностей: {count}",
+    "inventory": "Инвентарь",
+    "noItems": "Предметов пока нет",
+    "activeBuffs": "Активные баффы",
+    "noBuffs": "Нет активных баффов",
+    "expiresIn": "Истекает через {time}"
+  },
   "admin": {
     "common": {
       "loading": "Загрузка..."

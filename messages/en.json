@@ -347,6 +347,23 @@
     "deleteConfirm": "Are you sure? This action cannot be undone.",
     "deleteButton": "Yes, Delete My Account"
   },
+  "characterPage": {
+    "title": "Character",
+    "classAbility": "Class Ability",
+    "useAbility": "Use Ability",
+    "abilityUsed": "Used today",
+    "availableTomorrow": "Available tomorrow",
+    "abilityTree": "Abilities",
+    "learn": "Learn",
+    "learned": "Learned",
+    "locked": "Locked",
+    "abilityPoints": "Ability Points: {count}",
+    "inventory": "Inventory",
+    "noItems": "No items yet",
+    "activeBuffs": "Active Buffs",
+    "noBuffs": "No active buffs",
+    "expiresIn": "Expires in {time}"
+  },
   "admin": {
     "common": {
       "loading": "Loading..."

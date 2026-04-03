@@ -347,6 +347,23 @@
     "deleteConfirm": "Êtes-vous sûr ? Cette action est irréversible.",
     "deleteButton": "Oui, supprimer mon compte"
   },
+  "characterPage": {
+    "title": "Personnage",
+    "classAbility": "Capacité de classe",
+    "useAbility": "Utiliser",
+    "abilityUsed": "Utilisé aujourd'hui",
+    "availableTomorrow": "Disponible demain",
+    "abilityTree": "Capacités",
+    "learn": "Apprendre",
+    "learned": "Appris",
+    "locked": "Verrouillé",
+    "abilityPoints": "Points de capacité : {count}",
+    "inventory": "Inventaire",
+    "noItems": "Pas encore d'objets",
+    "activeBuffs": "Buffs actifs",
+    "noBuffs": "Aucun buff actif",
+    "expiresIn": "Expire dans {time}"
+  },
   "admin": {
     "common": {
       "loading": "Chargement..."
