@@ -2,6 +2,7 @@ import { z } from "zod/v4";
 import { hash } from "bcryptjs";
 import { TRPCError } from "@trpc/server";
 import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { createStripeCustomer } from "@/lib/stripe";
 
 export const authRouter = router({
   register: publicProcedure
@@ -30,6 +31,13 @@ export const authRouter = router({
       }
 
       const passwordHash = await hash(input.password, 12);
+
+      // Create Stripe customer (no-op when billing is disabled)
+      const stripeCustomerId = await createStripeCustomer(
+        input.email,
+        input.name,
+      );
+
       const user = await ctx.db.user.create({
         data: {
           name: input.name,
@@ -37,6 +45,7 @@ export const authRouter = router({
           passwordHash,
           consentedAt: new Date(),
           ageVerified: true,
+          ...(stripeCustomerId && { stripeCustomerId }),
         },
       });
 
