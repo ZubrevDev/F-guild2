@@ -3,6 +3,8 @@ import { TRPCError } from "@trpc/server";
 import type { Prisma } from "@prisma/client";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 
+const MAX_INVENTORY_SLOTS = 20;
+
 export const shopRouter = router({
   createItem: protectedProcedure
     .input(
@@ -240,6 +242,18 @@ export const shopRouter = router({
         });
       }
 
+      const currentInventory = await ctx.db.inventory.aggregate({
+        where: { characterId: character.id },
+        _sum: { quantity: true },
+      });
+      const usedSlots = currentInventory._sum.quantity ?? 0;
+      if (usedSlots >= MAX_INVENTORY_SLOTS) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Inventory full (${MAX_INVENTORY_SLOTS}/${MAX_INVENTORY_SLOTS} slots)`,
+        });
+      }
+
       return ctx.db.$transaction(async (tx) => {
         await tx.character.update({
           where: { id: character.id },
@@ -290,6 +304,202 @@ export const shopRouter = router({
         where: { characterId: player.character.id },
         include: { item: true },
         orderBy: { acquiredAt: "desc" },
+      });
+    }),
+
+  playerInventory: publicProcedure
+    .input(
+      z.object({
+        playerId: z.uuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const player = await ctx.db.player.findUnique({
+        where: { id: input.playerId },
+        include: { character: true },
+      });
+      if (!player) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Player not found",
+        });
+      }
+      if (!player.character) {
+        return { items: [], totalSlots: MAX_INVENTORY_SLOTS, usedSlots: 0, equippedEffects: {} };
+      }
+
+      const items = await ctx.db.inventory.findMany({
+        where: { characterId: player.character.id },
+        include: { item: true },
+        orderBy: [{ isEquipped: "desc" }, { acquiredAt: "desc" }],
+      });
+
+      const usedSlots = items.reduce((sum, inv) => sum + inv.quantity, 0);
+
+      const equippedEffects: Record<string, number> = {};
+      for (const inv of items) {
+        if (inv.isEquipped && inv.item.effect) {
+          const effect = inv.item.effect as Record<string, unknown>;
+          for (const [key, value] of Object.entries(effect)) {
+            if (typeof value === "number") {
+              equippedEffects[key] = (equippedEffects[key] ?? 0) + value;
+            }
+          }
+        }
+      }
+
+      return {
+        items,
+        totalSlots: MAX_INVENTORY_SLOTS,
+        usedSlots,
+        equippedEffects,
+      };
+    }),
+
+  equip: publicProcedure
+    .input(
+      z.object({
+        inventoryItemId: z.uuid(),
+        playerId: z.uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const player = await ctx.db.player.findUnique({
+        where: { id: input.playerId },
+        include: { character: true },
+      });
+      if (!player) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Player not found",
+        });
+      }
+      if (!player.character) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Player has no character",
+        });
+      }
+
+      const inventoryItem = await ctx.db.inventory.findUnique({
+        where: { id: input.inventoryItemId },
+        include: { item: true },
+      });
+      if (!inventoryItem) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Inventory item not found",
+        });
+      }
+      if (inventoryItem.characterId !== player.character.id) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Item does not belong to this player",
+        });
+      }
+
+      if (inventoryItem.item.category !== "game_item") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Only game items can be equipped",
+        });
+      }
+
+      return ctx.db.inventory.update({
+        where: { id: input.inventoryItemId },
+        data: { isEquipped: !inventoryItem.isEquipped },
+        include: { item: true },
+      });
+    }),
+
+  useItem: publicProcedure
+    .input(
+      z.object({
+        inventoryItemId: z.uuid(),
+        playerId: z.uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const player = await ctx.db.player.findUnique({
+        where: { id: input.playerId },
+        include: { character: true },
+      });
+      if (!player) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Player not found",
+        });
+      }
+      if (!player.character) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Player has no character",
+        });
+      }
+
+      const inventoryItem = await ctx.db.inventory.findUnique({
+        where: { id: input.inventoryItemId },
+        include: { item: true },
+      });
+      if (!inventoryItem) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Inventory item not found",
+        });
+      }
+      if (inventoryItem.characterId !== player.character.id) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Item does not belong to this player",
+        });
+      }
+
+      const effect = (inventoryItem.item.effect as Record<string, unknown>) ?? {};
+      if (!effect.consumable) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This item is not consumable",
+        });
+      }
+
+      return ctx.db.$transaction(async (tx) => {
+        const character = player.character!;
+        const updateData: Record<string, unknown> = {};
+
+        if (typeof effect.xp_bonus === "number") {
+          updateData.xp = { increment: effect.xp_bonus };
+        }
+        if (typeof effect.gold_bonus === "number") {
+          updateData.gold = { increment: effect.gold_bonus };
+        }
+        if (typeof effect.faith_bonus === "number") {
+          updateData.faithPoints = { increment: effect.faith_bonus };
+        }
+
+        if (Object.keys(updateData).length > 0) {
+          await tx.character.update({
+            where: { id: character.id },
+            data: updateData,
+          });
+        }
+
+        if (inventoryItem.quantity > 1) {
+          await tx.inventory.update({
+            where: { id: inventoryItem.id },
+            data: { quantity: { decrement: 1 } },
+          });
+        } else {
+          await tx.inventory.delete({
+            where: { id: inventoryItem.id },
+          });
+        }
+
+        return {
+          used: true,
+          itemName: inventoryItem.item.name,
+          effectApplied: effect,
+          remainingQuantity: inventoryItem.quantity - 1,
+        };
       });
     }),
 
