@@ -2,6 +2,7 @@ import { z } from "zod/v4";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { checkLevelUp } from "@/lib/leveling";
+import { generateRecurringInstances, getRecurringProgress, getPeriodStart, getTotalForPeriod } from "@/lib/recurring-quests";
 
 export const questRouter = router({
   create: protectedProcedure
@@ -541,6 +542,114 @@ export const questRouter = router({
           player: { select: { name: true } },
         },
         orderBy: { createdAt: "asc" },
+      });
+    }),
+
+  generateRecurring: protectedProcedure
+    .input(z.object({ guildId: z.uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      await assertGuildMaster(ctx, input.guildId);
+
+      const createdCount = await generateRecurringInstances(
+        ctx.db,
+        input.guildId
+      );
+
+      return { instancesCreated: createdCount };
+    }),
+
+  recurringProgress: publicProcedure
+    .input(
+      z.object({
+        questId: z.uuid(),
+        playerId: z.uuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const quest = await ctx.db.quest.findUnique({
+        where: { id: input.questId },
+      });
+      if (!quest) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Quest not found" });
+      }
+
+      await assertPlayerInGuild(ctx, input.playerId, quest.guildId);
+
+      return getRecurringProgress(ctx.db, input.questId, input.playerId);
+    }),
+
+  recurringStats: protectedProcedure
+    .input(z.object({ guildId: z.uuid() }))
+    .query(async ({ ctx, input }) => {
+      await assertGuildMaster(ctx, input.guildId);
+
+      const now = new Date();
+
+      const quests = await ctx.db.quest.findMany({
+        where: {
+          guildId: input.guildId,
+          isActive: true,
+          recurrence: { notIn: ["once", "custom"] },
+        },
+        include: {
+          instances: {
+            select: {
+              id: true,
+              playerId: true,
+              status: true,
+              periodStart: true,
+            },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+      });
+
+      return quests.map((quest) => {
+        const periodStart = getPeriodStart(quest.recurrence, now);
+        const { total, label } = getTotalForPeriod(quest.recurrence, now);
+
+        // Current period instances
+        const currentInstances = quest.instances.filter(
+          (i) =>
+            i.periodStart &&
+            i.periodStart.getTime() === periodStart.getTime()
+        );
+
+        const currentCompleted = currentInstances.filter(
+          (i) => i.status === "completed"
+        ).length;
+
+        const currentTotal = currentInstances.length;
+
+        // All-time stats
+        const allCompleted = quest.instances.filter(
+          (i) => i.status === "completed"
+        ).length;
+
+        const uniquePlayers = new Set(
+          quest.instances.map((i) => i.playerId)
+        ).size;
+
+        return {
+          questId: quest.id,
+          title: quest.title,
+          recurrence: quest.recurrence,
+          assignedTo: quest.assignedTo,
+          currentPeriod: {
+            completed: currentCompleted,
+            total: currentTotal,
+            label,
+          },
+          trackingWindow: {
+            total,
+            label,
+          },
+          allTime: {
+            completed: allCompleted,
+            totalInstances: quest.instances.length,
+            uniquePlayers,
+          },
+        };
       });
     }),
 });
