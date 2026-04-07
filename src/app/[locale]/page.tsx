@@ -2,89 +2,117 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Link } from "@/i18n/navigation";
-import { Sword, Users, ShoppingBag, Dice5, ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 const features = [
-  { key: "quests", icon: Sword, color: "text-purple-400" },
-  { key: "characters", icon: Users, color: "text-xp" },
-  { key: "shop", icon: ShoppingBag, color: "text-gold" },
-  { key: "dice", icon: Dice5, color: "text-mana-blue" },
+  { key: "quests", emoji: "⚔️" },
+  { key: "characters", emoji: "🧙" },
+  { key: "shop", emoji: "💎" },
+  { key: "dice", emoji: "🎲" },
 ] as const;
 
 const steps = [
   { key: "step1", emoji: "🏰" },
   { key: "step2", emoji: "📜" },
-  { key: "step3", emoji: "⚔️" },
+  { key: "step3", emoji: "🌟" },
 ] as const;
 
 export default function Home() {
   const t = useTranslations("home");
 
   return (
-    <div className="flex flex-col">
+    <div className="relative flex flex-col overflow-x-hidden">
+      {/* Background atmosphere */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
+        <div className="absolute -top-20 -right-20 h-72 w-72 rounded-full bg-primary/20 blur-3xl animate-glow-pulse" />
+        <div className="absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-accent/20 blur-3xl animate-glow-pulse delay-700" />
+        <div className="absolute top-1/2 left-1/4 h-48 w-48 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute top-[15%] right-[20%] text-2xl animate-float opacity-20">✨</div>
+        <div className="absolute top-[60%] left-[10%] text-xl animate-float delay-500 opacity-15">⭐</div>
+        <div className="absolute top-[40%] right-[8%] text-lg animate-float delay-300 opacity-20">🌟</div>
+      </div>
+
       {/* Locale switcher */}
       <div className="fixed top-4 right-4 z-50">
         <LocaleSwitcher />
       </div>
 
-      {/* Hero Section */}
-      <section className="flex min-h-[100dvh] flex-col items-center justify-center px-6 text-center">
-        {/* D20 Icon */}
-        <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 text-4xl shadow-lg shadow-purple-500/25">
-          🎲
+      {/* ═══════════ HERO ═══════════ */}
+      <section className="relative flex min-h-[100dvh] flex-col items-center justify-center px-4 text-center md:px-6">
+        <div className="animate-float animate-fade-up mb-6">
+          <div className="relative">
+            <div className="flex h-28 w-28 items-center justify-center rounded-3xl border-2 border-border bg-card text-6xl shadow-2xl">
+              🏰
+            </div>
+            <div className="absolute -top-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm text-primary-foreground shadow-lg animate-bounce">
+              ✨
+            </div>
+          </div>
         </div>
 
-        <h1 className="text-4xl font-extrabold tracking-tight text-foreground md:text-5xl">
-          {t("title")}
+        <h1 className="animate-fade-up delay-100 font-cinzel text-4xl font-black tracking-wider text-foreground md:text-6xl">
+          F-GUILD
         </h1>
-        <p className="mt-2 text-lg font-medium text-primary md:text-xl">
-          {t("subtitle")}
-        </p>
-        <p className="mt-4 max-w-md text-muted-foreground">
+
+        <div className="animate-fade-up delay-200 my-4 flex items-center gap-3">
+          <span className="h-px w-8 bg-gradient-to-r from-transparent to-primary/60" />
+          <span className="text-xs font-cinzel tracking-[0.3em] uppercase text-muted-foreground">
+            {t("subtitle")}
+          </span>
+          <span className="h-px w-8 bg-gradient-to-l from-transparent to-primary/60" />
+        </div>
+
+        <p className="animate-fade-up delay-300 max-w-sm text-sm leading-relaxed text-muted-foreground md:text-base">
           {t("description")}
         </p>
 
-        {/* CTA Buttons */}
-        <div className="mt-8 flex w-full max-w-xs flex-col gap-3">
-          <Button asChild size="lg" className="w-full gradient-btn-primary border-0 text-base font-semibold shadow-lg shadow-purple-500/20">
+        <div className="animate-fade-up delay-400 mt-10 flex w-full max-w-xs flex-col gap-3">
+          <Button
+            asChild
+            size="lg"
+            className="group relative w-full overflow-hidden bg-primary text-base font-bold shadow-lg transition-all hover:bg-primary/90"
+          >
             <Link href="/register">
+              <Sparkles className="mr-2 size-5" />
               {t("getStarted")}
-              <ArrowRight className="ml-2 size-5" />
+              <ArrowRight className="ml-2 size-5 transition-transform group-hover:translate-x-1" />
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="w-full">
+          <Button asChild variant="outline" size="lg" className="w-full backdrop-blur-sm">
             <Link href="/login">{t("login")}</Link>
           </Button>
           <Link
             href="/player-login"
-            className="text-sm text-muted-foreground hover:text-primary transition-colors"
+            className="mt-1 text-sm text-muted-foreground transition-colors hover:text-primary"
           >
             {t("playerLogin")}
           </Link>
         </div>
 
-        {/* Scroll hint */}
-        <div className="mt-12 animate-bounce text-muted-foreground/50">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mx-auto">
-            <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
-          </svg>
+        <div className="animate-fade-up delay-700 absolute bottom-8 flex flex-col items-center gap-2">
+          <span className="text-[10px] uppercase tracking-widest text-muted-foreground/40">scroll</span>
+          <div className="h-8 w-5 rounded-full border border-border p-1">
+            <div className="h-2 w-full rounded-full bg-primary/60 animate-bounce" />
+          </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="px-6 py-16 md:py-24">
+      {/* ═══════════ FEATURES ═══════════ */}
+      <section className="relative px-4 py-6 md:px-6 md:py-8">
         <div className="mx-auto max-w-lg">
           <div className="grid grid-cols-2 gap-3 md:gap-4">
-            {features.map(({ key, icon: Icon, color }) => (
+            {features.map(({ key, emoji }) => (
               <div
                 key={key}
-                className="gradient-card rounded-xl p-4 md:p-5 transition-all hover:border-purple-500/40"
+                className="group relative rounded-xl border border-border bg-card p-4 transition-all duration-300 hover:bg-accent md:p-5"
               >
-                <Icon className={`size-7 ${color} mb-3`} />
-                <h3 className="text-sm font-semibold text-foreground">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 text-2xl">
+                  {emoji}
+                </div>
+                <h3 className="font-cinzel text-sm font-bold tracking-wide text-foreground">
                   {t(`features.${key}`)}
                 </h3>
-                <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
                   {t(`features.${key}Desc`)}
                 </p>
               </div>
@@ -93,23 +121,26 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="px-6 py-16 md:py-24">
+      {/* ═══════════ HOW IT WORKS ═══════════ */}
+      <section className="relative px-4 py-6 md:px-6 md:py-8">
         <div className="mx-auto max-w-lg">
-          <h2 className="mb-8 text-center text-2xl font-bold text-foreground md:text-3xl">
+          <h2 className="mb-12 text-center font-cinzel text-2xl font-bold tracking-wide text-foreground md:text-3xl">
             {t("howItWorks")}
           </h2>
-          <div className="flex flex-col gap-6">
+
+          <div className="relative flex flex-col gap-6">
+            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/40 via-accent/40 to-primary/20" aria-hidden="true" />
+
             {steps.map(({ key, emoji }) => (
-              <div key={key} className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-pink-600 text-xl font-bold text-white shadow-md shadow-purple-500/20">
+              <div key={key} className="relative flex items-start gap-5">
+                <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-border bg-card text-xl shadow-lg">
                   {emoji}
                 </div>
-                <div className="pt-1">
-                  <h3 className="text-base font-semibold text-foreground">
+                <div className="rounded-xl bg-card border border-border p-4 flex-1">
+                  <h3 className="font-cinzel text-base font-bold tracking-wide text-foreground">
                     {t(key)}
                   </h3>
-                  <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                     {t(`${key}Desc`)}
                   </p>
                 </div>
@@ -119,17 +150,28 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Bottom CTA */}
-      <section className="px-6 pb-16 pt-8 text-center md:pb-24">
+      {/* ═══════════ BOTTOM CTA ═══════════ */}
+      <section className="relative px-4 pb-6 pt-8 text-center md:px-6 md:pb-8">
         <div className="mx-auto max-w-xs">
-          <Button asChild size="lg" className="w-full gradient-btn-primary border-0 text-base font-semibold shadow-lg shadow-purple-500/20">
+          <div className="mb-10 flex items-center justify-center gap-4">
+            <span className="h-px w-12 bg-gradient-to-r from-transparent to-primary/40" />
+            <span className="text-3xl">🌟</span>
+            <span className="h-px w-12 bg-gradient-to-l from-transparent to-primary/40" />
+          </div>
+
+          <Button
+            asChild
+            size="lg"
+            className="w-full bg-primary text-base font-bold shadow-lg hover:bg-primary/90"
+          >
             <Link href="/register">
+              <Sparkles className="mr-2 size-5" />
               {t("getStarted")}
               <ArrowRight className="ml-2 size-5" />
             </Link>
           </Button>
-          <p className="mt-4 text-sm text-muted-foreground">
-            <Link href="/login" className="text-primary hover:underline">
+          <p className="mt-5 text-sm text-muted-foreground">
+            <Link href="/login" className="text-primary transition-colors hover:text-primary/80 hover:underline underline-offset-4">
               {t("login")}
             </Link>
           </p>
