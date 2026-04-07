@@ -101,18 +101,18 @@ export default function DashboardLayout({
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 p-4 pb-20 md:p-6 md:pb-6">{children}</main>
+      <main className="flex-1 p-4 pb-24 md:p-6 md:pb-6">{children}</main>
 
       {/* Mobile notification bell — fixed top-right */}
       {session?.user?.id && (
-        <div className="fixed right-4 top-3 z-50 md:hidden">
+        <div className="fixed right-4 z-50 md:hidden app-header" style={{ top: 0 }}>
           <NotificationBell recipientType="master" recipientId={session.user.id} />
         </div>
       )}
 
       {/* Mobile bottom nav */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-purple-500/15 bg-[#130e28] md:hidden">
-        <div className="flex justify-around">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-purple-500/15 bg-[#130e28] app-bottom-nav md:hidden">
+        <div className="flex justify-around px-1">
           {navItems.slice(0, 5).map(({ key, href, icon: Icon }) => {
             const isActive = isNavItemActive(pathname, href);
             return (
@@ -120,7 +120,7 @@ export default function DashboardLayout({
                 key={key}
                 href={href}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 px-2 py-2 text-[10px] transition-colors",
+                  "flex flex-col items-center justify-center gap-0.5 min-h-[48px] min-w-[48px] px-1 py-1.5 text-[10px] transition-colors touch-active no-select",
                   isActive ? "text-purple-400" : "text-muted-foreground"
                 )}
               >

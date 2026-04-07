@@ -131,7 +131,7 @@ export function NotificationBell({ recipientType, recipientId }: NotificationBel
       <PopoverContent
         align="end"
         sideOffset={8}
-        className="w-80 p-0"
+        className="w-[calc(100vw-2rem)] max-w-80 p-0"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border px-4 py-3">

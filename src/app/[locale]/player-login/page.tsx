@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,25 @@ export default function PlayerLoginPage() {
   const [playerName, setPlayerName] = useState(searchParams.get("name") ?? "");
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
+  const [autoLogging, setAutoLogging] = useState(false);
+  const triedQr = useRef(false);
+
+  const qrToken = searchParams.get("qrToken");
+
+  const qrLoginMutation = trpc.player.loginByQr.useMutation({
+    onSuccess(data) {
+      setPlayerSession({
+        playerId: data.playerId,
+        guildId: data.guildId,
+        playerName: data.playerName,
+      });
+      router.push("/player");
+    },
+    onError() {
+      setAutoLogging(false);
+      setError(t("wrongCredentials"));
+    },
+  });
 
   const loginMutation = trpc.player.loginByPin.useMutation({
     onSuccess(data) {
@@ -31,15 +50,35 @@ export default function PlayerLoginPage() {
     },
   });
 
+  // Auto-login via QR token
+  useEffect(() => {
+    if (qrToken && !triedQr.current) {
+      triedQr.current = true;
+      setAutoLogging(true);
+      qrLoginMutation.mutate({ qrToken });
+    }
+  }, [qrToken]); // eslint-disable-line react-hooks/exhaustive-deps
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     loginMutation.mutate({ inviteCode, playerName, pin });
   }
 
+  if (autoLogging) {
+    return (
+      <div className="flex min-h-[100dvh] items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          <p className="text-sm text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-md space-y-6 rounded-lg border border-border bg-card p-8">
+    <div className="flex min-h-[100dvh] items-start justify-center px-4 py-8 md:items-center md:py-0">
+      <div className="w-full max-w-md space-y-6 rounded-lg border border-border bg-card p-6 md:p-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold">{t("title")}</h1>
         </div>
@@ -61,7 +100,7 @@ export default function PlayerLoginPage() {
               required
               value={inviteCode}
               onChange={(e) => setInviteCode(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2.5 text-base md:text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
 
@@ -75,7 +114,7 @@ export default function PlayerLoginPage() {
               required
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2.5 text-base md:text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
 
@@ -86,10 +125,11 @@ export default function PlayerLoginPage() {
             <input
               id="pin"
               type="password"
+              inputMode="numeric"
               required
               value={pin}
               onChange={(e) => setPin(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2.5 text-base md:text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
 

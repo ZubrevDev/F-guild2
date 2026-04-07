@@ -60,19 +60,19 @@ export default function PlayerLayout({
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 p-4 pt-14 pb-20 md:p-6 md:pt-6 md:pb-6">{children}</main>
+      <main className="flex-1 p-4 pt-16 pb-24 md:p-6 md:pt-6 md:pb-6">{children}</main>
 
       {/* Mobile top bar with notifications */}
       {session?.playerId && (
-        <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-2 border-b border-purple-500/15 bg-[#130e28] md:hidden">
+        <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-2 border-b border-purple-500/15 bg-[#130e28] app-header md:hidden">
           <span className="text-sm font-medium text-foreground">{session.playerName}</span>
           <NotificationBell recipientType="player" recipientId={session.playerId} />
         </div>
       )}
 
       {/* Mobile bottom nav */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-purple-500/15 bg-[#130e28] md:hidden">
-        <div className="flex justify-around">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-purple-500/15 bg-[#130e28] app-bottom-nav md:hidden">
+        <div className="flex justify-around px-1">
           {navItems.map(({ key, href, icon: Icon }) => {
             const isActive =
               href === "/player"
@@ -83,7 +83,7 @@ export default function PlayerLayout({
                 key={key}
                 href={href}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 px-2 py-2 text-[10px] transition-colors",
+                  "flex flex-col items-center justify-center gap-0.5 min-h-[48px] min-w-[48px] px-1 py-1.5 text-[10px] transition-colors touch-active no-select",
                   isActive ? "text-purple-400" : "text-muted-foreground"
                 )}
               >

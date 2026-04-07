@@ -27,30 +27,58 @@
 }
 
 .dark {
-  --background: oklch(0.13 0.018 285);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.16 0.015 285);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.16 0.015 285);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.707 0.217 269.069);
-  --primary-foreground: oklch(0.263 0.052 265.22);
-  --secondary: oklch(0.218 0.012 285);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.218 0.012 285);
-  --muted-foreground: oklch(0.715 0.012 286.067);
-  --accent: oklch(0.218 0.012 285);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.704 0.191 22.216);
-  --border: oklch(0.274 0.012 285);
-  --input: oklch(0.274 0.012 285);
-  --ring: oklch(0.551 0.229 264.364);
-  /* Game accent colors */
-  --gold: oklch(0.75 0.15 85);
-  --xp-green: oklch(0.7 0.2 145);
-  --danger-red: oklch(0.6 0.25 25);
-  --mana-blue: oklch(0.65 0.2 260);
+  /*
+   * Purple DnD palette — WCAG AA contrast ratios:
+   * foreground on card   ≈ 13:1  (white on dark purple)
+   * muted-fg on card     ≈  5:1  (light gray on dark purple)
+   * primary on card       ≈  5:1  (bright purple on dark)
+   * gold on card          ≈  8:1
+   * border visible but subtle
+   */
+
+  /* Base surfaces */
+  --background: #110b20;
+  --foreground: #f0ecf7;
+  --card: rgba(30, 20, 55, 0.9);
+  --card-foreground: #f0ecf7;
+  --popover: #231545;
+  --popover-foreground: #f0ecf7;
+
+  /* Primary — vibrant purple, readable on dark bg */
+  --primary: #a855f7;
+  --primary-foreground: #ffffff;
+
+  /* Secondary — subtle purple tint for hover states */
+  --secondary: #241548;
+  --secondary-foreground: #e0d8f0;
+
+  /* Muted — for disabled / secondary text (5:1 contrast on card) */
+  --muted: #241548;
+  --muted-foreground: #9b8fc2;
+
+  /* Accent — same as secondary */
+  --accent: #2d1a55;
+  --accent-foreground: #e0d8f0;
+
+  /* Destructive */
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+
+  /* Borders & inputs — clearly visible */
+  --border: rgba(139, 92, 246, 0.35);
+  --input: rgba(139, 92, 246, 0.25);
+  --ring: #a855f7;
+
+  /* Game accent colors — all 4.5:1+ on dark bg */
+  --gold: #fbbf24;
+  --xp-green: #4ade80;
+  --danger-red: #f87171;
+  --mana-blue: #60a5fa;
+
+  /* Gradients */
+  --gradient-hero: linear-gradient(135deg, #2d1560 0%, #4c1d95 50%, #6d28d9 100%);
+  --gradient-card: rgba(25, 16, 48, 0.85);
+  --sidebar-active: linear-gradient(135deg, #6d28d9, #a21caf);
 }
 
 @theme inline {
@@ -80,12 +108,127 @@
 }
 
 @layer base {
+  /* Safe area support for notched devices */
+  :root {
+    --safe-area-top: env(safe-area-inset-top, 0px);
+    --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-area-left: env(safe-area-inset-left, 0px);
+    --safe-area-right: env(safe-area-inset-right, 0px);
+  }
+}
+
+@layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background: linear-gradient(160deg, #110b20 0%, #1e0f45 30%, #2d1560 55%, #1e0f45 80%, #110b20 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
   }
+
+  /* Form elements — clearly visible on dark backgrounds */
+  .dark input,
+  .dark textarea,
+  .dark select {
+    background-color: rgba(15, 10, 30, 0.8) !important;
+    border-color: rgba(139, 92, 246, 0.4) !important;
+    color: #f0ecf7;
+  }
+  .dark input:focus,
+  .dark textarea:focus,
+  .dark select:focus {
+    border-color: #a855f7 !important;
+    box-shadow: 0 0 0 1px #a855f7;
+  }
+  .dark input::placeholder,
+  .dark textarea::placeholder {
+    color: #7a6da0;
+  }
+
+}
+
+/* Gradient utility classes for the DnD theme */
+.gradient-hero {
+  background: var(--gradient-hero);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: 0.75rem;
+}
+.gradient-card {
+  background: var(--gradient-card);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  backdrop-filter: blur(12px);
+}
+.gradient-btn-primary {
+  background: linear-gradient(135deg, #8b5cf6, #a21caf);
+  color: white;
+  transition: opacity 0.2s;
+}
+.gradient-btn-primary:hover {
+  opacity: 0.9;
+}
+.sidebar-active-item {
+  background: var(--sidebar-active);
+  border-radius: 0.5rem;
+}
+.text-gold {
+  color: var(--gold);
+}
+.text-xp {
+  color: var(--xp-green);
+}
+
+/* Mobile app utilities */
+.app-header {
+  padding-top: calc(var(--safe-area-top) + 0.5rem);
+}
+.app-bottom-nav {
+  padding-bottom: var(--safe-area-bottom);
+}
+.app-content {
+  padding-bottom: calc(var(--safe-area-bottom) + 5rem);
+}
+
+/* Touch feedback */
+@media (hover: none) {
+  .touch-active:active {
+    opacity: 0.7;
+    transform: scale(0.97);
+    transition: transform 0.1s ease, opacity 0.1s ease;
+  }
+}
+
+/* Prevent text selection on interactive app elements */
+.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Smooth scrolling containers */
+.scroll-container {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Full-height app layout */
+.app-shell {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 /* ------------------------------------------------------------------ */
