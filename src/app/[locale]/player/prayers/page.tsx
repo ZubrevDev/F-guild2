@@ -105,7 +105,7 @@ export default function PlayerPrayersPage() {
       </div>
 
       {/* Send Prayer form */}
-      <Card>
+      <Card className="gradient-card border-purple-500/30">
         <CardHeader className="pb-2">
           <CardTitle className="text-base">{t("sendPrayer")}</CardTitle>
         </CardHeader>
@@ -187,7 +187,7 @@ export default function PlayerPrayersPage() {
             const isAnswered = prayer.status === "answered";
 
             return (
-              <Card key={prayer.id}>
+              <Card key={prayer.id} className="gradient-card border-purple-500/15">
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between gap-2">
                     <p className="text-xs text-muted-foreground">
@@ -211,7 +211,7 @@ export default function PlayerPrayersPage() {
 
                   {/* Master replies */}
                   {prayer.replies.length > 0 && (
-                    <div className="space-y-2 border-l-2 border-primary/30 pl-3">
+                    <div className="space-y-2 border-l-2 border-purple-500/30 pl-3">
                       {prayer.replies.map((reply) => (
                         <div key={reply.id}>
                           <p className="text-xs font-medium text-muted-foreground">

@@ -99,7 +99,7 @@ export const playerRouter = router({
     }),
 
   getQrCode: protectedProcedure
-    .input(z.object({ playerId: z.uuid() }))
+    .input(z.object({ playerId: z.uuid(), locale: z.enum(["en", "ru", "fr"]).optional() }))
     .query(async ({ ctx, input }) => {
       const player = await ctx.db.player.findUnique({
         where: { id: input.playerId },
@@ -111,15 +111,16 @@ export const playerRouter = router({
 
       await assertGuildMaster(ctx, player.guildId);
 
-      const loginUrl = `/player-login?invite=${encodeURIComponent(player.guild.inviteCode)}&name=${encodeURIComponent(player.name)}&guild=${player.guild.id}`;
+      const locale = input.locale ?? "en";
+      const loginPath = `/${locale}/player-login?invite=${encodeURIComponent(player.guild.inviteCode)}&name=${encodeURIComponent(player.name)}&guild=${player.guild.id}&qrToken=${player.qrToken}`;
 
-      const dataUrl = await QRCode.toDataURL(loginUrl, {
+      const dataUrl = await QRCode.toDataURL(loginPath, {
         width: 400,
         margin: 2,
         color: { dark: "#000000", light: "#ffffff" },
       });
 
-      return { qrDataUrl: dataUrl, loginUrl };
+      return { qrDataUrl: dataUrl, loginUrl: loginPath };
     }),
 
   regenerateQrToken: protectedProcedure
@@ -141,7 +142,7 @@ export const playerRouter = router({
         data: { qrToken: newToken },
       });
 
-      const loginUrl = `/player-login?invite=${encodeURIComponent(player.guild.inviteCode)}&name=${encodeURIComponent(player.name)}&guild=${player.guild.id}`;
+      const loginUrl = `/player-login?invite=${encodeURIComponent(player.guild.inviteCode)}&name=${encodeURIComponent(player.name)}&guild=${player.guild.id}&qrToken=${newToken}`;
 
       const dataUrl = await QRCode.toDataURL(loginUrl, {
         width: 400,
@@ -191,6 +192,29 @@ export const playerRouter = router({
         playerName: player.name,
         guildId: guild.id,
         guildName: guild.name,
+      };
+    }),
+
+  loginByQr: publicProcedure
+    .input(z.object({ qrToken: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const player = await ctx.db.player.findUnique({
+        where: { qrToken: input.qrToken },
+        include: { guild: { select: { id: true, name: true } } },
+      });
+
+      if (!player) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Invalid QR token",
+        });
+      }
+
+      return {
+        playerId: player.id,
+        playerName: player.name,
+        guildId: player.guildId,
+        guildName: player.guild.name,
       };
     }),
 });

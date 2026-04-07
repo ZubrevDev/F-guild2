@@ -360,7 +360,7 @@ export default function BuffsPage() {
             }
           }}
         >
-          <div className="my-8 w-full max-w-lg rounded-lg bg-background p-6 shadow-xl">
+          <div className="my-8 w-full max-w-lg rounded-lg border border-purple-500/30 bg-[#1e1240] p-6 shadow-2xl shadow-purple-900/30">
             <h2 className="mb-4 text-lg font-semibold">{t("createBuff")}</h2>
             <form onSubmit={handleCreateSubmit} className="space-y-4">
               {/* Name */}
@@ -518,7 +518,7 @@ export default function BuffsPage() {
             }
           }}
         >
-          <div className="w-full max-w-sm rounded-lg bg-background p-6 shadow-xl">
+          <div className="w-full max-w-sm rounded-lg border border-purple-500/30 bg-[#1e1240] p-6 shadow-2xl shadow-purple-900/30">
             <h2 className="mb-4 text-lg font-semibold">{t("apply")}</h2>
 
             {applySuccess ? (

@@ -70,6 +70,44 @@ export const characterRouter = router({
       return character;
     }),
 
+  createSelf: publicProcedure
+    .input(
+      z.object({
+        playerId: z.uuid(),
+        class: z.enum(["fighter", "wizard", "ranger", "cleric", "rogue", "bard"]),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const player = await ctx.db.player.findUnique({
+        where: { id: input.playerId },
+        include: { character: true },
+      });
+      if (!player) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Player not found" });
+      }
+      if (player.character) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Player already has a character",
+        });
+      }
+
+      const stats = CLASS_STATS[input.class];
+
+      return ctx.db.character.create({
+        data: {
+          playerId: input.playerId,
+          class: input.class,
+          level: 1,
+          xp: 0,
+          gold: 100,
+          faithPoints: 10,
+          stats: JSON.stringify(stats),
+          abilities: JSON.stringify([]),
+        },
+      });
+    }),
+
   get: publicProcedure
     .input(z.object({ playerId: z.uuid() }))
     .query(async ({ ctx, input }) => {

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -61,6 +61,7 @@ const CLASS_DATA: { key: CharacterClass; emoji: string }[] = [
 export default function PlayersPage() {
   const t = useTranslations("players");
   const tc = useTranslations("character");
+  const locale = useLocale();
   const { data: session } = useSession();
   const guildId = (session?.user as { guildId?: string } | undefined)?.guildId;
 
@@ -132,7 +133,7 @@ export default function PlayersPage() {
 
   // QR code fetch — enabled only when a dialog is open
   const { data: qrData, isLoading: qrLoading } = trpc.player.getQrCode.useQuery(
-    { playerId: qrDialog?.playerId ?? "" },
+    { playerId: qrDialog?.playerId ?? "", locale: locale as "en" | "ru" | "fr" },
     { enabled: !!qrDialog?.playerId }
   );
 
@@ -163,8 +164,9 @@ export default function PlayersPage() {
     resetPinMutation.mutate({ playerId, newPin: resetPin.value });
   }
 
-  function handleCopyUrl(url: string) {
-    navigator.clipboard.writeText(url).then(() => {
+  function handleCopyUrl(path: string) {
+    const fullUrl = `${window.location.origin}${path}`;
+    navigator.clipboard.writeText(fullUrl).then(() => {
       setQrCopied(true);
       setTimeout(() => setQrCopied(false), 2000);
     });
@@ -355,7 +357,7 @@ export default function PlayersPage() {
             if (e.target === e.currentTarget) setAddOpen(false);
           }}
         >
-          <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-xl">
+          <div className="w-full max-w-md rounded-lg border border-purple-500/30 bg-[#1e1240] p-6 shadow-2xl shadow-purple-900/30">
             <h2 className="mb-4 text-lg font-semibold">{t("addPlayer")}</h2>
             <form onSubmit={handleAddSubmit} className="space-y-4">
               {/* Name */}
@@ -441,7 +443,7 @@ export default function PlayersPage() {
             }
           }}
         >
-          <div className="w-full max-w-sm rounded-lg bg-background p-6 shadow-xl">
+          <div className="w-full max-w-sm rounded-lg border border-purple-500/30 bg-[#1e1240] p-6 shadow-2xl shadow-purple-900/30">
             <h2 className="mb-4 text-center text-lg font-semibold">
               {t("showQr")} — {qrDialog.playerName}
             </h2>
@@ -468,9 +470,14 @@ export default function PlayersPage() {
                 <div className="space-y-1">
                   <p className="text-xs font-medium text-muted-foreground">Login URL</p>
                   <div className="flex items-center gap-2">
-                    <p className="flex-1 truncate rounded-md border border-input bg-muted px-3 py-2 text-xs">
+                    <a
+                      href={qrData.loginUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 truncate rounded-md border border-input bg-muted px-3 py-2 text-xs text-primary hover:underline"
+                    >
                       {qrData.loginUrl}
-                    </p>
+                    </a>
                     <Button
                       variant="outline"
                       size="sm"
@@ -506,7 +513,7 @@ export default function PlayersPage() {
             if (e.target === e.currentTarget) closeCreateCharDialog();
           }}
         >
-          <div className="w-full max-w-lg rounded-lg bg-background p-6 shadow-xl">
+          <div className="w-full max-w-lg rounded-lg border border-purple-500/30 bg-[#1e1240] p-6 shadow-2xl shadow-purple-900/30">
             <h2 className="mb-1 text-lg font-semibold">{tc("selectClass")}</h2>
             <p className="mb-4 text-sm text-muted-foreground">{createCharDialog.playerName}</p>
 

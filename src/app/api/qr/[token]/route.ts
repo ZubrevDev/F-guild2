@@ -17,7 +17,7 @@ export async function GET(
     return NextResponse.json({ error: "Invalid QR token" }, { status: 404 });
   }
 
-  const loginUrl = `/player-login?invite=${encodeURIComponent(player.guild.inviteCode)}&name=${encodeURIComponent(player.name)}&guild=${player.guild.id}`;
+  const loginUrl = `/player-login?invite=${encodeURIComponent(player.guild.inviteCode)}&name=${encodeURIComponent(player.name)}&guild=${player.guild.id}&qrToken=${player.qrToken}`;
 
   const pngBuffer = await QRCode.toBuffer(loginUrl, {
     width: 400,

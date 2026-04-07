@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 
-const CACHE_NAME = "f-guild-v1";
+const CACHE_NAME = "f-guild-v2";
 
 const APP_SHELL = [
   "/offline",

@@ -119,14 +119,14 @@ export default function PlayerShopPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-border">
+      <div className="flex gap-2 border-b border-purple-500/30">
         <button
           type="button"
           onClick={() => setActiveTab("shop")}
           className={[
             "px-4 py-2 text-sm font-medium border-b-2 transition-colors",
             activeTab === "shop"
-              ? "border-primary text-primary"
+              ? "border-purple-500 text-purple-400"
               : "border-transparent text-muted-foreground hover:text-foreground",
           ].join(" ")}
         >
@@ -138,13 +138,13 @@ export default function PlayerShopPage() {
           className={[
             "px-4 py-2 text-sm font-medium border-b-2 transition-colors",
             activeTab === "inventory"
-              ? "border-primary text-primary"
+              ? "border-purple-500 text-purple-400"
               : "border-transparent text-muted-foreground hover:text-foreground",
           ].join(" ")}
         >
           {t("inventory")}
           {inventoryItems.length > 0 && (
-            <span className="ml-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+            <span className="ml-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-purple-600 px-1 text-[10px] font-bold text-white">
               {inventoryItems.length}
             </span>
           )}
@@ -177,19 +177,26 @@ export default function PlayerShopPage() {
                 const outOfStock = item.stock !== null && item.stock <= 0;
 
                 return (
-                  <Card key={item.id}>
+                  <Card key={item.id} className="gradient-card border-purple-500/15">
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between gap-2">
                         <CardTitle className="text-base leading-snug">{item.name}</CardTitle>
-                        <Badge
-                          className={
-                            item.category === "game_item"
-                              ? "shrink-0 bg-blue-500 text-white hover:bg-blue-500"
-                              : "shrink-0 bg-amber-500 text-white hover:bg-amber-500"
-                          }
-                        >
-                          {item.category === "game_item" ? t("gameItem") : t("realReward")}
-                        </Badge>
+                        <div className="flex shrink-0 flex-wrap gap-1">
+                          <Badge
+                            className={
+                              item.category === "game_item"
+                                ? "bg-blue-500 text-white hover:bg-blue-500"
+                                : "bg-amber-500 text-white hover:bg-amber-500"
+                            }
+                          >
+                            {item.category === "game_item" ? t("gameItem") : t("realReward")}
+                          </Badge>
+                          {item.equipSlot && (
+                            <Badge variant="outline" className="text-[10px]">
+                              {item.equipSlot}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                     </CardHeader>
                     <CardContent className="space-y-3 pt-0">
@@ -210,7 +217,7 @@ export default function PlayerShopPage() {
 
                       <Button
                         size="sm"
-                        className="w-full text-xs"
+                        className="w-full text-xs bg-purple-600 hover:bg-purple-700 text-white"
                         disabled={
                           !canAfford ||
                           outOfStock ||
@@ -267,7 +274,7 @@ export default function PlayerShopPage() {
                   const isConsumable = effect?.consumable === true;
 
                   return (
-                    <Card key={inv.id} className={inv.isEquipped ? "border-primary" : ""}>
+                    <Card key={inv.id} className={`gradient-card ${inv.isEquipped ? "border-purple-500/60" : "border-purple-500/15"}`}>
                       <CardHeader className="pb-2">
                         <div className="flex items-start justify-between gap-2">
                           <CardTitle className="text-base leading-snug">

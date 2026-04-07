@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CharacterCard } from "@/components/player/character-card";
+import { Link } from "@/i18n/navigation";
 import { DiceRollButton } from "@/components/dice/dice-roll-button";
 import { trpc } from "@/lib/trpc";
 import { usePlayerSession } from "@/lib/player-session";
@@ -26,23 +26,10 @@ type QuestInstance = {
   };
 };
 
-type Quest = {
-  id: string;
-  title: string;
-  description: string;
-  xpReward: number;
-  goldReward: number;
-  faithReward: number;
-  confirmationType: string;
-};
-
-export default function PlayerDashboard() {
-  const t = useTranslations("playerDashboard");
+export default function PlayerHome() {
+  const t = useTranslations("playerHome");
   const router = useRouter();
   const { session, loading, logout } = usePlayerSession();
-
-  // Proof text state: maps instanceId -> proof text
-  const [proofTexts, setProofTexts] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (!loading && !session) {
@@ -63,37 +50,6 @@ export default function PlayerDashboard() {
     { enabled: !!playerId && !!guildId }
   );
 
-  const acceptMutation = trpc.quest.accept.useMutation({
-    onSuccess: () => questsQuery.refetch(),
-  });
-
-  const submitMutation = trpc.quest.submit.useMutation({
-    onSuccess: (_data, variables) => {
-      setProofTexts((prev) => {
-        const next = { ...prev };
-        delete next[variables.instanceId];
-        return next;
-      });
-      questsQuery.refetch();
-    },
-  });
-
-  function handleAccept(questId: string) {
-    acceptMutation.mutate({ questId, playerId });
-  }
-
-  function handleSubmit(instance: QuestInstance) {
-    const text = proofTexts[instance.id] ?? "";
-    submitMutation.mutate({
-      instanceId: instance.id,
-      playerId,
-      confirmationData: {
-        type: instance.quest.confirmationType as "text" | "photo" | "timer" | "master_confirm",
-        text: text || undefined,
-      },
-    });
-  }
-
   function handleLogout() {
     logout();
     router.replace("/player-login");
@@ -110,225 +66,112 @@ export default function PlayerDashboard() {
   const character = characterQuery.data;
   const questData = questsQuery.data;
 
-  // Build per-quest instance map
-  const instanceMap = new Map<string, QuestInstance>(
-    (questData?.instances ?? []).map((i) => [i.questId, i as QuestInstance])
-  );
-
-  // Group quests
-  const availableQuests: Quest[] = [];
-  const acceptedInstances: QuestInstance[] = [];
-  const pendingInstances: QuestInstance[] = [];
-  const completedInstances: QuestInstance[] = [];
-
+  // Collect accepted and pending_review instances
+  const activeInstances: QuestInstance[] = [];
   if (questData) {
-    const allQuests = [
-      ...questData.mandatoryQuests,
-      ...questData.optionalQuests,
-    ] as Quest[];
-
-    for (const quest of allQuests) {
-      const instance = instanceMap.get(quest.id);
-      if (!instance) {
-        availableQuests.push(quest);
-      }
-    }
-
     for (const instance of questData.instances as QuestInstance[]) {
-      if (instance.status === "accepted") {
-        acceptedInstances.push(instance);
-      } else if (instance.status === "pending_review") {
-        pendingInstances.push(instance);
-      } else if (instance.status === "completed") {
-        completedInstances.push(instance);
+      if (instance.status === "accepted" || instance.status === "pending_review") {
+        activeInstances.push(instance);
       }
     }
   }
 
   return (
-    <div className="mx-auto max-w-lg space-y-4">
-      {/* Header with welcome and logout */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">
-          {t("welcome", { name: session.playerName })}
-        </h1>
-        <Button variant="outline" size="sm" onClick={handleLogout}>
+    <div className="space-y-4">
+      {/* Hero welcome banner */}
+      <div className="gradient-hero rounded-xl p-5 flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-white">
+            {t("welcome", { name: session.playerName })}
+          </h1>
+          {character && (
+            <p className="text-sm text-white/60 mt-1">
+              {character.class} · {t("level", { level: character.level })}
+            </p>
+          )}
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleLogout}
+          className="border-white/20 text-white hover:bg-white/10"
+        >
           {t("logout")}
         </Button>
       </div>
 
-      {/* Character card */}
-      {character ? (
-        <CharacterCard
-          playerName={session.playerName}
-          character={{
-            class: character.class,
-            level: character.level,
-            xp: character.xp,
-            gold: character.gold,
-            faithPoints: character.faithPoints,
-          }}
-        />
-      ) : characterQuery.isLoading ? (
-        <div className="rounded-lg border border-border bg-card p-4">
-          <p className="text-sm text-muted-foreground">Loading character...</p>
-        </div>
-      ) : null}
-
-      {/* Dice roll section */}
+      {/* Mini character stats */}
       {character && (
-        <div className="rounded-lg border border-border bg-card p-4 space-y-4">
-          <h3 className="font-semibold">{t("diceRoll")}</h3>
-          <DiceRollButton
-            characterId={character.id}
-            context="general"
-            dc={10}
-          />
+        <div className="grid grid-cols-3 gap-3">
+          <div className="gradient-card rounded-lg p-3 text-center">
+            <p className="text-lg font-bold text-gold">{character.gold}</p>
+            <p className="text-xs text-muted-foreground">{t("gold")}</p>
+          </div>
+          <div className="gradient-card rounded-lg p-3 text-center">
+            <p className="text-lg font-bold text-xp">{character.xp}</p>
+            <p className="text-xs text-muted-foreground">{t("xp")}</p>
+          </div>
+          <div className="gradient-card rounded-lg p-3 text-center">
+            <p className="text-lg font-bold text-blue-400">{character.faithPoints}</p>
+            <p className="text-xs text-muted-foreground">{t("faith")}</p>
+          </div>
         </div>
       )}
 
-      {/* Quests section */}
-      <div className="rounded-lg border border-border bg-card p-4 space-y-4">
-        <h3 className="font-semibold">{t("activeQuests")}</h3>
+      {/* Active quests */}
+      <div className="gradient-card rounded-lg p-4 space-y-3">
+        <h2 className="font-semibold">{t("myQuests")}</h2>
 
         {questsQuery.isLoading && (
-          <p className="text-sm text-muted-foreground">Loading quests...</p>
+          <p className="text-sm text-muted-foreground">Loading...</p>
         )}
 
-        {!questsQuery.isLoading && questData &&
-          availableQuests.length === 0 &&
-          acceptedInstances.length === 0 &&
-          pendingInstances.length === 0 &&
-          completedInstances.length === 0 && (
-            <div className="text-center py-4">
-              <p className="text-sm font-medium">{t("noQuests")}</p>
-              <p className="text-xs text-muted-foreground mt-1">{t("noQuestsDesc")}</p>
+        {!questsQuery.isLoading && activeInstances.length === 0 && (
+          <div className="text-center py-3">
+            <p className="text-sm font-medium">{t("noActiveQuests")}</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {t("noActiveQuestsDesc")}
+            </p>
+            <Link
+              href="/player/quests"
+              className="mt-3 inline-block text-xs text-purple-400 hover:text-purple-300 underline underline-offset-2"
+            >
+              {t("viewBoard")}
+            </Link>
+          </div>
+        )}
+
+        {activeInstances.map((instance) => (
+          <div
+            key={instance.id}
+            className="flex items-center justify-between rounded-md border border-purple-500/15 bg-white/5 px-3 py-2"
+          >
+            <div>
+              <p className="text-sm font-medium">{instance.quest.title}</p>
+              <p className="text-xs text-muted-foreground">
+                {instance.quest.xpReward} XP · {instance.quest.goldReward} Gold
+              </p>
             </div>
-          )}
-
-        {/* Available quests */}
-        {availableQuests.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase text-muted-foreground">
-              {t("available")}
-            </p>
-            {availableQuests.map((quest) => (
-              <div
-                key={quest.id}
-                className="rounded-md border border-border p-3 space-y-2"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <p className="text-sm font-medium">{quest.title}</p>
-                    <p className="text-xs text-muted-foreground">{quest.description}</p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {quest.xpReward} XP · {quest.goldReward} Gold
-                    </p>
-                  </div>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    disabled={acceptMutation.isPending}
-                    onClick={() => handleAccept(quest.id)}
-                  >
-                    {t("acceptQuest")}
-                  </Button>
-                </div>
-              </div>
-            ))}
+            {instance.status === "accepted" ? (
+              <Badge className="bg-purple-500/20 text-purple-400 border-0">
+                {t("inProgress")}
+              </Badge>
+            ) : (
+              <Badge className="bg-yellow-500/20 text-yellow-400 border-0">
+                {t("pendingReview")}
+              </Badge>
+            )}
           </div>
-        )}
-
-        {/* Accepted / In progress */}
-        {acceptedInstances.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase text-muted-foreground">
-              {t("accepted")}
-            </p>
-            {acceptedInstances.map((instance) => (
-              <div
-                key={instance.id}
-                className="rounded-md border border-border p-3 space-y-2"
-              >
-                <p className="text-sm font-medium">{instance.quest.title}</p>
-                <p className="text-xs text-muted-foreground">{instance.quest.description}</p>
-                <p className="text-xs text-muted-foreground">
-                  {instance.quest.xpReward} XP · {instance.quest.goldReward} Gold
-                </p>
-                {instance.quest.confirmationType === "text" && (
-                  <textarea
-                    rows={2}
-                    placeholder={t("addProof")}
-                    value={proofTexts[instance.id] ?? ""}
-                    onChange={(e) =>
-                      setProofTexts((prev) => ({
-                        ...prev,
-                        [instance.id]: e.target.value,
-                      }))
-                    }
-                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
-                  />
-                )}
-                <Button
-                  size="sm"
-                  disabled={submitMutation.isPending}
-                  onClick={() => handleSubmit(instance)}
-                >
-                  {t("submitQuest")}
-                </Button>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Pending review */}
-        {pendingInstances.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase text-muted-foreground">
-              {t("pendingReview")}
-            </p>
-            {pendingInstances.map((instance) => (
-              <div
-                key={instance.id}
-                className="rounded-md border border-border p-3 flex items-center justify-between"
-              >
-                <div>
-                  <p className="text-sm font-medium">{instance.quest.title}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {instance.quest.xpReward} XP · {instance.quest.goldReward} Gold
-                  </p>
-                </div>
-                <Badge variant="secondary">{t("pendingReview")}</Badge>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Completed */}
-        {completedInstances.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase text-muted-foreground">
-              {t("completed")}
-            </p>
-            {completedInstances.map((instance) => (
-              <div
-                key={instance.id}
-                className="rounded-md border border-border p-3 flex items-center justify-between"
-              >
-                <div>
-                  <p className="text-sm font-medium">{instance.quest.title}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {instance.quest.xpReward} XP · {instance.quest.goldReward} Gold
-                  </p>
-                </div>
-                <Badge className="bg-green-500/20 text-green-700 dark:text-green-400 border-0">
-                  {t("completed")}
-                </Badge>
-              </div>
-            ))}
-          </div>
-        )}
+        ))}
       </div>
+
+      {/* Dice roll */}
+      {character && (
+        <div className="gradient-card rounded-lg p-4 space-y-3">
+          <h3 className="font-semibold">{t("diceRoll")}</h3>
+          <DiceRollButton characterId={character.id} context="general" dc={10} />
+        </div>
+      )}
     </div>
   );
 }
