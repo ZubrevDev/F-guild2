@@ -51,8 +51,8 @@ export function EquipmentSlots({ equipped, onUnequip }: EquipmentSlotsProps) {
               className={[
                 "flex h-16 w-16 items-center justify-center rounded-lg transition-all",
                 item
-                  ? "border-2 border-purple-500/60 bg-purple-500/10 hover:border-purple-400 hover:bg-purple-500/20 cursor-pointer shadow-md shadow-purple-500/10"
-                  : "border-2 border-dashed border-purple-500/30 bg-white/5 cursor-default",
+                  ? "border-2 border-primary/60 bg-primary/10 hover:border-primary hover:bg-primary/20 cursor-pointer shadow-md"
+                  : "border-2 border-dashed border-border bg-muted/20 cursor-default",
               ].join(" ")}
             >
               {item ? (

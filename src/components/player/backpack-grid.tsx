@@ -45,14 +45,14 @@ export function BackpackGrid({ items, totalSlots, onEquip, onUse }: BackpackGrid
               else if (isConsumable) onUse(inv.id);
             }}
             title={`${inv.item.name}\n${inv.item.description}${canEquip ? `\n→ ${t("equip")}` : ""}${isConsumable ? `\n→ ${t("use")}` : ""}`}
-            className="relative flex h-16 w-full flex-col items-center justify-center rounded-lg border border-purple-500/30 bg-purple-500/5 p-1 transition-all hover:border-purple-400 hover:bg-purple-500/15 cursor-pointer"
+            className="relative flex h-16 w-full flex-col items-center justify-center rounded-lg border border-border bg-card p-1 transition-all hover:border-primary hover:bg-accent cursor-pointer"
           >
-            <Package className="h-5 w-5 text-purple-400/70 mb-0.5" />
+            <Package className="h-5 w-5 text-muted-foreground mb-0.5" />
             <span className={`text-[9px] text-center leading-tight line-clamp-2 px-0.5 ${getRarityClass(inv.item.rarity ?? "common")}`}>
               {inv.item.name}
             </span>
             {inv.quantity > 1 && (
-              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-purple-500 text-[9px] font-bold text-white">
+              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-white">
                 {inv.quantity}
               </span>
             )}
@@ -68,7 +68,7 @@ export function BackpackGrid({ items, totalSlots, onEquip, onUse }: BackpackGrid
       {Array.from({ length: emptyCount }).map((_, i) => (
         <div
           key={`empty-${i}`}
-          className="flex h-16 w-full items-center justify-center rounded-lg border border-dashed border-purple-500/15 bg-white/[0.02]"
+          className="flex h-16 w-full items-center justify-center rounded-lg border border-dashed border-border bg-muted/20"
         >
           <span className="text-[10px] text-muted-foreground/30">{i + items.length + 1}</span>
         </div>

@@ -116,10 +116,8 @@ export function DiceRoller({
           state === "rolling" && "dice-rolling",
           state === "revealing" && "dice-reveal",
           // Critical effects
-          isCriticalHit &&
-            "dice-crit-hit border-yellow-400 shadow-[0_0_24px_4px_rgba(250,204,21,0.5)]",
-          isCriticalFail &&
-            "dice-crit-fail border-red-500 shadow-[0_0_24px_4px_rgba(239,68,68,0.45)]",
+          isCriticalHit && "dice-crit-hit dice-crit-glow-gold",
+          isCriticalFail && "dice-crit-fail dice-crit-glow-danger",
         )}
       >
         {/* Inner face — receives the 3D transform */}
@@ -128,8 +126,8 @@ export function DiceRoller({
             "dice-face z-10 tabular-nums",
             state === "rolling" && "dice-face-tumble",
             state === "revealing" && "animate-in zoom-in duration-300",
-            isCriticalHit && "text-yellow-400",
-            isCriticalFail && "text-red-500",
+            isCriticalHit && "text-gold",
+            isCriticalFail && "text-danger",
           )}
         >
           {shownValue}
@@ -150,8 +148,8 @@ export function DiceRoller({
           "text-sm font-medium",
           state === "idle" && "text-muted-foreground",
           state === "rolling" && "animate-pulse text-muted-foreground",
-          isCriticalHit && "text-yellow-500 font-bold",
-          isCriticalFail && "text-red-500 font-bold",
+          isCriticalHit && "text-gold font-bold",
+          isCriticalFail && "text-danger font-bold",
           state === "result" && !isCriticalHit && !isCriticalFail &&
             "text-foreground",
         )}

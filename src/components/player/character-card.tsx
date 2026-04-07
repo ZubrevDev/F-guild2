@@ -64,11 +64,11 @@ export function CharacterCard({ playerName, character }: CharacterCardProps) {
 
         <div className="mt-4 flex gap-4">
           <div className="flex items-center gap-1.5">
-            <Coins className="h-4 w-4 text-yellow-500" />
+            <Coins className="h-4 w-4 text-gold" />
             <span className="text-sm font-medium">{character.gold}</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <Sparkles className="h-4 w-4 text-blue-400" />
+            <Sparkles className="h-4 w-4 text-mana-blue" />
             <span className="text-sm font-medium">{character.faithPoints}</span>
           </div>
         </div>
