@@ -28,56 +28,61 @@
 
 .dark {
   /*
-   * Purple DnD palette — WCAG AA contrast ratios:
-   * foreground on card   ≈ 13:1  (white on dark purple)
-   * muted-fg on card     ≈  5:1  (light gray on dark purple)
-   * primary on card       ≈  5:1  (bright purple on dark)
-   * gold on card          ≈  8:1
-   * border visible but subtle
+   * Medium-purple family fantasy palette
+   * foreground on background ≈ 12:1
+   * muted-fg on background   ≈  5:1
+   * primary on background     ≈  4.5:1
    */
 
   /* Base surfaces */
-  --background: #110b20;
-  --foreground: #f0ecf7;
-  --card: rgba(30, 20, 55, 0.9);
-  --card-foreground: #f0ecf7;
-  --popover: #231545;
-  --popover-foreground: #f0ecf7;
+  --background: #2d1b69;
+  --foreground: #f5f0ff;
+  --card: #3a2580;
+  --card-foreground: #f5f0ff;
+  --popover: #3a2580;
+  --popover-foreground: #f5f0ff;
 
-  /* Primary — vibrant purple, readable on dark bg */
+  /* Primary — vibrant purple */
   --primary: #a855f7;
   --primary-foreground: #ffffff;
 
-  /* Secondary — subtle purple tint for hover states */
-  --secondary: #241548;
-  --secondary-foreground: #e0d8f0;
+  /* Secondary */
+  --secondary: #4a32a0;
+  --secondary-foreground: #e8dff5;
 
-  /* Muted — for disabled / secondary text (5:1 contrast on card) */
-  --muted: #241548;
-  --muted-foreground: #9b8fc2;
+  /* Muted */
+  --muted: #3a2580;
+  --muted-foreground: #b8a5e0;
 
-  /* Accent — same as secondary */
-  --accent: #2d1a55;
-  --accent-foreground: #e0d8f0;
+  /* Accent */
+  --accent: #5b3ec4;
+  --accent-foreground: #e8dff5;
 
   /* Destructive */
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
 
-  /* Borders & inputs — clearly visible */
-  --border: rgba(139, 92, 246, 0.35);
-  --input: rgba(139, 92, 246, 0.25);
+  /* Borders & inputs */
+  --border: rgba(167, 139, 250, 0.3);
+  --input: rgba(167, 139, 250, 0.25);
   --ring: #a855f7;
 
-  /* Game accent colors — all 4.5:1+ on dark bg */
+  /* Game accent colors */
   --gold: #fbbf24;
   --xp-green: #4ade80;
   --danger-red: #f87171;
   --mana-blue: #60a5fa;
 
+  /* Rarity colors */
+  --rarity-common: #9ca3af;
+  --rarity-uncommon: #4ade80;
+  --rarity-rare: #60a5fa;
+  --rarity-epic: #a855f7;
+  --rarity-legendary: #fbbf24;
+
   /* Gradients */
-  --gradient-hero: linear-gradient(135deg, #2d1560 0%, #4c1d95 50%, #6d28d9 100%);
-  --gradient-card: rgba(25, 16, 48, 0.85);
+  --gradient-hero: linear-gradient(135deg, #2d1b69 0%, #4c1d95 50%, #6d28d9 100%);
+  --gradient-card: rgba(58, 37, 128, 0.85);
   --sidebar-active: linear-gradient(135deg, #6d28d9, #a21caf);
 }
 
@@ -123,7 +128,7 @@
   }
   body {
     @apply text-foreground;
-    background: linear-gradient(160deg, #110b20 0%, #1e0f45 30%, #2d1560 55%, #1e0f45 80%, #110b20 100%);
+    background: linear-gradient(160deg, #2d1b69 0%, #3a1f8a 30%, #4c1d95 55%, #3a1f8a 80%, #2d1b69 100%);
     background-attachment: fixed;
     min-height: 100vh;
     -webkit-tap-highlight-color: transparent;
@@ -134,19 +139,19 @@
   .dark input,
   .dark textarea,
   .dark select {
-    background-color: rgba(15, 10, 30, 0.8) !important;
-    border-color: rgba(139, 92, 246, 0.4) !important;
-    color: #f0ecf7;
+    background-color: rgba(30, 18, 70, 0.8) !important; /* override: browser autofill */
+    border-color: rgba(167, 139, 250, 0.4) !important; /* override: browser autofill */
+    color: #f5f0ff;
   }
   .dark input:focus,
   .dark textarea:focus,
   .dark select:focus {
-    border-color: #a855f7 !important;
+    border-color: #a855f7 !important; /* override: browser autofill */
     box-shadow: 0 0 0 1px #a855f7;
   }
   .dark input::placeholder,
   .dark textarea::placeholder {
-    color: #7a6da0;
+    color: #8b7ab8;
   }
 
 }
@@ -154,12 +159,12 @@
 /* Gradient utility classes for the DnD theme */
 .gradient-hero {
   background: var(--gradient-hero);
-  border: 1px solid rgba(139, 92, 246, 0.25);
+  border: 1px solid var(--border);
   border-radius: 0.75rem;
 }
 .gradient-card {
   background: var(--gradient-card);
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  border: 1px solid var(--border);
   backdrop-filter: blur(12px);
 }
 .gradient-btn-primary {
@@ -182,6 +187,54 @@
 }
 .text-mana-blue {
   color: var(--mana-blue);
+}
+.text-danger {
+  color: var(--danger-red);
+}
+.border-gold {
+  border-color: var(--gold);
+}
+.border-danger {
+  border-color: var(--danger-red);
+}
+
+/* Toast variant styles */
+.toast-success {
+  border-color: color-mix(in srgb, var(--xp-green) 40%, transparent);
+  background-color: color-mix(in srgb, var(--xp-green) 12%, var(--card));
+  color: var(--xp-green);
+}
+.toast-error {
+  border-color: color-mix(in srgb, var(--danger-red) 40%, transparent);
+  background-color: color-mix(in srgb, var(--danger-red) 12%, var(--card));
+  color: var(--danger-red);
+}
+.toast-info {
+  border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+  background-color: color-mix(in srgb, var(--primary) 12%, var(--card));
+  color: var(--primary);
+}
+.toast-warning {
+  border-color: color-mix(in srgb, var(--gold) 40%, transparent);
+  background-color: color-mix(in srgb, var(--gold) 12%, var(--card));
+  color: var(--gold);
+}
+
+/* Rarity text colors */
+.text-rarity-common { color: var(--rarity-common); }
+.text-rarity-uncommon { color: var(--rarity-uncommon); }
+.text-rarity-rare { color: var(--rarity-rare); }
+.text-rarity-epic { color: var(--rarity-epic); }
+.text-rarity-legendary { color: var(--rarity-legendary); }
+
+/* Dice crit effects using tokens */
+.dice-crit-glow-gold {
+  box-shadow: 0 0 24px 4px color-mix(in srgb, var(--gold) 50%, transparent);
+  border-color: var(--gold);
+}
+.dice-crit-glow-danger {
+  box-shadow: 0 0 24px 4px color-mix(in srgb, var(--danger-red) 45%, transparent);
+  border-color: var(--danger-red);
 }
 
 /* Mobile app utilities */
@@ -233,6 +286,69 @@
   flex-direction: column;
   overflow: hidden;
 }
+
+/* ------------------------------------------------------------------ */
+/* Landing Page Animations                                             */
+/* ------------------------------------------------------------------ */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; filter: blur(20px); }
+  50% { opacity: 0.8; filter: blur(30px); }
+}
+
+@keyframes rune-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+.animate-rune-rotate {
+  animation: rune-rotate 20s linear infinite;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out both;
+}
+
+.animate-shimmer {
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+.font-cinzel {
+  font-family: var(--font-cinzel), serif;
+}
+
+/* Staggered delays */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-700 { animation-delay: 700ms; }
 
 /* ------------------------------------------------------------------ */
 /* D20 Dice Roll Animations                                           */
