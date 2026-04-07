@@ -10,7 +10,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 const INPUT_CLASS =
-  "mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary";
+  "mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-base md:text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary";
 
 type QuestType = "mandatory" | "optional";
 type QuestRecurrence = "once" | "daily" | "weekly" | "monthly" | "custom";
@@ -172,7 +172,7 @@ export default function QuestsPage() {
 
   if (!guildId) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
+      <div className="flex min-h-[100dvh] items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
       </div>
     );
@@ -199,7 +199,7 @@ export default function QuestsPage() {
           type="button"
           onClick={() => setActiveTab("all")}
           className={[
-            "px-4 py-2 text-sm font-medium border-b-2 transition-colors",
+            "px-4 py-2 min-h-[44px] text-sm font-medium border-b-2 transition-colors",
             activeTab === "all"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground",
@@ -211,7 +211,7 @@ export default function QuestsPage() {
           type="button"
           onClick={() => setActiveTab("pending")}
           className={[
-            "flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors",
+            "flex items-center gap-2 px-4 py-2 min-h-[44px] text-sm font-medium border-b-2 transition-colors",
             activeTab === "pending"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground",
@@ -237,7 +237,7 @@ export default function QuestsPage() {
                 type="button"
                 onClick={() => setFilterType(f)}
                 className={[
-                  "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                  "rounded-full border px-3 py-1 min-h-[44px] text-xs font-medium transition-colors",
                   filterType === f
                     ? "border-primary bg-primary text-primary-foreground"
                     : "border-border text-muted-foreground hover:border-primary hover:text-primary",
@@ -253,7 +253,7 @@ export default function QuestsPage() {
                 type="button"
                 onClick={() => setFilterRecurrence(r)}
                 className={[
-                  "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                  "rounded-full border px-3 py-1 min-h-[44px] text-xs font-medium transition-colors",
                   filterRecurrence === r
                     ? "border-primary bg-primary text-primary-foreground"
                     : "border-border text-muted-foreground hover:border-primary hover:text-primary",
@@ -669,7 +669,7 @@ export default function QuestsPage() {
                           type="checkbox"
                           checked={form.assignedTo.includes(player.id)}
                           onChange={() => togglePlayerAssign(player.id)}
-                          className="h-4 w-4 rounded border-input"
+                          className="h-5 w-5 rounded border-input"
                         />
                         {player.name}
                       </label>
@@ -698,7 +698,7 @@ export default function QuestsPage() {
                             next[index] = { ...next[index], quantity: Number(e.target.value) || 1 };
                             setForm((prev) => ({ ...prev, itemRewards: next }));
                           }}
-                          className={INPUT_CLASS + " !w-16 text-center"}
+                          className={INPUT_CLASS + " w-20 text-center"}
                         />
                         <button
                           type="button"

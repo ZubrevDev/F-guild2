@@ -60,7 +60,7 @@ export default function GuildsPage() {
 
   if (isLoading || isRedirecting) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-[100dvh] items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
       </div>
     );
@@ -69,7 +69,7 @@ export default function GuildsPage() {
   // 0 guilds: show create + join cards
   if (guilds && guilds.length === 0) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-4">
+      <div className="flex min-h-[100dvh] items-center justify-center p-4">
         <div className="w-full max-w-2xl">
           <div className="mb-6 text-center">
             <h1 className="text-2xl font-bold">{t("noGuilds")}</h1>
@@ -99,7 +99,7 @@ export default function GuildsPage() {
                       required
                       value={guildName}
                       onChange={(e) => setGuildName(e.target.value)}
-                      className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                      className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-base md:text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                     />
                   </div>
                   <div>
@@ -111,7 +111,7 @@ export default function GuildsPage() {
                       type="text"
                       value={guildDescription}
                       onChange={(e) => setGuildDescription(e.target.value)}
-                      className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                      className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-base md:text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                     />
                   </div>
                   <Button
@@ -151,7 +151,7 @@ export default function GuildsPage() {
                       required
                       value={inviteCode}
                       onChange={(e) => setInviteCode(e.target.value)}
-                      className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                      className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-base md:text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                     />
                   </div>
                   <Button
@@ -175,7 +175,7 @@ export default function GuildsPage() {
 
   // 2+ guilds: show selection grid
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-[100dvh] p-4 md:p-6">
       <div className="mx-auto max-w-3xl">
         <h1 className="mb-6 text-2xl font-bold">{t("selectGuild")}</h1>
 
@@ -216,7 +216,7 @@ export default function GuildsPage() {
               placeholder={t("inviteCode")}
               value={inviteCode}
               onChange={(e) => setInviteCode(e.target.value)}
-              className="block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              className="block w-full rounded-md border border-input bg-background px-3 py-2 text-base md:text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
             <Button
               disabled={joinMutation.isPending || !inviteCode.trim()}

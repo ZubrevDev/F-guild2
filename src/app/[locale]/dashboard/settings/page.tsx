@@ -222,7 +222,7 @@ export default function SettingsPage() {
               type="text"
               value={profileName}
               onChange={(e) => setProfileName(e.target.value)}
-              className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50"
+              className="w-full rounded-md border bg-background px-3 py-2 text-base md:text-sm outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
 
@@ -260,7 +260,7 @@ export default function SettingsPage() {
                 <button
                   key={opt.value}
                   onClick={() => handleSaveTheme(opt.value)}
-                  className={`flex-1 rounded-md px-3 py-2 text-sm transition-colors ${
+                  className={`flex-1 min-h-[44px] rounded-md px-3 py-2 text-sm transition-colors ${
                     theme === opt.value
                       ? "bg-primary text-primary-foreground font-medium"
                       : "border bg-background text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -304,7 +304,7 @@ export default function SettingsPage() {
                 type="text"
                 value={guildName}
                 onChange={(e) => setGuildName(e.target.value)}
-                className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full rounded-md border bg-background px-3 py-2 text-base md:text-sm outline-none focus:ring-2 focus:ring-primary/50"
               />
             </div>
 
@@ -318,7 +318,7 @@ export default function SettingsPage() {
                 value={guildDescription}
                 onChange={(e) => setGuildDescription(e.target.value)}
                 rows={3}
-                className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+                className="w-full rounded-md border bg-background px-3 py-2 text-base md:text-sm outline-none focus:ring-2 focus:ring-primary/50 resize-none"
               />
             </div>
 
@@ -330,7 +330,7 @@ export default function SettingsPage() {
                   type="text"
                   readOnly
                   value={inviteCode}
-                  className="flex-1 rounded-md border bg-muted px-3 py-2 text-sm font-mono"
+                  className="flex-1 rounded-md border bg-muted px-3 py-2 text-base md:text-sm font-mono"
                 />
                 <Button
                   variant="outline"
@@ -358,7 +358,7 @@ export default function SettingsPage() {
                 max={100}
                 value={maxPlayers}
                 onChange={(e) => setMaxPlayers(Number(e.target.value))}
-                className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full rounded-md border bg-background px-3 py-2 text-base md:text-sm outline-none focus:ring-2 focus:ring-primary/50"
               />
             </div>
 
@@ -375,7 +375,7 @@ export default function SettingsPage() {
                 step={0.1}
                 value={xpModifier}
                 onChange={(e) => setXpModifier(Number(e.target.value))}
-                className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full rounded-md border bg-background px-3 py-2 text-base md:text-sm outline-none focus:ring-2 focus:ring-primary/50"
               />
             </div>
 

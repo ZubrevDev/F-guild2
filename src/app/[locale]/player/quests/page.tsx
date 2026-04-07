@@ -101,7 +101,7 @@ export default function QuestBoard() {
 
   if (loading || !session) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-[100dvh] items-center justify-center">
         <p className="text-muted-foreground">Loading...</p>
       </div>
     );
@@ -161,7 +161,7 @@ export default function QuestBoard() {
         <button
           onClick={() => setActiveTab("available")}
           className={cn(
-            "px-4 py-2 text-sm font-medium transition-colors",
+            "px-4 py-2 min-h-[44px] text-sm font-medium transition-colors",
             activeTab === "available"
               ? "border-b-2 border-purple-500 text-white"
               : "text-muted-foreground hover:text-foreground"
@@ -172,7 +172,7 @@ export default function QuestBoard() {
         <button
           onClick={() => setActiveTab("my")}
           className={cn(
-            "px-4 py-2 text-sm font-medium transition-colors",
+            "px-4 py-2 min-h-[44px] text-sm font-medium transition-colors",
             activeTab === "my"
               ? "border-b-2 border-purple-500 text-white"
               : "text-muted-foreground hover:text-foreground"
@@ -300,7 +300,7 @@ export default function QuestBoard() {
                           [instance.id]: e.target.value,
                         }))
                       }
-                      className="w-full rounded-md border border-purple-500/20 bg-white/5 px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-purple-500/50 focus:outline-none resize-none"
+                      className="w-full rounded-md border border-purple-500/20 bg-white/5 px-3 py-2 text-base md:text-sm placeholder:text-muted-foreground focus:border-purple-500/50 focus:outline-none resize-none"
                     />
                   )}
                   <Button

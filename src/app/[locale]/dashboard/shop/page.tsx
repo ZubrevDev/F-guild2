@@ -189,7 +189,7 @@ export default function ShopPage() {
 
   if (!guildId) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
+      <div className="flex min-h-[100dvh] items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
       </div>
     );
@@ -275,7 +275,7 @@ export default function ShopPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1 text-xs"
+                    className="flex-1 text-xs min-h-[44px]"
                     onClick={() => openEdit(item)}
                   >
                     {t("edit")}
@@ -284,7 +284,7 @@ export default function ShopPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1 text-xs text-destructive hover:text-destructive"
+                      className="flex-1 text-xs min-h-[44px] text-destructive hover:text-destructive"
                       disabled={deactivateMutation.isPending}
                       onClick={() => deactivateMutation.mutate({ itemId: item.id })}
                     >
@@ -400,7 +400,7 @@ interface ItemFormFieldsProps {
 }
 
 const INPUT_CLASS_FORM =
-  "mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary";
+  "mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-base md:text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary";
 
 function ItemFormFields({ form, setForm, t }: ItemFormFieldsProps) {
   return (

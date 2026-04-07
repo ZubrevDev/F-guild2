@@ -25,7 +25,7 @@ export function LocaleSwitcher() {
         <button
           key={loc}
           onClick={() => onChange(loc)}
-          className={`rounded px-2 py-1 text-sm transition-colors ${
+          className={`flex items-center justify-center rounded px-3 py-2 text-sm transition-colors min-h-[44px] min-w-[44px] ${
             loc === locale
               ? "bg-primary text-primary-foreground"
               : "text-muted-foreground hover:text-foreground"

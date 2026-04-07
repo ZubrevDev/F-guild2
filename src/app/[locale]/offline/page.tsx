@@ -2,7 +2,7 @@
 
 export default function OfflinePage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 px-4 text-center">
+    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-zinc-950 px-4 text-center">
       <div className="mb-6 rounded-2xl bg-violet-600/20 p-6">
         <svg
           xmlns="http://www.w3.org/2000/svg"
