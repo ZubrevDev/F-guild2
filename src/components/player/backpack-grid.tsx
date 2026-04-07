@@ -57,7 +57,7 @@ export function BackpackGrid({ items, totalSlots, onEquip, onUse }: BackpackGrid
               </span>
             )}
             {canEquip && (
-              <span className="absolute -left-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500 text-[8px] text-white">
+              <span className="absolute -left-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-mana-blue text-[8px] text-white">
                 E
               </span>
             )}

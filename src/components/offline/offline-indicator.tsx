@@ -61,8 +61,8 @@ export function OfflineIndicator({
         !isOnline
           ? "bg-destructive text-white"
           : isSyncing
-          ? "bg-yellow-500 text-black"
-          : "bg-green-600 text-white",
+          ? "bg-gold text-background"
+          : "bg-xp text-background",
         className
       )}
     >
