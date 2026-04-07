@@ -89,8 +89,28 @@
   },
   "home": {
     "title": "F-Guild",
-    "description": "Transformez les tâches quotidiennes en aventures épiques avec la mécanique DnD",
-    "getStarted": "Commencer l'aventure"
+    "subtitle": "Plateforme de quêtes familiale",
+    "description": "Transformez les tâches quotidiennes en aventures épiques avec des mécaniques DnD",
+    "getStarted": "Commencer l'aventure",
+    "login": "J'ai un compte",
+    "playerLogin": "Connexion joueur",
+    "features": {
+      "quests": "Quêtes épiques",
+      "questsDesc": "Créez des tâches sous forme de quêtes avec des récompenses en XP et or",
+      "characters": "Personnages",
+      "charactersDesc": "Montez de niveau, choisissez une classe et équipez des objets",
+      "shop": "Boutique de guilde",
+      "shopDesc": "Gagnez de l'or et dépensez-le pour de vraies récompenses",
+      "dice": "Lancers de dés",
+      "diceDesc": "Lancez le D20 pour des récompenses bonus et des surprises"
+    },
+    "howItWorks": "Comment ça marche",
+    "step1": "Créez une guilde",
+    "step1Desc": "Configurez votre guilde familiale et invitez les membres",
+    "step2": "Assignez des quêtes",
+    "step2Desc": "Transformez les corvées en quêtes enrichissantes",
+    "step3": "Progressez ensemble",
+    "step3Desc": "Complétez les quêtes, gagnez de l'XP et débloquez des récompenses"
   },
   "guilds": {
     "title": "Vos guildes",

@@ -89,8 +89,28 @@
   },
   "home": {
     "title": "F-Guild",
+    "subtitle": "Family Quest Platform",
     "description": "Turn everyday chores into epic adventures with DnD mechanics",
-    "getStarted": "Start Your Adventure"
+    "getStarted": "Start Your Adventure",
+    "login": "I have an account",
+    "playerLogin": "Player Login",
+    "features": {
+      "quests": "Epic Quests",
+      "questsDesc": "Create tasks as quests with XP and gold rewards",
+      "characters": "Characters",
+      "charactersDesc": "Level up, choose a class, and equip items",
+      "shop": "Guild Shop",
+      "shopDesc": "Earn gold and spend it on real rewards",
+      "dice": "Dice Rolls",
+      "diceDesc": "Roll the D20 for bonus rewards and surprises"
+    },
+    "howItWorks": "How It Works",
+    "step1": "Create a Guild",
+    "step1Desc": "Set up your family guild and invite members",
+    "step2": "Assign Quests",
+    "step2Desc": "Turn chores and tasks into rewarding quests",
+    "step3": "Level Up Together",
+    "step3Desc": "Complete quests, earn XP, and unlock rewards"
   },
   "guilds": {
     "title": "Your Guilds",

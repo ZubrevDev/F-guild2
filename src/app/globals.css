@@ -180,6 +180,9 @@
 .text-xp {
   color: var(--xp-green);
 }
+.text-mana-blue {
+  color: var(--mana-blue);
+}
 
 /* Mobile app utilities */
 .app-header {
