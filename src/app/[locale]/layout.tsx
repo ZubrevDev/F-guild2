@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
-import { Inter } from "next/font/google";
+import { Inter, Cinzel } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -15,6 +15,7 @@ import { CapacitorProvider } from "@/components/capacitor/capacitor-provider";
 import "../globals.css";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
+const cinzel = Cinzel({ subsets: ["latin"], variable: "--font-cinzel", weight: ["400", "700", "900"] });
 
 export const metadata: Metadata = {
   title: "F-Guild",
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#7c3aed",
+  themeColor: "#a855f7",
   viewportFit: "cover",
   width: "device-width",
   initialScale: 1,
@@ -56,7 +57,7 @@ export default async function LocaleLayout({
       <head>
         <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} ${cinzel.variable}`}>
         <NextIntlClientProvider messages={messages}>
           <TRPCProvider>
             <Toaster>{children}</Toaster>

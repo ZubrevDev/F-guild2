@@ -8,8 +8,8 @@
   "display": "standalone",
   "categories": ["games", "entertainment"],
   "prefer_related_applications": false,
-  "background_color": "#09090b",
-  "theme_color": "#7c3aed",
+  "background_color": "#2d1b69",
+  "theme_color": "#a855f7",
   "orientation": "portrait-primary",
   "icons": [
     {
