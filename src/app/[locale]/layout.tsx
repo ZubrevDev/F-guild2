@@ -7,6 +7,7 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { TRPCProvider } from "@/components/providers";
+import { Toaster } from "@/components/ui/toast";
 import { PostHogProvider } from "@/components/analytics/posthog-provider";
 import { RegisterSW } from "@/components/pwa/register-sw";
 import { OfflineIndicator } from "@/components/offline/offline-indicator";
@@ -57,7 +58,9 @@ export default async function LocaleLayout({
       </head>
       <body className={inter.className}>
         <NextIntlClientProvider messages={messages}>
-          <TRPCProvider>{children}</TRPCProvider>
+          <TRPCProvider>
+            <Toaster>{children}</Toaster>
+          </TRPCProvider>
         </NextIntlClientProvider>
         <Suspense fallback={null}>
           <PostHogProvider />

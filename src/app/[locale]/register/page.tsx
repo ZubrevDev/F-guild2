@@ -20,8 +20,17 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
 
   const registerMutation = trpc.auth.register.useMutation({
-    onSuccess: () => {
-      router.push("/login?registered=1");
+    onSuccess: async () => {
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+      if (res?.ok) {
+        router.push("/dashboard");
+      } else {
+        router.push("/login?registered=1");
+      }
     },
     onError: (err) => {
       if (err.data?.code === "CONFLICT") {
@@ -47,8 +56,8 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-md space-y-6 rounded-lg border border-border bg-card p-8">
+    <div className="flex min-h-[100dvh] items-start justify-center px-4 py-8 md:items-center md:py-0">
+      <div className="w-full max-w-md space-y-6 rounded-lg border border-border bg-card p-6 md:p-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold">{t("registerTitle")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -74,7 +83,7 @@ export default function RegisterPage() {
               minLength={2}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2.5 text-base md:text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
 
@@ -88,7 +97,7 @@ export default function RegisterPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2.5 text-base md:text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
 
@@ -103,7 +112,7 @@ export default function RegisterPage() {
               minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2.5 text-base md:text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
 
@@ -113,18 +122,18 @@ export default function RegisterPage() {
               type="checkbox"
               checked={consent}
               onChange={(e) => setConsent(e.target.checked)}
-              className="mt-1 size-4 rounded border-input"
+              className="mt-0.5 size-5 rounded border-input"
             />
             <label htmlFor="consent" className="text-sm text-muted-foreground">
               {t.rich("consentLabel", {
-                terms: () => (
+                terms: (chunks) => (
                   <Link href="/terms" className="text-primary hover:underline">
-                    {t("termsOfService")}
+                    {chunks}
                   </Link>
                 ),
-                privacy: () => (
+                privacy: (chunks) => (
                   <Link href="/privacy" className="text-primary hover:underline">
-                    {t("privacyPolicy")}
+                    {chunks}
                   </Link>
                 ),
               })}
@@ -137,7 +146,7 @@ export default function RegisterPage() {
               type="checkbox"
               checked={ageVerified}
               onChange={(e) => setAgeVerified(e.target.checked)}
-              className="mt-1 size-4 rounded border-input"
+              className="mt-0.5 size-5 rounded border-input"
             />
             <label htmlFor="ageVerified" className="text-sm text-muted-foreground">
               {t("ageVerification")}

@@ -57,8 +57,8 @@ export default function ResetPasswordPage() {
 
   if (!token) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="w-full max-w-md space-y-6 rounded-lg border border-border bg-card p-8">
+      <div className="flex min-h-[100dvh] items-start justify-center px-4 py-8 md:items-center md:py-0">
+        <div className="w-full max-w-md space-y-6 rounded-lg border border-border bg-card p-6 md:p-8">
           <p className="rounded-md bg-destructive/10 p-3 text-center text-sm text-destructive">
             {t("invalidResetToken")}
           </p>
@@ -73,8 +73,8 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-md space-y-6 rounded-lg border border-border bg-card p-8">
+    <div className="flex min-h-[100dvh] items-start justify-center px-4 py-8 md:items-center md:py-0">
+      <div className="w-full max-w-md space-y-6 rounded-lg border border-border bg-card p-6 md:p-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold">{t("resetPasswordTitle")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -117,7 +117,7 @@ export default function ResetPasswordPage() {
                   maxLength={128}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2.5 text-base md:text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
 
@@ -136,7 +136,7 @@ export default function ResetPasswordPage() {
                   maxLength={128}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2.5 text-base md:text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
 
