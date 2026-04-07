@@ -60,9 +60,9 @@ export default function DashboardLayout({
   return (
     <div className="flex min-h-screen">
       {/* Desktop sidebar */}
-      <aside className="hidden w-56 shrink-0 border-r border-purple-500/15 bg-[#130e28] md:flex md:flex-col">
+      <aside className="hidden w-56 shrink-0 border-r border-border bg-background md:flex md:flex-col">
         <div className="flex items-center gap-3 p-4 pb-5">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-xs font-bold text-white shadow-lg shadow-purple-500/20">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-xs font-bold text-white shadow-lg">
             {userInitials}
           </div>
           <div className="min-w-0 flex-1">
@@ -85,7 +85,7 @@ export default function DashboardLayout({
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200",
                   isActive
-                    ? "sidebar-active-item text-white font-medium shadow-md shadow-purple-500/10"
+                    ? "sidebar-active-item text-white font-medium shadow-md"
                     : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
                 )}
               >
@@ -95,7 +95,7 @@ export default function DashboardLayout({
             );
           })}
         </nav>
-        <div className="mt-auto border-t border-purple-500/15 p-4">
+        <div className="mt-auto border-t border-border p-4">
           <LocaleSwitcher />
         </div>
       </aside>
@@ -111,7 +111,7 @@ export default function DashboardLayout({
       )}
 
       {/* Mobile bottom nav */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-purple-500/15 bg-[#130e28] app-bottom-nav md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background app-bottom-nav md:hidden">
         <div className="flex justify-around px-1">
           {navItems.slice(0, 5).map(({ key, href, icon: Icon }) => {
             const isActive = isNavItemActive(pathname, href);
@@ -121,7 +121,7 @@ export default function DashboardLayout({
                 href={href}
                 className={cn(
                   "flex flex-col items-center justify-center gap-0.5 min-h-[48px] min-w-[48px] px-1 py-1.5 text-[10px] transition-colors touch-active no-select",
-                  isActive ? "text-purple-400" : "text-muted-foreground"
+                  isActive ? "text-primary" : "text-muted-foreground"
                 )}
               >
                 <Icon className="h-5 w-5" />

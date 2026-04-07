@@ -18,10 +18,10 @@ interface ToastContextType {
 const ToastContext = createContext<ToastContextType | null>(null);
 
 const VARIANT_STYLES: Record<ToastVariant, string> = {
-  success: "border-emerald-500/40 bg-emerald-950/90 text-emerald-200",
-  error: "border-red-500/40 bg-red-950/90 text-red-200",
-  info: "border-purple-500/40 bg-purple-950/90 text-purple-200",
-  warning: "border-amber-500/40 bg-amber-950/90 text-amber-200",
+  success: "toast-success",
+  error: "toast-error",
+  info: "toast-info",
+  warning: "toast-warning",
 };
 
 const VARIANT_ICONS: Record<ToastVariant, string> = {
