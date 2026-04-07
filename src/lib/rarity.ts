@@ -13,7 +13,7 @@ export const RARITY_CONFIG: Record<
 };
 
 export function getRarityClass(rarity: string): string {
-  return RARITY_CONFIG[rarity as ItemRarity]?.twClass ?? "text-gray-400";
+  return RARITY_CONFIG[rarity as ItemRarity]?.twClass ?? "text-muted-foreground";
 }
 
 export function getRarityLabel(rarity: string): string {

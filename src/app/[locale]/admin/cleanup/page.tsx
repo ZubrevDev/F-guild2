@@ -56,7 +56,7 @@ export default function AdminCleanupPage() {
           </p>
 
           {confirmed && (
-            <div className="flex items-start gap-2 rounded-md border border-yellow-500/30 bg-yellow-500/10 p-3 text-sm text-yellow-500">
+            <div className="flex items-start gap-2 rounded-md border border-gold/30 bg-gold/10 p-3 text-sm text-gold">
               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
               <span>{t("cleanup.confirmWarning")}</span>
             </div>
@@ -86,7 +86,7 @@ export default function AdminCleanupPage() {
 
           {/* Last result */}
           {lastResult && (
-            <div className="flex items-start gap-2 rounded-md border border-green-500/30 bg-green-500/10 p-3 text-sm text-green-500">
+            <div className="flex items-start gap-2 rounded-md border border-xp/30 bg-xp/10 p-3 text-sm text-xp">
               <CheckCircle className="mt-0.5 h-4 w-4 shrink-0" />
               <div className="space-y-1">
                 <p className="font-medium">{t("cleanup.resultTitle")}</p>

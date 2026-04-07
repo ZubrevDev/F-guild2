@@ -48,7 +48,7 @@ export default function PlayerLayout({
                   "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200",
                   isActive
                     ? "sidebar-active-item text-white font-medium shadow-md"
-                    : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                    : "text-muted-foreground hover:bg-muted/30 hover:text-foreground"
                 )}
               >
                 <Icon className="h-[18px] w-[18px]" />

@@ -281,7 +281,7 @@ export default function SettingsPage() {
               {t("save")}
             </Button>
             {profileSaved && (
-              <span className="text-sm text-green-600">{t("saved")}</span>
+              <span className="text-sm text-xp">{t("saved")}</span>
             )}
           </div>
         </CardContent>
@@ -342,7 +342,7 @@ export default function SettingsPage() {
                 </Button>
               </div>
               {codeRegenerated && (
-                <p className="text-sm text-green-600">{t("codeRegenerated")}</p>
+                <p className="text-sm text-xp">{t("codeRegenerated")}</p>
               )}
             </div>
 
@@ -416,7 +416,7 @@ export default function SettingsPage() {
                 {t("save")}
               </Button>
               {guildSaved && (
-                <span className="text-sm text-green-600">{t("saved")}</span>
+                <span className="text-sm text-xp">{t("saved")}</span>
               )}
               {updateGuildSettings.isError && (
                 <span className="text-sm text-destructive">
@@ -464,7 +464,7 @@ export default function SettingsPage() {
               {t("save")}
             </Button>
             {notifSaved && (
-              <span className="text-sm text-green-600">{t("saved")}</span>
+              <span className="text-sm text-xp">{t("saved")}</span>
             )}
           </div>
         </CardContent>

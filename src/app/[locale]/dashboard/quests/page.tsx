@@ -188,7 +188,7 @@ export default function QuestsPage() {
 
       {/* Review success toast */}
       {reviewSuccess && (
-        <div className="rounded-md bg-green-100 px-4 py-2 text-sm text-green-800 dark:bg-green-900/30 dark:text-green-300">
+        <div className="rounded-md border border-xp/30 bg-xp/10 px-4 py-2 text-sm text-xp">
           {reviewSuccess}
         </div>
       )}
@@ -295,8 +295,8 @@ export default function QuestsPage() {
                         <Badge
                           className={
                             quest.type === "mandatory"
-                              ? "bg-red-500 text-white hover:bg-red-500"
-                              : "bg-blue-500 text-white hover:bg-blue-500"
+                              ? "bg-destructive text-white hover:bg-destructive"
+                              : "bg-mana-blue/80 text-white hover:bg-mana-blue/80"
                           }
                         >
                           {t(quest.type as "mandatory" | "optional")}
@@ -461,7 +461,7 @@ export default function QuestsPage() {
                       <div className="flex gap-2">
                         <Button
                           size="sm"
-                          className="flex-1 bg-green-600 text-white hover:bg-green-700 text-xs"
+                          className="flex-1 bg-xp/80 text-white hover:bg-xp text-xs"
                           disabled={reviewMutation.isPending}
                           onClick={() => handleApprove(instance.id)}
                         >
@@ -507,7 +507,7 @@ export default function QuestsPage() {
             }
           }}
         >
-          <div className="my-8 w-full max-w-lg rounded-lg border border-purple-500/30 bg-[#1e1240] p-6 shadow-2xl shadow-purple-900/30">
+          <div className="my-8 w-full max-w-lg rounded-lg border border-border bg-card p-6 shadow-2xl">
             <h2 className="mb-4 text-lg font-semibold">{t("createQuest")}</h2>
             <form onSubmit={handleCreateSubmit} className="space-y-4">
               {/* Title */}

@@ -161,8 +161,8 @@ export default function CharacterPage() {
                 className={cn(
                   "flex flex-col items-center gap-2 rounded-lg border-2 p-4 transition-all",
                   selectedClass === cls
-                    ? "border-purple-500 bg-purple-500/20 shadow-lg shadow-purple-500/10"
-                    : "border-purple-500/20 bg-white/5 hover:border-purple-500/40 hover:bg-white/10"
+                    ? "border-primary bg-primary/20 shadow-lg"
+                    : "border-border bg-muted/20 hover:border-primary/40 hover:bg-muted/30"
                 )}
               >
                 <span className="text-2xl">{info.emoji}</span>
@@ -230,7 +230,7 @@ export default function CharacterPage() {
           </div>
           <div className="flex items-center gap-1.5">
             <span className="text-sm">✨</span>
-            <span className="text-sm font-bold text-blue-400">{character.faithPoints}</span>
+            <span className="text-sm font-bold text-mana-blue">{character.faithPoints}</span>
           </div>
         </div>
       </div>
@@ -314,7 +314,7 @@ export default function CharacterPage() {
             {classStatus.ability.isPassive ? (
               <Badge variant="secondary">Passive</Badge>
             ) : classStatus.usesRemaining > 0 ? (
-              <Badge className="bg-green-500/20 text-green-400 border-0">{t("useAbility")}</Badge>
+              <Badge className="bg-xp/20 text-xp border-0">{t("useAbility")}</Badge>
             ) : (
               <div className="flex items-center gap-3">
                 <Badge variant="secondary">{t("abilityUsed")}</Badge>
@@ -357,10 +357,10 @@ export default function CharacterPage() {
                   className={cn(
                     "flex items-start justify-between gap-3 rounded-md border p-3",
                     isLearned
-                      ? "border-green-500/40 bg-green-500/5"
+                      ? "border-xp/40 bg-xp/5"
                       : isLocked
-                        ? "border-purple-500/20 opacity-50"
-                        : "border-blue-500/40 bg-blue-500/5"
+                        ? "border-border opacity-50"
+                        : "border-primary/40 bg-primary/5"
                   )}
                 >
                   <div className="space-y-0.5 min-w-0">
@@ -370,7 +370,7 @@ export default function CharacterPage() {
                   </div>
                   <div className="shrink-0">
                     {isLearned && (
-                      <Badge className="bg-green-500/20 text-green-400 border-0 text-xs">{t("learned")}</Badge>
+                      <Badge className="bg-xp/20 text-xp border-0 text-xs">{t("learned")}</Badge>
                     )}
                     {isLocked && <Badge variant="secondary" className="text-xs">{t("locked")}</Badge>}
                     {canLearn && (
@@ -408,13 +408,13 @@ export default function CharacterPage() {
           {activeBuffs.map((ab) => {
             const eff = ab.buff.effect as { type: string; value: number };
             return (
-              <div key={ab.id} className="flex items-start justify-between gap-3 rounded-md border border-purple-500/20 bg-white/5 p-3">
+              <div key={ab.id} className="flex items-start justify-between gap-3 rounded-md border border-border bg-muted/20 p-3">
                 <div className="space-y-0.5 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="text-sm font-medium truncate">{ab.buff.name}</p>
                     <Badge className={cn(
                       "text-xs border-0 shrink-0",
-                      ab.buff.type === "buff" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"
+                      ab.buff.type === "buff" ? "bg-xp/20 text-xp" : "bg-destructive/20 text-destructive"
                     )}>
                       {eff.type} {eff.value > 0 ? `+${eff.value}` : eff.value}
                     </Badge>
@@ -451,7 +451,7 @@ export default function CharacterPage() {
       {headerSection}
 
       {/* Mobile: tab bar */}
-      <div className="flex gap-1 rounded-lg bg-white/5 p-1 md:hidden">
+      <div className="flex gap-1 rounded-lg bg-muted/20 p-1 md:hidden">
         {tabs.map((tab) => (
           <button
             key={tab.key}
@@ -459,7 +459,7 @@ export default function CharacterPage() {
             className={cn(
               "flex-1 rounded-md py-2 text-xs font-medium transition-all",
               activeTab === tab.key
-                ? "bg-purple-500/20 text-white shadow-sm"
+                ? "bg-primary/20 text-white shadow-sm"
                 : "text-muted-foreground hover:text-white"
             )}
           >

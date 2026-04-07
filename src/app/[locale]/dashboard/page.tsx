@@ -134,7 +134,7 @@ export default function DashboardPage() {
         {statCards.map((card) => (
           <Card key={card.label} className="gradient-card">
             <CardContent className="flex items-center gap-3 p-4">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-xl">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted/30 text-xl">
                 {card.emoji}
               </div>
               <div>
@@ -160,9 +160,9 @@ export default function DashboardPage() {
 
               return (
                 <Link key={player.id} href="/dashboard/players">
-                  <Card className="gradient-card cursor-pointer transition-all hover:border-purple-500/40">
+                  <Card className="gradient-card cursor-pointer transition-all hover:border-primary/40">
                     <CardContent className="flex items-center gap-3 p-4">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-xl">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted/30 text-xl">
                         {classEmoji}
                       </div>
                       <div className="min-w-0 flex-1">
@@ -223,7 +223,7 @@ export default function DashboardPage() {
         <h2 className="mb-3 text-lg font-semibold">{t("quickActions")}</h2>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Link href="/dashboard/quests">
-            <Card className="gradient-card cursor-pointer transition-all hover:border-purple-500/40">
+            <Card className="gradient-card cursor-pointer transition-all hover:border-primary/40">
               <CardContent className="flex items-center gap-2 px-4 py-3">
                 <span className="text-lg">📜</span>
                 <span className="text-sm font-medium">{t("createQuest")}</span>
@@ -231,7 +231,7 @@ export default function DashboardPage() {
             </Card>
           </Link>
           <Link href="/dashboard/players">
-            <Card className="gradient-card cursor-pointer transition-all hover:border-purple-500/40">
+            <Card className="gradient-card cursor-pointer transition-all hover:border-primary/40">
               <CardContent className="flex items-center gap-2 px-4 py-3">
                 <span className="text-lg">👤</span>
                 <span className="text-sm font-medium">{t("addPlayer")}</span>
@@ -239,7 +239,7 @@ export default function DashboardPage() {
             </Card>
           </Link>
           <Link href="/dashboard/shop">
-            <Card className="gradient-card cursor-pointer transition-all hover:border-purple-500/40">
+            <Card className="gradient-card cursor-pointer transition-all hover:border-primary/40">
               <CardContent className="flex items-center gap-2 px-4 py-3">
                 <span className="text-lg">🛒</span>
                 <span className="text-sm font-medium">{t("viewShop")}</span>

@@ -157,13 +157,13 @@ export default function QuestBoard() {
   return (
     <div className="space-y-4">
       {/* Tab bar */}
-      <div className="flex border-b border-purple-500/15">
+      <div className="flex border-b border-border">
         <button
           onClick={() => setActiveTab("available")}
           className={cn(
             "px-4 py-2 min-h-[44px] text-sm font-medium transition-colors",
             activeTab === "available"
-              ? "border-b-2 border-purple-500 text-white"
+              ? "border-b-2 border-primary text-white"
               : "text-muted-foreground hover:text-foreground"
           )}
         >
@@ -174,7 +174,7 @@ export default function QuestBoard() {
           className={cn(
             "px-4 py-2 min-h-[44px] text-sm font-medium transition-colors",
             activeTab === "my"
-              ? "border-b-2 border-purple-500 text-white"
+              ? "border-b-2 border-primary text-white"
               : "text-muted-foreground hover:text-foreground"
           )}
         >
@@ -272,7 +272,7 @@ export default function QuestBoard() {
                         </span>
                       )}
                       {instance.quest.faithReward > 0 && (
-                        <span className="flex items-center gap-1 text-xs text-blue-400">
+                        <span className="flex items-center gap-1 text-xs text-mana-blue">
                           <Star className="h-3 w-3" />
                           {t("faithReward", { amount: instance.quest.faithReward })}
                         </span>
@@ -300,7 +300,7 @@ export default function QuestBoard() {
                           [instance.id]: e.target.value,
                         }))
                       }
-                      className="w-full rounded-md border border-purple-500/20 bg-white/5 px-3 py-2 text-base md:text-sm placeholder:text-muted-foreground focus:border-purple-500/50 focus:outline-none resize-none"
+                      className="w-full rounded-md border border-border bg-muted/20 px-3 py-2 text-base md:text-sm placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none resize-none"
                     />
                   )}
                   <Button
@@ -328,7 +328,7 @@ export default function QuestBoard() {
                   className="gradient-card rounded-lg p-4 flex items-center justify-between"
                 >
                   <p className="font-medium">{instance.quest.title}</p>
-                  <Badge className="bg-yellow-500/20 text-yellow-400 border-0">
+                  <Badge className="bg-gold/20 text-gold border-0">
                     {t("pendingReview")}
                   </Badge>
                 </div>
@@ -348,7 +348,7 @@ export default function QuestBoard() {
                   className="gradient-card rounded-lg p-4 flex items-center justify-between"
                 >
                   <p className="font-medium">{instance.quest.title}</p>
-                  <Badge className="bg-green-500/20 text-green-400 border-0">
+                  <Badge className="bg-xp/20 text-xp border-0">
                     {t("completed")}
                   </Badge>
                 </div>
@@ -397,7 +397,7 @@ function QuestCard({
           </span>
         )}
         {quest.faithReward > 0 && (
-          <span className="flex items-center gap-1 text-xs text-blue-400">
+          <span className="flex items-center gap-1 text-xs text-mana-blue">
             <Star className="h-3 w-3" />
             {t("faithReward", { amount: quest.faithReward })}
           </span>

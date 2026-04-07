@@ -50,19 +50,19 @@ const INPUT_CLASS =
 function effectBadgeClass(type: string): string {
   switch (type) {
     case "xp_bonus":
-      return "bg-green-500 text-white hover:bg-green-500";
+      return "bg-xp/80 text-white hover:bg-xp/80";
     case "gold_bonus":
-      return "bg-amber-500 text-white hover:bg-amber-500";
+      return "bg-gold/80 text-white hover:bg-gold/80";
     case "dice_bonus":
-      return "bg-blue-500 text-white hover:bg-blue-500";
+      return "bg-mana-blue/80 text-white hover:bg-mana-blue/80";
     case "xp_penalty":
     case "gold_penalty":
     case "dice_penalty":
-      return "bg-red-500 text-white hover:bg-red-500";
+      return "bg-destructive text-white hover:bg-destructive";
     case "shop_discount":
-      return "bg-purple-500 text-white hover:bg-purple-500";
+      return "bg-primary text-white hover:bg-primary";
     case "gold_drain":
-      return "bg-red-900 text-white hover:bg-red-900";
+      return "bg-destructive/80 text-white hover:bg-destructive/80";
     default:
       return "bg-muted text-muted-foreground";
   }
@@ -360,7 +360,7 @@ export default function BuffsPage() {
             }
           }}
         >
-          <div className="my-8 w-full max-w-lg rounded-lg border border-purple-500/30 bg-[#1e1240] p-6 shadow-2xl shadow-purple-900/30">
+          <div className="my-8 w-full max-w-lg rounded-lg border border-border bg-card p-6 shadow-2xl">
             <h2 className="mb-4 text-lg font-semibold">{t("createBuff")}</h2>
             <form onSubmit={handleCreateSubmit} className="space-y-4">
               {/* Name */}
@@ -518,11 +518,11 @@ export default function BuffsPage() {
             }
           }}
         >
-          <div className="w-full max-w-sm rounded-lg border border-purple-500/30 bg-[#1e1240] p-6 shadow-2xl shadow-purple-900/30">
+          <div className="w-full max-w-sm rounded-lg border border-border bg-card p-6 shadow-2xl">
             <h2 className="mb-4 text-lg font-semibold">{t("apply")}</h2>
 
             {applySuccess ? (
-              <p className="py-4 text-center text-green-600 font-medium">{t("applied")}</p>
+              <p className="py-4 text-center text-xp font-medium">{t("applied")}</p>
             ) : (
               <form onSubmit={handleApplySubmit} className="space-y-4">
                 <div>

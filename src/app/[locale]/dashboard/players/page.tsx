@@ -12,15 +12,15 @@ const INPUT_CLASS =
   "mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary";
 
 const AVATAR_COLORS = [
-  "bg-red-500",
-  "bg-orange-500",
-  "bg-amber-500",
-  "bg-green-500",
-  "bg-teal-500",
-  "bg-blue-500",
-  "bg-indigo-500",
-  "bg-purple-500",
-  "bg-pink-500",
+  "bg-destructive",
+  "bg-primary/80",
+  "bg-gold/80",
+  "bg-xp/80",
+  "bg-mana-blue/80",
+  "bg-primary",
+  "bg-primary/60",
+  "bg-primary/90",
+  "bg-primary/70",
 ];
 
 function getAvatarColor(name: string): string {
@@ -213,7 +213,7 @@ export default function PlayersPage() {
 
       {/* Success toast */}
       {resetSuccess && (
-        <div className="rounded-md bg-green-100 px-4 py-2 text-sm text-green-800 dark:bg-green-900/30 dark:text-green-300">
+        <div className="rounded-md border border-xp/30 bg-xp/10 px-4 py-2 text-sm text-xp">
           {resetSuccess}
         </div>
       )}
@@ -357,7 +357,7 @@ export default function PlayersPage() {
             if (e.target === e.currentTarget) setAddOpen(false);
           }}
         >
-          <div className="w-full max-w-md rounded-lg border border-purple-500/30 bg-[#1e1240] p-6 shadow-2xl shadow-purple-900/30">
+          <div className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-2xl">
             <h2 className="mb-4 text-lg font-semibold">{t("addPlayer")}</h2>
             <form onSubmit={handleAddSubmit} className="space-y-4">
               {/* Name */}
@@ -443,7 +443,7 @@ export default function PlayersPage() {
             }
           }}
         >
-          <div className="w-full max-w-sm rounded-lg border border-purple-500/30 bg-[#1e1240] p-6 shadow-2xl shadow-purple-900/30">
+          <div className="w-full max-w-sm rounded-lg border border-border bg-card p-6 shadow-2xl">
             <h2 className="mb-4 text-center text-lg font-semibold">
               {t("showQr")} — {qrDialog.playerName}
             </h2>
@@ -513,7 +513,7 @@ export default function PlayersPage() {
             if (e.target === e.currentTarget) closeCreateCharDialog();
           }}
         >
-          <div className="w-full max-w-lg rounded-lg border border-purple-500/30 bg-[#1e1240] p-6 shadow-2xl shadow-purple-900/30">
+          <div className="w-full max-w-lg rounded-lg border border-border bg-card p-6 shadow-2xl">
             <h2 className="mb-1 text-lg font-semibold">{tc("selectClass")}</h2>
             <p className="mb-4 text-sm text-muted-foreground">{createCharDialog.playerName}</p>
 

@@ -84,7 +84,7 @@ export default function DiceLogPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-yellow-500">
+            <p className="text-2xl font-bold text-gold">
               {stats?.criticalHits ?? 0}
             </p>
           </CardContent>
@@ -97,7 +97,7 @@ export default function DiceLogPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-red-500">
+            <p className="text-2xl font-bold text-destructive">
               {stats?.criticalFails ?? 0}
             </p>
           </CardContent>
@@ -110,7 +110,7 @@ export default function DiceLogPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-green-600">
+            <p className="text-2xl font-bold text-xp">
               {stats?.successRate ?? 0}%
             </p>
           </CardContent>
@@ -223,9 +223,9 @@ export default function DiceLogPage() {
                         <span
                           className={
                             isCrit
-                              ? "font-bold text-yellow-500"
+                              ? "font-bold text-gold"
                               : isFail
-                                ? "font-bold text-red-500"
+                                ? "font-bold text-destructive"
                                 : ""
                           }
                         >
@@ -245,7 +245,7 @@ export default function DiceLogPage() {
                       </td>
                       <td className="px-4 py-3 text-center">
                         {entry.success ? (
-                          <Badge className="bg-green-500/20 text-green-700 dark:text-green-400 border-0">
+                          <Badge className="bg-xp/20 text-xp border-0">
                             {t("success")}
                           </Badge>
                         ) : (

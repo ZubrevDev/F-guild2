@@ -235,8 +235,8 @@ export default function ShopPage() {
                   <Badge
                     className={
                       item.category === "game_item"
-                        ? "shrink-0 bg-blue-500 text-white hover:bg-blue-500"
-                        : "shrink-0 bg-amber-500 text-white hover:bg-amber-500"
+                        ? "shrink-0 bg-mana-blue/80 text-white hover:bg-mana-blue/80"
+                        : "shrink-0 bg-gold/80 text-white hover:bg-gold/80"
                     }
                   >
                     {item.category === "game_item" ? t("gameItem") : t("realReward")}
@@ -310,7 +310,7 @@ export default function ShopPage() {
             }
           }}
         >
-          <div className="my-8 w-full max-w-lg rounded-lg border border-purple-500/30 bg-[#1e1240] p-6 shadow-2xl shadow-purple-900/30">
+          <div className="my-8 w-full max-w-lg rounded-lg border border-border bg-card p-6 shadow-2xl">
             <h2 className="mb-4 text-lg font-semibold">{t("createItem")}</h2>
             <form onSubmit={handleCreateSubmit} className="space-y-4">
               <ItemFormFields form={form} setForm={setForm} t={t} />
@@ -356,7 +356,7 @@ export default function ShopPage() {
             }
           }}
         >
-          <div className="my-8 w-full max-w-lg rounded-lg border border-purple-500/30 bg-[#1e1240] p-6 shadow-2xl shadow-purple-900/30">
+          <div className="my-8 w-full max-w-lg rounded-lg border border-border bg-card p-6 shadow-2xl">
             <h2 className="mb-4 text-lg font-semibold">{t("edit")}</h2>
             <form onSubmit={handleEditSubmit} className="space-y-4">
               <ItemFormFields form={editForm} setForm={setEditForm} t={t} />

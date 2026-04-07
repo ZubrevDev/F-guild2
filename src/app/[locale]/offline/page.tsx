@@ -3,7 +3,7 @@
 export default function OfflinePage() {
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-zinc-950 px-4 text-center">
-      <div className="mb-6 rounded-2xl bg-violet-600/20 p-6">
+      <div className="mb-6 rounded-2xl bg-primary/20 p-6">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="64"
@@ -14,7 +14,7 @@ export default function OfflinePage() {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="text-violet-400"
+          className="text-primary"
         >
           <line x1="1" x2="23" y1="1" y2="23" />
           <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55" />
@@ -32,7 +32,7 @@ export default function OfflinePage() {
       </p>
       <button
         onClick={() => window.location.reload()}
-        className="rounded-lg bg-violet-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-violet-700"
+        className="rounded-lg bg-primary px-6 py-3 font-semibold text-white transition-colors hover:bg-primary/90"
         type="button"
       >
         Try again

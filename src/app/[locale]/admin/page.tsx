@@ -14,25 +14,25 @@ export default function AdminOverviewPage() {
       key: "totalUsers",
       icon: Users,
       value: data?.totalUsers,
-      color: "text-blue-400",
+      color: "text-mana-blue",
     },
     {
       key: "totalGuilds",
       icon: Building2,
       value: data?.totalGuilds,
-      color: "text-purple-400",
+      color: "text-primary",
     },
     {
       key: "activeGuilds",
       icon: Activity,
       value: data?.activeGuilds,
-      color: "text-green-400",
+      color: "text-xp",
     },
     {
       key: "totalPlayers",
       icon: Gamepad2,
       value: data?.totalPlayers,
-      color: "text-yellow-400",
+      color: "text-gold",
     },
   ] as const;
 

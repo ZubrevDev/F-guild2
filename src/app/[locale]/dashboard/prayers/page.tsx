@@ -100,7 +100,7 @@ export default function MasterPrayersPage() {
 
       {/* Success toast */}
       {successId && (
-        <div className="rounded-md bg-green-100 px-4 py-2 text-sm text-green-800 dark:bg-green-900/30 dark:text-green-300">
+        <div className="rounded-md border border-xp/30 bg-xp/10 px-4 py-2 text-sm text-xp">
           {t("replied")}
         </div>
       )}
@@ -140,8 +140,8 @@ export default function MasterPrayersPage() {
                     <Badge
                       className={
                         isAnswered
-                          ? "shrink-0 bg-green-500 text-white hover:bg-green-500"
-                          : "shrink-0 bg-yellow-500 text-white hover:bg-yellow-500"
+                          ? "shrink-0 bg-xp/80 text-white hover:bg-xp/80"
+                          : "shrink-0 bg-gold/80 text-white hover:bg-gold/80"
                       }
                     >
                       {isAnswered ? t("answered") : t("unanswered")}

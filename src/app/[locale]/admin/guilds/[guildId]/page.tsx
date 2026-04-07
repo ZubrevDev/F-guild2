@@ -83,7 +83,7 @@ export default function AdminGuildDetailPage({
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t("guildDetail.masters")}
             </CardTitle>
-            <Crown className="h-4 w-4 text-yellow-400" />
+            <Crown className="h-4 w-4 text-gold" />
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">{guild._count.masters}</p>
@@ -94,7 +94,7 @@ export default function AdminGuildDetailPage({
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t("guildDetail.players")}
             </CardTitle>
-            <Users className="h-4 w-4 text-blue-400" />
+            <Users className="h-4 w-4 text-mana-blue" />
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">{guild._count.players}</p>
@@ -105,7 +105,7 @@ export default function AdminGuildDetailPage({
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t("guildDetail.quests")}
             </CardTitle>
-            <Sword className="h-4 w-4 text-purple-400" />
+            <Sword className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">{guild._count.quests}</p>

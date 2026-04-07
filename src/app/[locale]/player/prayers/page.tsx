@@ -105,7 +105,7 @@ export default function PlayerPrayersPage() {
       </div>
 
       {/* Send Prayer form */}
-      <Card className="gradient-card border-purple-500/30">
+      <Card className="gradient-card border-border">
         <CardHeader className="pb-2">
           <CardTitle className="text-base">{t("sendPrayer")}</CardTitle>
         </CardHeader>
@@ -147,7 +147,7 @@ export default function PlayerPrayersPage() {
             )}
 
             {successMessage && (
-              <p className="text-sm text-green-600 dark:text-green-400">{successMessage}</p>
+              <p className="text-sm text-xp">{successMessage}</p>
             )}
 
             <Button
@@ -187,7 +187,7 @@ export default function PlayerPrayersPage() {
             const isAnswered = prayer.status === "answered";
 
             return (
-              <Card key={prayer.id} className="gradient-card border-purple-500/15">
+              <Card key={prayer.id} className="gradient-card border-border">
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between gap-2">
                     <p className="text-xs text-muted-foreground">
@@ -196,8 +196,8 @@ export default function PlayerPrayersPage() {
                     <Badge
                       className={
                         isAnswered
-                          ? "shrink-0 bg-green-500 text-white hover:bg-green-500"
-                          : "shrink-0 bg-yellow-500 text-white hover:bg-yellow-500"
+                          ? "shrink-0 bg-xp/80 text-white hover:bg-xp/80"
+                          : "shrink-0 bg-gold/80 text-white hover:bg-gold/80"
                       }
                     >
                       {isAnswered ? t("answered") : t("unanswered")}
@@ -211,7 +211,7 @@ export default function PlayerPrayersPage() {
 
                   {/* Master replies */}
                   {prayer.replies.length > 0 && (
-                    <div className="space-y-2 border-l-2 border-purple-500/30 pl-3">
+                    <div className="space-y-2 border-l-2 border-border pl-3">
                       {prayer.replies.map((reply) => (
                         <div key={reply.id}>
                           <p className="text-xs font-medium text-muted-foreground">

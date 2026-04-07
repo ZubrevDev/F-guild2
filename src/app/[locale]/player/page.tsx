@@ -94,7 +94,7 @@ export default function PlayerHome() {
           variant="outline"
           size="sm"
           onClick={handleLogout}
-          className="border-white/20 text-white hover:bg-white/10"
+          className="border-border/40 text-white hover:bg-muted/20"
         >
           {t("logout")}
         </Button>
@@ -112,7 +112,7 @@ export default function PlayerHome() {
             <p className="text-xs text-muted-foreground">{t("xp")}</p>
           </div>
           <div className="gradient-card rounded-lg p-3 text-center">
-            <p className="text-lg font-bold text-blue-400">{character.faithPoints}</p>
+            <p className="text-lg font-bold text-mana-blue">{character.faithPoints}</p>
             <p className="text-xs text-muted-foreground">{t("faith")}</p>
           </div>
         </div>
@@ -134,7 +134,7 @@ export default function PlayerHome() {
             </p>
             <Link
               href="/player/quests"
-              className="mt-3 inline-block text-xs text-purple-400 hover:text-purple-300 underline underline-offset-2"
+              className="mt-3 inline-block text-xs text-primary hover:text-primary/80 underline underline-offset-2"
             >
               {t("viewBoard")}
             </Link>
@@ -144,7 +144,7 @@ export default function PlayerHome() {
         {activeInstances.map((instance) => (
           <div
             key={instance.id}
-            className="flex items-center justify-between rounded-md border border-purple-500/15 bg-white/5 px-3 py-2"
+            className="flex items-center justify-between rounded-md border border-border bg-muted/20 px-3 py-2"
           >
             <div>
               <p className="text-sm font-medium">{instance.quest.title}</p>
@@ -153,11 +153,11 @@ export default function PlayerHome() {
               </p>
             </div>
             {instance.status === "accepted" ? (
-              <Badge className="bg-purple-500/20 text-purple-400 border-0">
+              <Badge className="bg-primary/20 text-primary border-0">
                 {t("inProgress")}
               </Badge>
             ) : (
-              <Badge className="bg-yellow-500/20 text-yellow-400 border-0">
+              <Badge className="bg-gold/20 text-gold border-0">
                 {t("pendingReview")}
               </Badge>
             )}
