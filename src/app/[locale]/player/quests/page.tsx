@@ -163,7 +163,7 @@ export default function QuestBoard() {
           className={cn(
             "px-4 py-2 min-h-[44px] text-sm font-medium transition-colors",
             activeTab === "available"
-              ? "border-b-2 border-primary text-white"
+              ? "border-b-2 border-primary text-foreground"
               : "text-muted-foreground hover:text-foreground"
           )}
         >
@@ -174,7 +174,7 @@ export default function QuestBoard() {
           className={cn(
             "px-4 py-2 min-h-[44px] text-sm font-medium transition-colors",
             activeTab === "my"
-              ? "border-b-2 border-primary text-white"
+              ? "border-b-2 border-primary text-foreground"
               : "text-muted-foreground hover:text-foreground"
           )}
         >

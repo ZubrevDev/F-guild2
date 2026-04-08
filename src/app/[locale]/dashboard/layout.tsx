@@ -62,11 +62,11 @@ export default function DashboardLayout({
       {/* Desktop sidebar */}
       <aside className="hidden w-56 shrink-0 border-r border-border bg-background md:flex md:flex-col">
         <div className="flex items-center gap-3 p-4 pb-5">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white shadow-lg">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground shadow-lg">
             {userInitials}
           </div>
           <div className="min-w-0 flex-1">
-            <h2 className="text-base font-bold text-white leading-none">F-Guild</h2>
+            <h2 className="text-base font-bold text-foreground leading-none">F-Guild</h2>
             {userName && (
               <p className="truncate text-[11px] text-muted-foreground mt-0.5">{userName}</p>
             )}
@@ -85,7 +85,7 @@ export default function DashboardLayout({
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200",
                   isActive
-                    ? "sidebar-active-item text-white font-medium shadow-md"
+                    ? "sidebar-active-item text-foreground font-medium shadow-md"
                     : "text-muted-foreground hover:bg-muted/30 hover:text-foreground"
                 )}
               >

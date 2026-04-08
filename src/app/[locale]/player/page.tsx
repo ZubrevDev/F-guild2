@@ -81,11 +81,11 @@ export default function PlayerHome() {
       {/* Hero welcome banner */}
       <div className="gradient-hero rounded-xl p-5 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-white">
+          <h1 className="text-xl font-bold text-foreground">
             {t("welcome", { name: session.playerName })}
           </h1>
           {character && (
-            <p className="text-sm text-white/60 mt-1">
+            <p className="text-sm text-foreground/60 mt-1">
               {character.class} · {t("level", { level: character.level })}
             </p>
           )}
@@ -94,7 +94,7 @@ export default function PlayerHome() {
           variant="outline"
           size="sm"
           onClick={handleLogout}
-          className="border-border/40 text-white hover:bg-muted/20"
+          className="border-border/40 text-foreground hover:bg-muted/20"
         >
           {t("logout")}
         </Button>

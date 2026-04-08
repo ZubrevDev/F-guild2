@@ -295,7 +295,7 @@ export default function QuestsPage() {
                         <Badge
                           className={
                             quest.type === "mandatory"
-                              ? "bg-destructive text-white hover:bg-destructive"
+                              ? "bg-destructive text-destructive-foreground hover:bg-destructive"
                               : "bg-mana-blue/80 text-white hover:bg-mana-blue/80"
                           }
                         >

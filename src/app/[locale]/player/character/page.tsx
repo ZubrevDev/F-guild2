@@ -149,7 +149,7 @@ export default function CharacterPage() {
     return (
       <div className="mx-auto max-w-md space-y-4 pb-8">
         <div className="gradient-card rounded-xl p-6 space-y-4">
-          <h2 className="text-lg font-bold text-white text-center">Выбери свой класс</h2>
+          <h2 className="text-lg font-bold text-foreground text-center">Выбери свой класс</h2>
           <p className="text-sm text-muted-foreground text-center">
             Создай персонажа чтобы начать приключение
           </p>
@@ -166,7 +166,7 @@ export default function CharacterPage() {
                 )}
               >
                 <span className="text-2xl">{info.emoji}</span>
-                <span className="text-sm font-medium text-white">{info.name}</span>
+                <span className="text-sm font-medium text-foreground">{info.name}</span>
               </button>
             ))}
           </div>
@@ -208,7 +208,7 @@ export default function CharacterPage() {
       {/* Character header */}
       <div className="gradient-hero rounded-xl p-5 space-y-3">
         <div className="flex items-center justify-between flex-wrap gap-2">
-          <h1 className="text-xl font-bold text-white">{session.playerName}</h1>
+          <h1 className="text-xl font-bold text-foreground">{session.playerName}</h1>
           <div className="flex items-center gap-2">
             <Badge variant="secondary" className="capitalize">{character.class}</Badge>
             <span className="text-sm text-gold font-semibold">Lvl {character.level}</span>
@@ -251,7 +251,7 @@ export default function CharacterPage() {
     <>
       {/* Equipment slots */}
       <div className="gradient-card rounded-xl p-4 space-y-3">
-        <h2 className="text-sm font-semibold text-white">{tEq("title")}</h2>
+        <h2 className="text-sm font-semibold text-foreground">{tEq("title")}</h2>
         {equippedQuery.isLoading ? (
           <p className="text-sm text-muted-foreground">Loading...</p>
         ) : (
@@ -265,7 +265,7 @@ export default function CharacterPage() {
       {/* Backpack */}
       <div className="gradient-card rounded-xl p-4 space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-white">{tEq("backpack")}</h2>
+          <h2 className="text-sm font-semibold text-foreground">{tEq("backpack")}</h2>
           {inventoryData && (
             <span className="text-xs text-muted-foreground">
               {tEq("backpackSlots", { used: inventoryData.usedSlots, total: inventoryData.totalSlots })}
@@ -301,14 +301,14 @@ export default function CharacterPage() {
     <>
       {/* Class ability */}
       <div className="gradient-card rounded-xl p-4 space-y-3">
-        <h2 className="text-sm font-semibold text-white">{t("classAbility")}</h2>
+        <h2 className="text-sm font-semibold text-foreground">{t("classAbility")}</h2>
         {classAbilityStatusQuery.isLoading && (
           <p className="text-sm text-muted-foreground">Loading...</p>
         )}
         {classStatus && (
           <div className="space-y-2">
             <div className="space-y-0.5">
-              <p className="font-medium text-sm text-white">{classStatus.ability.displayName}</p>
+              <p className="font-medium text-sm text-foreground">{classStatus.ability.displayName}</p>
               <p className="text-xs text-muted-foreground">{classStatus.ability.description}</p>
             </div>
             {classStatus.ability.isPassive ? (
@@ -328,7 +328,7 @@ export default function CharacterPage() {
       {/* Ability tree */}
       <div className="gradient-card rounded-xl p-4 space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-white">{t("abilityTree")}</h2>
+          <h2 className="text-sm font-semibold text-foreground">{t("abilityTree")}</h2>
           {abilityData && (
             <span className="text-xs text-muted-foreground">
               {t("abilityPoints", { count: abilityData.remainingPoints })}
@@ -398,7 +398,7 @@ export default function CharacterPage() {
 
   const buffsSection = (
     <div className="gradient-card rounded-xl p-4 space-y-3">
-      <h2 className="text-sm font-semibold text-white">{tEq("buffs")}</h2>
+      <h2 className="text-sm font-semibold text-foreground">{tEq("buffs")}</h2>
       {buffsQuery.isLoading && <p className="text-sm text-muted-foreground">Loading...</p>}
       {!buffsQuery.isLoading && activeBuffs.length === 0 && (
         <p className="text-sm text-muted-foreground py-1">{tEq("noBuffs")}</p>
@@ -459,8 +459,8 @@ export default function CharacterPage() {
             className={cn(
               "flex-1 rounded-md py-2 text-xs font-medium transition-all",
               activeTab === tab.key
-                ? "bg-primary/20 text-white shadow-sm"
-                : "text-muted-foreground hover:text-white"
+                ? "bg-primary/20 text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             {tab.label}

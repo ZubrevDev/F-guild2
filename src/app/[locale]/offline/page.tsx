@@ -25,14 +25,14 @@ export default function OfflinePage() {
           <line x1="12" x2="12.01" y1="20" y2="20" />
         </svg>
       </div>
-      <h1 className="mb-3 text-3xl font-bold text-white">You are offline</h1>
+      <h1 className="mb-3 text-3xl font-bold text-foreground">You are offline</h1>
       <p className="mb-8 max-w-md text-zinc-400">
         It looks like you have lost your internet connection. Check your network
         and try again.
       </p>
       <button
         onClick={() => window.location.reload()}
-        className="rounded-lg bg-primary px-6 py-3 font-semibold text-white transition-colors hover:bg-primary/90"
+        className="rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
         type="button"
       >
         Try again

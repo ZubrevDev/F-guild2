@@ -52,7 +52,7 @@ export function BackpackGrid({ items, totalSlots, onEquip, onUse }: BackpackGrid
               {inv.item.name}
             </span>
             {inv.quantity > 1 && (
-              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-white">
+              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground">
                 {inv.quantity}
               </span>
             )}

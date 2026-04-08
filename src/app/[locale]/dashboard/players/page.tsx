@@ -250,7 +250,7 @@ export default function PlayersPage() {
                   <div className="flex items-start gap-3">
                     {/* Avatar */}
                     <div
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white font-bold text-lg ${avatarColor}`}
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-foreground font-bold text-lg ${avatarColor}`}
                       aria-hidden="true"
                     >
                       {player.name.charAt(0).toUpperCase()}

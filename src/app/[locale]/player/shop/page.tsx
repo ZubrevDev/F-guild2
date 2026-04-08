@@ -144,7 +144,7 @@ export default function PlayerShopPage() {
         >
           {t("inventory")}
           {inventoryItems.length > 0 && (
-            <span className="ml-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">
+            <span className="ml-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
               {inventoryItems.length}
             </span>
           )}
@@ -217,7 +217,7 @@ export default function PlayerShopPage() {
 
                       <Button
                         size="sm"
-                        className="w-full text-xs bg-primary hover:bg-primary/90 text-white"
+                        className="w-full text-xs bg-primary hover:bg-primary/90 text-primary-foreground"
                         disabled={
                           !canAfford ||
                           outOfStock ||

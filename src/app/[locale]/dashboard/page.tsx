@@ -125,8 +125,8 @@ export default function DashboardPage() {
     <div className="space-y-6">
       {/* Hero welcome banner — gradient like reference */}
       <div className="gradient-hero rounded-xl p-5 md:p-6">
-        <h1 className="text-2xl font-bold text-white">{t("title")}</h1>
-        <p className="mt-1 text-sm text-white/60">{t("noActivity").replace("—", "")}</p>
+        <h1 className="text-2xl font-bold text-foreground">{t("title")}</h1>
+        <p className="mt-1 text-sm text-foreground/60">{t("noActivity").replace("—", "")}</p>
       </div>
 
       {/* Stat cards — 2x2 on mobile, 4 columns on desktop */}

@@ -58,11 +58,11 @@ function effectBadgeClass(type: string): string {
     case "xp_penalty":
     case "gold_penalty":
     case "dice_penalty":
-      return "bg-destructive text-white hover:bg-destructive";
+      return "bg-destructive text-destructive-foreground hover:bg-destructive";
     case "shop_discount":
-      return "bg-primary text-white hover:bg-primary";
+      return "bg-primary text-primary-foreground hover:bg-primary";
     case "gold_drain":
-      return "bg-destructive/80 text-white hover:bg-destructive/80";
+      return "bg-destructive/80 text-destructive-foreground hover:bg-destructive/80";
     default:
       return "bg-muted text-muted-foreground";
   }
